@@ -92,7 +92,30 @@
     display: block !important;
 }
 
-.slick-initialized {
-    opacity: 1 !important;
-    transition: opacity .3s ease-out !important;
+
+.page-link {
+    font-weight: bold !important;
+    color: #BBB !important;
+    margin: 3px !important;
+    border-radius: 5px !important;
+    background-color: #f5f5f5 !important;
+    border-style: none !important;
+}
+
+
+.active>.page-link {
+    background-color: #0096FF !important;
+    color: #FFF !important;
+}
+
+.pagination {
+    --bs-pagination-focus-box-shadow: none !important;
+}
+
+.next-and-previous-button {
+    color: #0096FF !important;
+}
+
+.disabled>.page-link {
+    color: #BBB !important;
 }

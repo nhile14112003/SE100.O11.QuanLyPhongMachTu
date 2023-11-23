@@ -228,7 +228,7 @@ const TopNav = (props) => {
             <section class="container mt-5 mb-5">
                 <h4 align="center">Đội ngũ các chuyên gia nha sĩ</h4>
                 <div class="row">
-                    <div class="col-md-3 p-4">
+                    <div class="col-sm-6 col-md-3 p-4">
                         <img alt="" src="./images/doctor1.jpg" style={{ width: "100%" }} />
                         <p class="mt-3">
                             Nguyễn Văn A<br />
@@ -237,7 +237,7 @@ const TopNav = (props) => {
                         </p>
 
                     </div>
-                    <div class="col-md-3 p-4">
+                    <div class="col-sm-6 col-md-3 p-4">
                         <img alt="" src="./images/doctor1.jpg" style={{ width: "100%" }} />
                         <p class="mt-3">
                             Nguyễn Văn A<br />
@@ -245,7 +245,7 @@ const TopNav = (props) => {
                             Chi nhánh:  Lâm Văn Bền, Quận 7, HCM
                         </p>
                     </div>
-                    <div class="col-md-3 p-4">
+                    <div class="col-sm-6 col-md-3 p-4">
                         <img alt="" src="./images/doctor1.jpg" style={{ width: "100%" }} />
                         <p class="mt-3">
                             Nguyễn Văn A<br />
@@ -253,7 +253,7 @@ const TopNav = (props) => {
                             Chi nhánh:  Lâm Văn Bền, Quận 7, HCM
                         </p>
                     </div>
-                    <div class="col-md-3 p-4">
+                    <div class="col-sm-6 col-md-3 p-4">
                         <img alt="" src="./images/doctor1.jpg" style={{ width: "100%" }} />
                         <p class="mt-3">
                             Nguyễn Văn A<br />
@@ -262,7 +262,7 @@ const TopNav = (props) => {
                         </p>
                     </div>
                 </div>
-                <h5 className="mt-3" align="center"><NavLink to="/" className="text-decoration-none" style={{ color: "black" }}>Xem thêm &rarr;</NavLink></h5>
+                <h5 className="mt-2" align="center"><NavLink to="/doctors" className="text-decoration-none nav-link">Xem thêm &rarr;</NavLink></h5>
             </section>
             <section className='container'>
                 <h3 align="center">Phản hồi của khách hàng</h3>

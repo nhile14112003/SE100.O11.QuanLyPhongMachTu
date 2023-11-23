@@ -1,21 +1,23 @@
 import React from 'react';
 import './App.css';
+import ScrollToTop from './components/ScrollToTop';
 import {
   BrowserRouter as Router,
   Switch,
   Route
 
 } from "react-router-dom";
-import Introduction from './components/Introduction';
+import Introduction from './views/Introduction';
+import Doctors from './views/Doctors';
 function App() {
 
   return (
 
     <Router>
-
+      <ScrollToTop />
       <Switch>
         <Route path="/doctors">
-          <Introduction />
+          <Doctors />
         </Route>
         <Route path="/services">
           <Introduction />
