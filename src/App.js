@@ -7,6 +7,8 @@ import {
 
 } from "react-router-dom";
 import Introduction from './components/Introduction';
+import Manager from './components/Manager';
+import BaoCao from './components/BaoCao'
 function App() {
 
   return (
@@ -32,12 +34,16 @@ function App() {
         <Route path="/sign_up">
 
         </Route>
+        <Route path="/manager">
+          <Manager/>
+        </Route>
         <Route path="/" exact>
           <Introduction />
         </Route>
         <Route path="*" >
           404 Not Found
         </Route>
+        
       </Switch>
     </Router >
   );
