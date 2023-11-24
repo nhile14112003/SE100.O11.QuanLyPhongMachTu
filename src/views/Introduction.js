@@ -1,10 +1,15 @@
 import React from 'react'
 import './style.css'
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 const TopNav = (props) => {
+    //chuyển tới trang đăng ký
+    const history = useHistory();
+    const moveToBookingPage = () => {
+        history.push("/booking")
+    }
 
     //dữ liệu list đánh giá giả
     const reviewList = [
@@ -152,7 +157,7 @@ const TopNav = (props) => {
                     <p className="mt-5" style={{ fontSize: "25px", color: "#0096FF" }}>Chào mừng đến với chúng tôi</p>
                     <p><h3>Với kinh nghiệm hơn 7 năm, chúng tôi sẽ đem đến cho bạn nhưng trải nghiệm tốt nhất</h3></p>
                     <div className="col-12">
-                        <button type="submit" className="btn pb-2 pt-2 px-5 pe-5 mt-4" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>Đặt lịch ngay</button>
+                        <button type="submit" className="btn pb-2 pt-2 px-5 pe-5 mt-4" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={() => moveToBookingPage()}>Đặt lịch ngay</button>
                     </div>
                 </div>
                 <div className="col-md-6 d-none d-md-block"><img alt="" src="images/kham5.png" style={{ width: "90%" }} align="right" /></div>
@@ -231,7 +236,7 @@ const TopNav = (props) => {
             <section class="container mt-5 mb-5">
                 <h4 align="center">Đội ngũ các chuyên gia nha sĩ</h4>
                 <div class="row">
-                    <div class="col-md-3 p-4">
+                    <div class="col-sm-6 col-md-3 p-4">
                         <img alt="" src="./images/doctor1.jpg" style={{ width: "100%" }} />
                         <p class="mt-3">
                             Nguyễn Văn A<br />
@@ -240,7 +245,7 @@ const TopNav = (props) => {
                         </p>
 
                     </div>
-                    <div class="col-md-3 p-4">
+                    <div class="col-sm-6 col-md-3 p-4">
                         <img alt="" src="./images/doctor1.jpg" style={{ width: "100%" }} />
                         <p class="mt-3">
                             Nguyễn Văn A<br />
@@ -248,7 +253,7 @@ const TopNav = (props) => {
                             Chi nhánh:  Lâm Văn Bền, Quận 7, HCM
                         </p>
                     </div>
-                    <div class="col-md-3 p-4">
+                    <div class="col-sm-6 col-md-3 p-4">
                         <img alt="" src="./images/doctor1.jpg" style={{ width: "100%" }} />
                         <p class="mt-3">
                             Nguyễn Văn A<br />
@@ -256,7 +261,7 @@ const TopNav = (props) => {
                             Chi nhánh:  Lâm Văn Bền, Quận 7, HCM
                         </p>
                     </div>
-                    <div class="col-md-3 p-4">
+                    <div class="col-sm-6 col-md-3 p-4">
                         <img alt="" src="./images/doctor1.jpg" style={{ width: "100%" }} />
                         <p class="mt-3">
                             Nguyễn Văn A<br />
@@ -265,7 +270,7 @@ const TopNav = (props) => {
                         </p>
                     </div>
                 </div>
-                <h5 className="mt-3" align="center"><NavLink to="/" className="text-decoration-none" style={{ color: "black" }}>Xem thêm &rarr;</NavLink></h5>
+                <h5 className="mt-2" align="center"><NavLink to="/doctors" className="text-decoration-none nav-link">Xem thêm &rarr;</NavLink></h5>
             </section>
             <section className='container'>
                 <h3 align="center">Phản hồi của khách hàng</h3>
