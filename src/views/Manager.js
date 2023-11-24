@@ -10,9 +10,8 @@ import {
   
   } from "react-router-dom";
 import BaoCao  from './BaoCao';
-import Introduction from './Introduction';
-import QuanLyNhanVien from './QuanLyNhanVien';
 import QuanLyLichHen from './QuanLyLichHen';
+import QuanLyNhanVien from './QuanLyNhanVien';
 const Manager = (props) => {
 
     return (

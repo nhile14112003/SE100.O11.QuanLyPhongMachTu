@@ -7,15 +7,12 @@ import {
   Route
 
 } from "react-router-dom";
-import Introduction from './components/Introduction';
-import Manager from './components/Manager';
-import BaoCao from './components/BaoCao'
-import Introduction from './views/Introduction';
 import Doctors from './views/Doctors';
 import Booking from './views/Booking';
 import SignIn from './views/SignIn';
 import SignUp from './views/SignUp';
-
+import Introduction from './views/Introduction'
+import Manager from './views/Manager'
 function App() {
 
   return (
