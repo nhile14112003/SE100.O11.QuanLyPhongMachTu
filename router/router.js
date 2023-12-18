@@ -5,6 +5,8 @@ const {getAllServices, addService, updateService, deleteService, getServicesBySe
 const {getAllMaterials, addMaterial, updateMaterial, deleteMaterial, getMaterialsBySearch,
         getAllDrugs, addDrug, updateDrug, deleteDrug, getDrugsBySearch} = require ('../controllers/Iventory')
 const {getAllBranchs, addBranch, updateBranch, deleteBranch, getBranchsBySearch} = require ('../controllers/Branch')
+const {getAllFeedbacks, addFeedback} = require ('../controllers/Feedback')
+const {getAllStaffs, addStaff, updateStaff, deleteStaff, getStaffsBySearch} = require ('../controllers/Staff')
 //user
 router.put('/setUserInfo/:userId', setUserInfo)
 router.post('/addUser', addUser)
@@ -34,5 +36,13 @@ router.get('/BranchManagement/Branchs', getBranchsBySearch);
 router.post('/BranchManagement/add', addBranch);
 router.put('/BranchManagement/update/:branchId', updateBranch);
 router.delete('/BranchManagement/delete/:branchId', deleteBranch);
-
+//Feedback
+router.get('/FeedbackManagement/getFeedbacks', getAllFeedbacks);
+router.post('/FeedbackManagement/add', addFeedback);
+//Staff
+router.get('/StaffManagement/getStaffs', getAllStaffs);
+router.get('/StaffManagement/Staffs', getStaffsBySearch);
+router.post('/StaffManagement/add', addStaff);
+router.put('/StaffManagement/update/:staffId', updateStaff);
+router.delete('/StaffManagement/delete/:staffId', deleteStaff);
 module.exports = router
