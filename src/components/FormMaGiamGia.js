@@ -1,29 +1,79 @@
 import React, { useState } from "react";
 
-export const FormMaGiamGia = ({ closeModal, onSubmit, defaultValue }) => {
+export const FormMaGiamGia = ({
+  closeModal,
+  onSubmit,
+  defaultValue,
+  discounts,
+}) => {
   const [formState, setFormState] = useState(
     defaultValue || {
-      idMa: "",
+      maGiamGia: "",
       phanTram: "",
-      thoiGianBatDau: "",
-      thoiGianKetThuc: "",
+      TGBatDau: "",
+      TGKetThuc: "",
       dichVuApDung: "",
     }
   );
   const [errors, setErrors] = useState("");
 
   const validateForm = () => {
-    if (formState.idMa && formState.phanTram && formState.thoiGianBatDau && formState.thoiGianKetThuc && formState.dichVuApDung) {
+    if (
+      formState.maGiamGia != "" &&
+      formState.phanTram != "" &&
+      formState.TGBatDau != "" &&
+      formState.TGKetThuc != "" &&
+      formState.dichVuApDung != ""
+    ) {
+      const isIdExists = discounts.some(
+        (discount) => discount.maGiamGia == formState.maGiamGia
+      );
+      if (!defaultValue && isIdExists) {
+        setErrors(
+          "Mã giảm giá này đã tồn tại! Vui lòng nhập một mã giảm giá khác."
+        );
+        return false;
+      } else if (formState.phanTram > 100 || formState.phanTram <= 0) {
+        setErrors("Phần trăm giảm giá phải lớn hơn 0 và không lớn hơn 100");
+        return false;
+      } else if (formState.TGBatDau > formState.TGKetThuc) {
+        setErrors(
+          "Thời gian kết thúc phải lớn hơn hoặc bằng thời gian bắt đầu"
+        );
+        return false;
+      } else if (new Date() > formState.TGKetThuc) {
+        setErrors("Thời gian kết thúc phải là sau ngày hôm nay");
+        return false;
+      } else {
         setErrors("");
-      return true;
+        return true;
+      }
     } else {
       let errorFields = [];
       for (const [key, value] of Object.entries(formState)) {
-        if (!value) {
-          errorFields.push(key);
+        if (value == "") {
+          switch (key) {
+            case "maGiamGia":
+              errorFields.push("ID mã giảm giá");
+              break;
+            case "phanTram":
+              errorFields.push("Phầm trăm giảm");
+              break;
+            case "TGBatDau":
+              errorFields.push("Thời gian bắt đầu");
+              break;
+            case "TGKetThuc":
+              errorFields.push("Thời gian kết thúc");
+              break;
+            case "dichVuApDung":
+              errorFields.push("Dịch vụ áp dụng");
+              break;
+            default:
+              break;
+          }
         }
       }
-      setErrors(errorFields.join(", "));
+      setErrors("Vui lòng nhập: " + errorFields.join(", "));
       return false;
     }
   };
@@ -52,10 +102,12 @@ export const FormMaGiamGia = ({ closeModal, onSubmit, defaultValue }) => {
       <div className="col-sm-4 modal1">
         <form>
           <div className="form-group">
-            <label for="idMa">Id mã giảm giá</label>
-            <input name="idMa" 
-            onChange={handleChange} 
-            value={formState.idMa} />
+            <label for="maGiamGia">Id mã giảm giá</label>
+            <input
+              name="maGiamGia"
+              onChange={handleChange}
+              value={formState.maGiamGia}
+            />
           </div>
           <div className="form-group">
             <label for="phanTram">Phần trăm</label>
@@ -67,21 +119,21 @@ export const FormMaGiamGia = ({ closeModal, onSubmit, defaultValue }) => {
             />
           </div>
           <div className="form-group">
-            <label for="thoiGianBatDau">Thời gian bắt đầu</label>
+            <label for="TGBatDau">Thời gian bắt đầu</label>
             <input
-              name="thoiGianBatDau"
+              name="TGBatDau"
               onChange={handleChange}
               type="date"
-              value={formState.thoiGianBatDau}
+              value={formState.TGBatDau}
             />
           </div>
           <div className="form-group">
-            <label htmlFor="thoiGianKetThuc">Thời gian kết thúc</label>
+            <label htmlFor="TGKetThuc">Thời gian kết thúc</label>
             <input
-              name="thoiGianKetThuc"
+              name="TGKetThuc"
               onChange={handleChange}
               type="date"
-              value={formState.thoiGianKetThuc}
+              value={formState.TGKetThuc}
             />
           </div>
           <div className="form-group">
