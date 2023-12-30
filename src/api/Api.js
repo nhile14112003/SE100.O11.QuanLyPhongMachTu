@@ -323,7 +323,6 @@ const getAllDiscounts = async () => {
     return [];
   }
 };
-
 const addDiscount = async (data) => {
   const endpoint = "/DiscountManagement/add";
   try {
@@ -333,7 +332,6 @@ const addDiscount = async (data) => {
     console.log("error: ", error.message);
   }
 };
-
 const updateDiscount = async (data, id) => {
   const endpoint = "/DiscountManagement/update/" + id;
   try {
@@ -342,7 +340,6 @@ const updateDiscount = async (data, id) => {
     console.error("error: ", error.message);
   }
 };
-
 const deleteDiscount = async (id) => {
   try {
     await client.delete("/DiscountManagement/delete/" + id);
@@ -350,7 +347,6 @@ const deleteDiscount = async (id) => {
     console.log("error: ", error.message);
   }
 };
-
 const getDiscountsBySearch = async (searchCriteria) => {
   try {
     const queryParams = new URLSearchParams(searchCriteria).toString();
@@ -369,6 +365,52 @@ const getDiscountsBySearch = async (searchCriteria) => {
   }
 };
 
+const getAllBills = async () => {
+  try {
+    const response = await client.get("/BillManagement/getBills");
+    if (response.data.success) {
+      return response.data.bills;
+    } else {
+      console.log("not get bills");
+    }
+  } catch (error) {
+    console.log("error: ", error.message);
+    return [];
+  }
+};
+const addBill = async (data) => {
+  const endpoint = "/BillManagement/add";
+  try {
+    const response = await client.post(endpoint, data);
+    return response.data.docId;
+  } catch (error) {
+    console.log("error: ", error.message);
+  }
+};
+const updateBill = async (data, id) => {
+  const endpoint = "/BillManagement/update/" + id;
+  try {
+    await client.put(endpoint, data);
+  } catch (error) {
+    console.error("error: ", error.message);
+  }
+};
+const getTreatmentRecordDetailById = async (id) => {
+  try {
+    const response = await client.get(
+      "/TreatmentRecordDetailManagement/getTreatmentRecordDetailById/" + id
+    );
+    if (response.data.success) {
+      console.log(response.data.cthsdtById);
+      return response.data.cthsdtById;
+    } else {
+      console.log("not get treatment record detail");
+    }
+  } catch (error) {
+    console.log("error: ", error.message);
+    return [];
+  }
+};
 export default {
   getAllServices,
   addService,
@@ -402,4 +444,8 @@ export default {
   updateDiscount,
   deleteDiscount,
   getDiscountsBySearch,
+  getAllBills,
+  addBill,
+  updateBill,
+  getTreatmentRecordDetailById,
 };
