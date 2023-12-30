@@ -84,8 +84,21 @@ const deleteDiscount = async (req, res) => {
   }
 };
 
+function compareDates(dateString1, dateString2) {
+  const date1 = new Date(dateString1);
+  const date2 = new Date(dateString2);
+
+  if (date1 < date2) {
+    return -1; // dateString1 là ngày trước dateString2
+  } else if (date1 > date2) {
+    return 1; // dateString1 là ngày sau dateString2
+  } else {
+    return 0; // Hai ngày bằng nhau
+  }
+}
+
 const getDiscountsBySearch = async (req, res) => {
-  const { maGiamGia } = req.query;
+  const { maGiamGia, TGBatDau, TGKetThuc } = req.query;
   const myCollection = collection(firestore, "GiamGia");
   try {
     const querySnapshot = await getDocs(myCollection);
@@ -100,7 +113,20 @@ const getDiscountsBySearch = async (req, res) => {
       const matchMaGiamGia =
         maGiamGia === "" ||
         normalizeText(giamgia.maGiamGia).includes(normalizeText(maGiamGia));
-      return matchMaGiamGia;
+
+      const matchTGGiamGia =
+        (TGBatDau == "" && TGKetThuc == "") ||
+        (TGBatDau != "" &&
+          compareDates(giamgia.TGBatDau, TGBatDau) != -1 &&
+          TGKetThuc == "") ||
+        (TGKetThuc != "" &&
+          compareDates(giamgia.TGKetThuc, TGKetThuc) != -1 &&
+          TGBatDau == "") ||
+        (TGBatDau != "" &&
+          TGKetThuc != "" &&
+          compareDates(giamgia.TGBatDau, TGBatDau) != -1 &&
+          compareDates(giamgia.TGKetThuc, TGKetThuc) != -1);
+      return matchMaGiamGia && matchTGGiamGia;
     });
     const sortList = searchResults.sort((a, b) =>
       a.TGBatDau.localeCompare(b.TGBatDau)
