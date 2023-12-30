@@ -22,8 +22,8 @@ export const FormMaGiamGia = ({
       formState.maGiamGia != "" &&
       formState.phanTram != "" &&
       formState.TGBatDau != "" &&
-      formState.TGKetThuc != "" &&
-      formState.dichVuApDung != ""
+      formState.TGKetThuc != ""
+      // && formState.dichVuApDung != ""
     ) {
       const isIdExists = discounts.some(
         (discount) => discount.maGiamGia == formState.maGiamGia
@@ -65,9 +65,9 @@ export const FormMaGiamGia = ({
             case "TGKetThuc":
               errorFields.push("Thời gian kết thúc");
               break;
-            case "dichVuApDung":
-              errorFields.push("Dịch vụ áp dụng");
-              break;
+            // case "dichVuApDung":
+            //   errorFields.push("Dịch vụ áp dụng");
+            //   break;
             default:
               break;
           }
@@ -136,14 +136,14 @@ export const FormMaGiamGia = ({
               value={formState.TGKetThuc}
             />
           </div>
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="dichVuApDung">Dịch vụ áp dụng</label>
             <textarea
               name="dichVuApDung"
               onChange={handleChange}
               value={formState.dichVuApDung}
             />
-          </div>
+          </div> */}
           {errors && <div className="error">{`Please include: ${errors}`}</div>}
           <button type="submit" className="btnSummit" onClick={handleSubmit}>
             Lưu
