@@ -13,6 +13,8 @@ const QuanLyMaGiamGia = (props) => {
   const [rowToEdit, setRowToEdit] = useState(null);
   const [searchCriteria, setSearchCriteria] = useState({
     maGiamGia: "",
+    TGBatDau: "",
+    TGKetThuc: "",
   });
 
   const handleDeleteRow = (targetIndex) => {
@@ -74,13 +76,26 @@ const QuanLyMaGiamGia = (props) => {
           name="maGiamGia"
           onChange={handleChange}
         />
-        <input
-          className="block m-2 px-4 customBox"
-          type="text"
-          id="noidungMaGiamGia"
-          placeholder="Nhập nội dung mã giảm giá"
-          name="noidungMaGiamGia"
-        />
+        <div>
+          <text>Ngày bắt đầu từ: </text>
+          <input
+            className="block m-2 px-4 customBox"
+            type="date"
+            name="TGBatDau"
+            id="TGBatDau"
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <text>đến ngày: </text>
+          <input
+            className="block m-2 px-4 customBox"
+            type="date"
+            name="TGKetThuc"
+            id="TGKetThuc"
+            onChange={handleChange}
+          />
+        </div>
       </div>
       <button
         onClick={onSearch}
@@ -102,7 +117,7 @@ const QuanLyMaGiamGia = (props) => {
             <th>Phần trăm giảm</th>
             <th>Thời gian bắt đầu</th>
             <th>Thời gian kết thúc</th>
-            <th>Dịch vụ áp dụng</th>
+            {/* <th>Dịch vụ áp dụng</th> */}
             <th></th>
           </tr>
         </thead>
@@ -114,7 +129,7 @@ const QuanLyMaGiamGia = (props) => {
                 <td>{row.phanTram}</td>
                 <td>{row.TGBatDau}</td>
                 <td>{row.TGKetThuc}</td>
-                <td>{row.dichVuApDung}</td>
+                {/* <td>{row.dichVuApDung}</td> */}
                 <td className="fit">
                   <span className="actions">
                     <BsFillTrashFill
