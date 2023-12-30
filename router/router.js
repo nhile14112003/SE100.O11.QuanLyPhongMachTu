@@ -48,6 +48,10 @@ const {
   deleteDiscount,
   getDiscountsBySearch,
 } = require("../controllers/Discount");
+const { getAllBills, addBill, updateBill } = require("../controllers/Bill");
+const {
+  getTreatmentRecordDetailById,
+} = require("../controllers/TreatmentRecordDetail");
 //user
 router.put("/setUserInfo/:userId", setUserInfo);
 router.post("/addUser", addUser);
@@ -95,5 +99,14 @@ router.post("/DiscountManagement/add", addDiscount);
 router.put("/DiscountManagement/update/:discountId", updateDiscount);
 router.delete("/DiscountManagement/delete/:discountId", deleteDiscount);
 router.get("/DiscountManagement/Discounts", getDiscountsBySearch);
+//Bill
+router.get("/BillManagement/getBills", getAllBills);
+router.post("/BillManagement/add", addBill);
+router.put("/BillManagement/update/:billId", updateBill);
+//TreatmentRecordDetail
+router.get(
+  "/TreatmentRecordDetailManagement/getTreatmentRecordDetailById/:cthsdtId",
+  getTreatmentRecordDetailById
+);
 
 module.exports = router;
