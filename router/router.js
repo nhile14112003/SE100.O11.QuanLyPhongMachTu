@@ -48,7 +48,13 @@ const {
   deleteDiscount,
   getDiscountsBySearch,
 } = require("../controllers/Discount");
-const { getAllBills, addBill, updateBill } = require("../controllers/Bill");
+const {
+  getAllBills,
+  addBill,
+  updateBill,
+  deleteBill,
+  getBillsBySearch,
+} = require("../controllers/Bill");
 const {
   getTreatmentRecordDetailById,
 } = require("../controllers/TreatmentRecordDetail");
@@ -103,6 +109,8 @@ router.get("/DiscountManagement/Discounts", getDiscountsBySearch);
 router.get("/BillManagement/getBills", getAllBills);
 router.post("/BillManagement/add", addBill);
 router.put("/BillManagement/update/:billId", updateBill);
+router.delete("/BillManagement/delete/:billId", deleteBill);
+router.get("BillManagement/Bills", getBillsBySearch);
 //TreatmentRecordDetail
 router.get(
   "/TreatmentRecordDetailManagement/getTreatmentRecordDetailById/:cthsdtId",
