@@ -350,6 +350,7 @@ const deleteDiscount = async (id) => {
 const getDiscountsBySearch = async (searchCriteria) => {
   try {
     const queryParams = new URLSearchParams(searchCriteria).toString();
+    alert(queryParams);
     const response = await client.get(
       `/DiscountManagement/Discounts?${queryParams}`
     );
@@ -395,6 +396,32 @@ const updateBill = async (data, id) => {
     console.error("error: ", error.message);
   }
 };
+const deleteBill = async (id) => {
+  try {
+    await client.delete("/BillManagement/delete/" + id);
+  } catch (error) {
+    console.log("error: ", error.message);
+  }
+};
+const getBillsBySearch = async (searchCriteria) => {
+  try {
+    alert("Hehe");
+    const queryParams = new URLSearchParams(searchCriteria).toString();
+    alert(queryParams);
+    const response = await client.get(`/BillManagement/Bills${queryParams}`);
+    alert("hihi");
+    if (response.data.success) {
+      alert("true");
+      return response.data.bills;
+    } else {
+      console.log("not get bills");
+    }
+  } catch (error) {
+    console.log("error: ", error.message);
+    return [];
+  }
+};
+
 const getTreatmentRecordDetailById = async (id) => {
   try {
     const response = await client.get(
@@ -448,4 +475,5 @@ export default {
   addBill,
   updateBill,
   getTreatmentRecordDetailById,
+  getBillsBySearch,
 };
