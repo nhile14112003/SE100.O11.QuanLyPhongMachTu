@@ -2,104 +2,34 @@ import React, { useEffect, useState } from "react";
 import "./style.css";
 import moment from "moment";
 import api from "../api/Api";
+import Select from "react-select";
 
 const BillManagement = (props) => {
-  //fake data
-  const CTHD = [
-    {
-      MaBN: "BN001",
-      TenBN: "Lê Văn Dần",
-      MaHD: "HD001",
-      Ngay: "2023-28-12",
-      TinhTrang: "Chưa thanh toán",
-    },
-    {
-      MaBN: "BN003",
-      TenBN: "Lê Trần Long",
-      MaHD: "HD001",
-      Ngay: "2023-29-12",
-      TinhTrang: "Chưa thanh toán",
-    },
-    {
-      MaBN: "BN004",
-      TenBN: "Lê Trần Long",
-      MaHD: "HD001",
-      Ngay: "2023-28-12",
-      TinhTrang: "Đã thanh toán",
-    },
-  ];
-  //   const CTHSDT = [
-  //     {
-  //       MaCTHSDT: "CTHS001",
-  //       MaHSDT: "HS001",
-  //       MaNS: "NS001",
-  //       TenNS: "Nguyễn Văn A",
-  //       MaDV: "DV001",
-  //       TenDV: "Phẫu thuật nhổ răng khó mức III",
-  //       Ngay: "2023-10-26",
-  //       DonGia: "1500000",
-  //       SL: "2",
-  //       MaHD: "",
-  //     },
-  //     {
-  //       MaCTHSDT: "CTHS001",
-  //       MaHSDT: "HS001",
-  //       MaDV: "DV001",
-  //       TenDV: "Cấy ghép Implant",
-  //       MaNS: "NS003",
-  //       TenNS: "Nguyễn Văn Thái",
-  //       Ngay: "2023-10-26",
-  //       DonGia: "1500000",
-  //       MaHD: "",
-  //       SL: "1",
-  //     },
-  //   ];
-  const CTTOATHUOC = [
-    {
-      MaTT: "TT001",
-      MaThuoc: "T001",
-      TenThuoc: "ALPHACHOAY",
-      SL: "10",
-      DonGia: "5000",
-      Ngay: "2023-10-11",
-      GhiChu: "Ngày uống 2 lần, mỗi lần 1 viên(sáng chiều - sau ăn)",
-    },
-    {
-      MaTT: "TT001",
-      MaThuoc: "T002",
-      TenThuoc: "MEDOTASE 10mg",
-      SL: "10",
-      DonGia: "50000",
-
-      Ngay: "2023-10-11",
-      GhiChu: "Ngày uống 2 lần, mỗi lần 1 viên(sáng chiều - sau ăn)",
-    },
-    {
-      MaTT: "TT001",
-      MaThuoc: "T001",
-      TenThuoc: "ALPHACHOAY",
-      SL: "5",
-      DonGia: "50",
-      Ngay: "2023-10-11",
-      GhiChu: "Ngày uống 1 lần, mỗi lần 1 viên(sáng - sau ăn)",
-    },
-  ];
-
   const [bills, setBills] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [CTHSDT, setCTHSDT] = useState(null);
+  const [staffs, setStaffs] = useState([]);
+  const [maGiamGia, setMaGiamGia] = useState([]);
+  const [recentDiscount, setRecentDiscount] = useState("");
+  const [ThanhTienSauGiamGia, setTTSGG] = useState(0);
+  const [SoTienGiam, setSoTienGiam] = useState(0);
+  const [conNo, setConNo] = useState(0);
+  const [noSauThanhToan, setNoSauThanhToan] = useState(0);
+  const [disableDiscount, setDisaleDiscount] = useState(true);
+  const [recentStaff, setRecentStaff] = useState({
+    maNhanVien: "",
+    tenNhanVien: "",
+  });
   const [searchCriteria, setSearchCriteria] = useState({
-    MaHD: "",
-    MaBN: "",
-    TenBN: "",
-    Ngay: "",
-    TinhTrang: "",
+    maHoaDon: "",
+    maBenhNhan: "",
+    tenBenhNhan: "",
+    ngayLap: "",
+    tinhTrang: "",
   });
   var TongTienDT = 0;
   var TongTienThuoc = 0;
   var ThanhTien = 0;
-  var SoTienGiam = 0;
-  var ThanhTienSauGiamGia = 0;
 
   const handleChange = (e) => {
     setSearchCriteria({ ...searchCriteria, [e.target.name]: e.target.value });
@@ -107,7 +37,7 @@ const BillManagement = (props) => {
 
   const setSelectedRowById = async (id, cthsdtId) => {
     setSelectedRow(id);
-    await getCTHSDT(cthsdtId);
+    await getCTHSDT(id, cthsdtId);
     setPage(2);
   };
   const [page, setPage] = useState(1);
@@ -125,14 +55,133 @@ const BillManagement = (props) => {
     setBills(bills);
   };
 
-  const getCTHSDT = async (id) => {
-    let CTHSDT = await api.getTreatmentRecordDetailById(id);
+  const getStaffs = async () => {
+    const staffs = await api.getAllStaffs();
+    setStaffs(staffs);
+  };
+
+  const getDiscounts = async () => {
+    const discounts = await api.getAllDiscounts();
+    const discountsFilter = discounts.filter((discount) => {
+      const dateBD = new Date(discount.TGBatDau);
+      let dateKT = new Date(discount.TGKetThuc);
+      dateKT.setHours(23);
+      dateKT.setMinutes(59);
+
+      const matchDateBD = !(dateBD > new Date());
+      const matchDateKT = !(dateKT < new Date());
+      return matchDateBD && matchDateKT;
+    });
+    setMaGiamGia(discountsFilter);
+  };
+
+  const getCTHSDT = async (id, cthsdtId) => {
+    let CTHSDT = await api.getTreatmentRecordDetailById(cthsdtId);
+    const status = bills[id].tinhTrang;
+    const Id = bills[id].Id;
+    TongTienDT = 0;
+    CTHSDT.DichVu.map((item, index) => {
+      TongTienDT += parseInt(item.DonGia);
+      return 0;
+    });
+    CTHSDT.Thuoc.map((item, index) => {
+      TongTienDT += parseInt(item.DonGia);
+      return 0;
+    });
+
+    if (status == "Chưa thanh toán") {
+      let newBill = bills[id];
+      newBill.conNo = TongTienDT;
+      setConNo(newBill.conNo);
+      setTTSGG(newBill.conNo);
+      setNoSauThanhToan(newBill.conNo);
+      setDisaleDiscount(false);
+      await api.updateBill(newBill, Id);
+      let updatedBills = bills.map((currRow, idx) => {
+        if (idx !== id) return currRow;
+        return newBill;
+      });
+      setBills(updatedBills);
+    } else {
+      let newBill = bills[id];
+      setConNo(newBill.conNo);
+      setTTSGG(TongTienDT - (TongTienDT * newBill.phanTram) / 100);
+      setSoTienGiam((TongTienDT * newBill.phanTram) / 100);
+      setNoSauThanhToan(newBill.conNo);
+      setDisaleDiscount(true);
+      setRecentDiscount({
+        maGiamGia: newBill.maGiamGia,
+        phanTram: newBill.phanTram,
+      });
+      setRecentStaff({
+        maNhanVien: newBill.maNhanVien,
+        tenNhanVien: newBill.tenNhanVien,
+      });
+    }
     setCTHSDT(CTHSDT);
+  };
+
+  const validSubmitData = () => {
+    if (bills[selectedRow].tinhTrang === "Đã thanh toán") return true;
+    const soTienThanhToan = document.getElementById("soTienDaThanhToan").value;
+    const matchSoTienThanhToan =
+      soTienThanhToan != "" &&
+      soTienThanhToan > 0 &&
+      soTienThanhToan < TongTienDT - SoTienGiam;
+    if (!matchSoTienThanhToan)
+      alert("Vui lòng nhập số tiền thanh toán hợp lệ!");
+    const matchMaNhanVien = document.getElementById("maNhanVien").value != "";
+    return matchMaNhanVien && matchSoTienThanhToan;
+  };
+
+  const handleSubmit = async () => {
+    if (validSubmitData()) {
+      const newBill = bills[selectedRow];
+      const Id = newBill.Id;
+      newBill.daThanhToan =
+        parseInt(newBill.daThanhToan) +
+        parseInt(document.getElementById("soTienDaThanhToan").value);
+      newBill.conNo =
+        conNo - parseInt(document.getElementById("soTienDaThanhToan").value);
+      if (!disableDiscount) {
+        newBill.maGiamGia = recentDiscount.maGiamGia || "";
+        newBill.phanTram = recentDiscount.phanTram || 0;
+        newBill.maNhanVien = recentStaff.maNhanVien;
+        newBill.tenNhanVien = recentStaff.tenNhanVien;
+      }
+      newBill.tinhTrang = "Đã thanh toán";
+      api.updateBill(newBill, Id);
+      let updatedBills = bills.map((currRow, idx) => {
+        if (idx !== selectedRow) return currRow;
+        return newBill;
+      });
+      setBills(updatedBills);
+      setDisaleDiscount(true);
+      setRecentDiscount(null);
+      setRecentStaff(null);
+      alert("Lưu thành công");
+    }
+  };
+
+  const onSearch = async () => {
+    const searchResults = await api.getBillsBySearch(searchCriteria);
+    setBills(searchResults);
   };
 
   useEffect(() => {
     getBills();
+    getStaffs();
+    getDiscounts();
   }, []);
+
+  useEffect(() => {
+    if (!disableDiscount) {
+      setSoTienGiam((TongTienDT * recentDiscount.phanTram) / 100 || 0);
+      setTTSGG(TongTienDT - SoTienGiam);
+      setConNo(TongTienDT - SoTienGiam);
+      setNoSauThanhToan(TongTienDT - SoTienGiam);
+    }
+  }, [recentDiscount]);
 
   return (
     <div>
@@ -146,10 +195,10 @@ const BillManagement = (props) => {
                   <input
                     type="text"
                     className="form-control pb-2 pt-2 mb-2"
-                    id="MaHD"
-                    name="MaHD"
+                    id="maHoaDon"
+                    name="maHoaDon"
                     onChange={handleChange}
-                    value={searchCriteria.MaHD}
+                    value={searchCriteria.maHoaDon}
                   />
                 </div>
                 <div className="col-md-6">
@@ -157,10 +206,10 @@ const BillManagement = (props) => {
                   <input
                     type="text"
                     className="form-control pb-2 pt-2 mb-2"
-                    id="MaBN"
-                    name="MaBN"
+                    id="maBenhNhan"
+                    name="maBenhNhan"
                     onChange={handleChange}
-                    value={searchCriteria.MaBN}
+                    value={searchCriteria.maBenhNhan}
                   />
                 </div>
                 <div className="col-md-6">
@@ -168,20 +217,20 @@ const BillManagement = (props) => {
                   <input
                     type="text"
                     className="form-control pb-2 pt-2 mb-2"
-                    id="TenBN"
-                    name="TenBN"
+                    id="tenBenhNhan"
+                    name="tenBenhNhan"
                     onChange={handleChange}
-                    value={searchCriteria.TenBN}
+                    value={searchCriteria.tenBenhNhan}
                   />
                 </div>
                 <div className="col-md-6">
-                  <div className="mb-2">Ngày lập gần nhất</div>
+                  <div className="mb-2">Ngày lập</div>
                   <input
                     type="date"
                     className="form-control pb-3 pt-3"
-                    id="Ngay"
-                    name="Ngay"
-                    value={searchCriteria.Ngay}
+                    id="ngayLap"
+                    name="ngayLap"
+                    value={searchCriteria.ngayLap}
                     onChange={handleChange}
                   />
                 </div>
@@ -190,12 +239,12 @@ const BillManagement = (props) => {
                   <select
                     className="form-select pb-2 pt-2 mb-2"
                     aria-label="Chọn tình trạng"
-                    id="TinhTrang"
-                    name="TinhTrang"
+                    id="tinhTrang"
+                    name="tinhTrang"
                     onChange={handleChange}
-                    value={searchCriteria.TinhTrang}
+                    value={searchCriteria.tinhTrang}
                   >
-                    <option value="Tất cả">Tất cả</option>
+                    <option value="">Tất cả</option>
                     <option value="Đã thanh toán">Đã thanh toán</option>
                     <option value="Chưa thanh toán">Chưa thanh toán</option>
                   </select>
@@ -204,6 +253,7 @@ const BillManagement = (props) => {
                   <button
                     type="submit"
                     className="btn pb-2 pt-2 mt-2"
+                    onClick={onSearch}
                     style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
                   >
                     Tìm kiếm
@@ -330,12 +380,13 @@ const BillManagement = (props) => {
                     <th>Dịch vụ</th>
                     <th>Đơn giá</th>
                     <th>Số lượng</th>
+                    <th>Trả góp</th>
                   </tr>
                 </thead>
                 <tbody>
                   {CTHSDT !== null ? (
                     CTHSDT.DichVu.map((item, index) => {
-                      TongTienDT += item.DonGia;
+                      TongTienDT += parseInt(item.DonGia);
                       return (
                         <tr
                           key={item.Id}
@@ -344,6 +395,7 @@ const BillManagement = (props) => {
                           <td>{item.tenDichVu}</td>
                           <td>{item.DonGia}</td>
                           <td>{item.SL}</td>
+                          <td>{item.coTraGop}</td>
                         </tr>
                       );
                     })
@@ -365,7 +417,7 @@ const BillManagement = (props) => {
                 <tbody>
                   {CTHSDT !== null ? (
                     CTHSDT.Thuoc.map((item, index) => {
-                      TongTienThuoc += item.DonGia;
+                      TongTienThuoc += parseInt(item.DonGia);
                       return (
                         <tr key={index}>
                           <td>
@@ -412,33 +464,98 @@ const BillManagement = (props) => {
                       <th>{TongTienDT + TongTienThuoc}</th>
                     </tr>
                     <tr>
+                      <th>Mã giảm giá:</th>
+                      <th>
+                        {disableDiscount ? (
+                          <Select
+                            className="mb-2"
+                            value={recentDiscount}
+                            isDisabled
+                            onChange={(value) =>
+                              value !== null
+                                ? (setSoTienGiam(
+                                    (TongTienDT * value.phanTram) / 100
+                                  ),
+                                  setTTSGG(TongTienDT - SoTienGiam),
+                                  setConNo(TongTienDT - SoTienGiam),
+                                  setNoSauThanhToan(TongTienDT - SoTienGiam),
+                                  setRecentDiscount(value))
+                                : setRecentDiscount("")
+                            }
+                            options={maGiamGia}
+                            id="maGiamGia"
+                            getOptionLabel={(item) => item.maGiamGia}
+                            getOptionValue={(item) => item}
+                            placeholder={bills[selectedRow].maGiamGia}
+                          />
+                        ) : (
+                          <Select
+                            className="mb-2"
+                            value={recentDiscount}
+                            onChange={(value) =>
+                              value !== null
+                                ? (setSoTienGiam(
+                                    (TongTienDT * value.phanTram) / 100
+                                  ),
+                                  setTTSGG(TongTienDT - SoTienGiam),
+                                  setConNo(TongTienDT - SoTienGiam),
+                                  setRecentDiscount(value))
+                                : setRecentDiscount("")
+                            }
+                            options={maGiamGia}
+                            id="maGiamGia"
+                            getOptionLabel={(item) => item.maGiamGia}
+                            getOptionValue={(item) => item}
+                            placeholder=""
+                          />
+                        )}
+                      </th>
+                    </tr>
+                    <tr>
+                      <th>Số tiền giảm:</th>
+                      <th>{SoTienGiam}</th>
+                    </tr>
+                    <tr>
+                      <th>Thành tiền sau khi giảm:</th>
+                      <th>{ThanhTienSauGiamGia}</th>
+                    </tr>
+                    <tr>
                       <th>Công nợ trước thanh toán:</th>
-                      <th>{bills[selectedRow].conNo}</th>
+                      <th>{conNo}</th>
                     </tr>
                     <tr>
                       <th>Số tiền đã thanh toán:</th>
                       <th>
                         <input
-                          type="text"
+                          type="number"
                           className="signature"
-                          id="MaNV"
-                          name="MaNV"
+                          id="soTienDaThanhToan"
+                          name="soTienDaThanhToan"
                           size={1}
+                          onChange={(value) => {
+                            setNoSauThanhToan(
+                              conNo -
+                                parseInt(
+                                  document.getElementById("soTienDaThanhToan")
+                                    .value,
+                                  0
+                                )
+                            );
+                          }}
                           placeholder=""
+                          min={(20 * TongTienDT) / 100}
+                          max={TongTienDT - SoTienGiam}
                           style={{
                             width: "100%",
                             boxSizing: "border-box",
+                            fontWeight: "bold",
                           }}
                         />
                       </th>
                     </tr>
                     <tr>
                       <th> Công nợ sau thanh toán:</th>
-                      <th>{bills[selectedRow].daThanhToan}</th>
-                    </tr>
-                    <tr>
-                      <th>Thành tiền:</th>
-                      <th>900000</th>
+                      <th>{noSauThanhToan}</th>
                     </tr>
                   </tbody>
                 </table>
@@ -449,7 +566,34 @@ const BillManagement = (props) => {
                 </div>
                 <div style={{ height: "50px" }}></div>
                 <div className="mt-5">
-                  <input
+                  <Select
+                    className="mb-2"
+                    value={
+                      staffs.find(
+                        (item) => item.maNhanVien === recentStaff.maNhanVien
+                      ) || ""
+                    }
+                    onChange={(value) =>
+                      value !== null
+                        ? setRecentStaff({
+                            ...recentStaff,
+                            maNhanVien: value.maNhanVien,
+                            tenVatTu: value.tenNhanVien,
+                          })
+                        : setRecentStaff({
+                            ...recentStaff,
+                            maNhanVien: "",
+                            tenNhanVien: "",
+                          })
+                    }
+                    options={staffs}
+                    id="maNhanVien"
+                    isClearable
+                    getOptionLabel={(item) => item.maNhanVien}
+                    getOptionValue={(item) => item}
+                    placeholder=""
+                  />
+                  {/* <input
                     type="text"
                     className="text-end signature"
                     style={{
@@ -460,20 +604,48 @@ const BillManagement = (props) => {
                     id="MaNV"
                     name="MaNV"
                     placeholder="Nhập mã nhân viên"
-                  />
+                  /> */}
                 </div>
                 <div>
-                  <input
+                  <Select
+                    className="mb-2"
+                    value={
+                      staffs.find(
+                        (item) => item.maNhanVien === recentStaff.maNhanVien
+                      ) || ""
+                    }
+                    onChange={(value) =>
+                      value !== null
+                        ? setRecentStaff({
+                            ...recentStaff,
+                            maNhanVien: value.maNhanVien,
+                            tenVatTu: value.tenNhanVien,
+                          })
+                        : setRecentStaff({
+                            ...recentStaff,
+                            maNhanVien: "",
+                            tenNhanVien: "",
+                          })
+                    }
+                    options={staffs}
+                    isClearable
+                    id="tenNhanVien"
+                    getOptionLabel={(item) => item.tenNhanVien}
+                    getOptionValue={(item) => item}
+                    placeholder=""
+                  />
+                  {/* <input
                     type="text"
                     className="text-end signature"
                     style={{ fontSize: "19px", fontWeight: "bold" }}
                     id="TenNV"
                     name="TenNV"
                     placeholder="Nhập tên nhân viên"
-                  />
+                  /> */}
                 </div>
                 <button
                   type="submit"
+                  onClick={handleSubmit}
                   className="btn pb-2 pt-2 mt-3 mb-3"
                   style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
                 >

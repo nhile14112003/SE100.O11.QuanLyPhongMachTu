@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import moment from "moment";
 
 export const FormMaGiamGia = ({
   closeModal,
@@ -36,9 +37,9 @@ export const FormMaGiamGia = ({
       } else if (formState.phanTram > 100 || formState.phanTram <= 0) {
         setErrors("Phần trăm giảm giá phải lớn hơn 0 và không lớn hơn 100");
         return false;
-      } else if (formState.TGBatDau > formState.TGKetThuc) {
+      } else if (formState.TGBatDau >= formState.TGKetThuc) {
         setErrors(
-          "Thời gian kết thúc phải lớn hơn hoặc bằng thời gian bắt đầu"
+          "Thời gian kết thúc phải lớn hơn hoặc bằng thời gian bắt đầu 1 ngày"
         );
         return false;
       } else if (new Date() > formState.TGKetThuc) {
@@ -124,6 +125,7 @@ export const FormMaGiamGia = ({
               name="TGBatDau"
               onChange={handleChange}
               type="date"
+              min={moment().format("YYYY-MM-DD")}
               value={formState.TGBatDau}
             />
           </div>
@@ -133,6 +135,7 @@ export const FormMaGiamGia = ({
               name="TGKetThuc"
               onChange={handleChange}
               type="date"
+              min={moment().add(1, "day").format("YYYY-MM-DD")}
               value={formState.TGKetThuc}
             />
           </div>
