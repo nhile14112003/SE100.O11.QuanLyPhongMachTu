@@ -58,6 +58,18 @@ const {
 const {
   getTreatmentRecordDetailById,
 } = require("../controllers/TreatmentRecordDetail");
+const {
+  getAppointmentsBySearch,
+  addDocument,
+  deleteDocument,
+  updateDocument,
+  getAllDocuments,
+  getDocument,
+  addDoctorSchedule,
+  getDocumentByField,
+  updateDoctorSchedule,
+} = require("../controllers/Schedule");
+
 //user
 router.put("/setUserInfo/:userId", setUserInfo);
 router.post("/addUser", addUser);
@@ -99,6 +111,10 @@ router.get("/StaffManagement/Staffs", getStaffsBySearch);
 router.post("/StaffManagement/add", addStaff);
 router.put("/StaffManagement/update/:staffId", updateStaff);
 router.delete("/StaffManagement/delete/:staffId", deleteStaff);
+router.get("/StaffManagement/getAll/:dataName", getAllDocuments);
+router.post("/StaffManagement/add/:dataName", addDocument);
+router.put("/StaffManagement/:dataName/update/:id", updateDocument);
+router.delete("/StaffManagement/:dataName/delete/:id", deleteDocument);
 //Discount
 router.get("/DiscountManagement/getDiscounts", getAllDiscount);
 router.post("/DiscountManagement/add", addDiscount);
@@ -115,6 +131,23 @@ router.get("BillManagement/Bills", getBillsBySearch);
 router.get(
   "/TreatmentRecordDetailManagement/getTreatmentRecordDetailById/:cthsdtId",
   getTreatmentRecordDetailById
+);
+//Schedule
+router.get("/ScheduleManagement/getAppointments", getAppointmentsBySearch);
+router.get("/ScheduleManagement/getAll/:dataName", getAllDocuments);
+router.post("/ScheduleManagement/add/:dataName", addDocument);
+router.put("/ScheduleManagement/update/:dataName/:id", updateDocument);
+router.delete("/ScheduleManagement/delete/:dataName/:id", deleteDocument);
+router.get("/ScheduleManagement/get/:dataName/:id", getDocument);
+router.get(
+  "/ScheduleManagement/getByField/:dataName/:fieldName",
+  getDocumentByField
+);
+
+router.post("/ScheduleManagement/DoctorSchedule/add", addDoctorSchedule);
+router.put(
+  "/ScheduleManagement/DoctorSchedule/update/:id",
+  updateDoctorSchedule
 );
 
 module.exports = router;
