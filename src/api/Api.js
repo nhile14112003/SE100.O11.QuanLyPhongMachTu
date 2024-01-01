@@ -438,6 +438,102 @@ const getTreatmentRecordDetailById = async (id) => {
     return [];
   }
 };
+
+const addDoctorSchedule = async (data) => {
+  const endpoint = "/ScheduleManagement/DoctorSchedule/add";
+  try {
+    const response = await client.post(endpoint, data);
+    return response.data.docId;
+  } catch (error) {
+    console.log("error: ", error.message);
+  }
+};
+const updateDoctorSchedule = async (endpoint, data) => {
+  try {
+    const response = await client.put(endpoint, data);
+    return response.data.success;
+  } catch (error) {
+    console.error("error: ", error.message);
+  }
+};
+const addDoc = async (endpoint, data) => {
+  try {
+    const response = await client.post(endpoint, data);
+    return response.data.docId;
+  } catch (error) {
+    console.log("error: ", error.message);
+  }
+};
+
+const updateDoc = async (endpoint, data) => {
+  try {
+    const response = await client.put(endpoint, data);
+    return response.data.success;
+  } catch (error) {
+    console.error("error: ", error.message);
+  }
+};
+const deleteDoc = async (endpoint) => {
+  try {
+    const response = await client.delete(endpoint);
+    return response.data.success;
+  } catch (error) {
+    console.log("error: ", error.message);
+  }
+};
+const getDoc = async (endpoint) => {
+  try {
+    const response = await client.get(endpoint);
+    if (response.data.success) {
+      return response.data.item;
+    } else return null;
+  } catch (error) {
+    console.log("error: ", error.message);
+    return null;
+  }
+};
+const getDocs = async (endpoint) => {
+  try {
+    const response = await client.get(endpoint);
+    if (response.data.success) {
+      return response.data.list;
+    } else {
+      console.log("not get list");
+    }
+  } catch (error) {
+    console.log("error: ", error.message);
+    return [];
+  }
+};
+const getDocByField = async (endpoint) => {
+  try {
+    const response = await client.get(endpoint);
+    if (response.data.success) {
+      return response.data.list;
+    } else {
+      console.log("not get list");
+      return [];
+    }
+  } catch (error) {
+    console.log("error: ", error.message);
+    return [];
+  }
+};
+const getDocsBySeacrh = async (endpoint, searchCriteria) => {
+  try {
+    const queryParams = new URLSearchParams(searchCriteria).toString();
+    const response = await client.get(`${endpoint}?${queryParams}`);
+
+    if (response.data.success) {
+      return response.data.list;
+    }
+    return [];
+  } catch (error) {
+    console.log("error: ", error.message);
+    return [];
+  }
+};
+
 export default {
   getAllServices,
   addService,
@@ -476,4 +572,13 @@ export default {
   updateBill,
   getTreatmentRecordDetailById,
   getBillsBySearch,
+  addDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  getDoc,
+  getDocByField,
+  getDocsBySeacrh,
+  addDoctorSchedule,
+  updateDoctorSchedule,
 };

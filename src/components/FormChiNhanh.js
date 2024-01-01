@@ -1,24 +1,41 @@
 import React, { useState } from "react";
 
-export const FormChiNhanh = ({ closeModal, onSubmit, defaultValue, branchs }) => {
+export const FormChiNhanh = ({
+  closeModal,
+  onSubmit,
+  defaultValue,
+  branchs,
+}) => {
   const [formState, setFormState] = useState(
     defaultValue || {
       maChiNhanh: "",
       tenChiNhanh: "",
       soLuongPhong: "",
       diaChi: "",
-    } 
+    }
   );
   const [errors, setErrors] = useState("");
 
   const validateForm = () => {
-    if (formState.maChiNhanh!="" && formState.tenChiNhanh!="" && formState.diaChi!="" && formState.soLuongPhong!="") {
-      const isIdExists = branchs.some(branch => branch.maChiNhanh == formState.maChiNhanh);
-      if(!defaultValue && isIdExists){
-        setErrors("Mã chi nhánh này đã tồn tại! Vui lòng nhập một mã chi nhánh khác.");
+    if (
+      formState.maChiNhanh != "" &&
+      formState.tenChiNhanh != "" &&
+      formState.diaChi != "" &&
+      formState.soLuongPhong != ""
+    ) {
+      const isIdExists = branchs.some(
+        (branch) => branch.maChiNhanh == formState.maChiNhanh
+      );
+      if (
+        !defaultValue &&
+        defaultValue.maChiNhanh != formState.maChiNhanh &&
+        isIdExists
+      ) {
+        setErrors(
+          "Mã chi nhánh này đã tồn tại! Vui lòng nhập một mã chi nhánh khác."
+        );
         return false;
-      }
-      else {
+      } else {
         setErrors("");
         return true;
       }
@@ -26,16 +43,21 @@ export const FormChiNhanh = ({ closeModal, onSubmit, defaultValue, branchs }) =>
       let errorFields = [];
       for (const [key, value] of Object.entries(formState)) {
         if (value == "") {
-          switch (key){
-            case 'maChiNhanh': 
-              errorFields.push("Mã chi nhánh"); break;
-            case 'tenChiNhanh': 
-              errorFields.push("Tên chi nhánh"); break;
-            case 'soLuongPhong': 
-              errorFields.push("Số lượng phòng"); break;
-            case 'diaChi': 
-              errorFields.push("Địa chỉ"); break; 
-            default: break;         
+          switch (key) {
+            case "maChiNhanh":
+              errorFields.push("Mã chi nhánh");
+              break;
+            case "tenChiNhanh":
+              errorFields.push("Tên chi nhánh");
+              break;
+            case "soLuongPhong":
+              errorFields.push("Số lượng phòng");
+              break;
+            case "diaChi":
+              errorFields.push("Địa chỉ");
+              break;
+            default:
+              break;
           }
         }
       }
@@ -69,9 +91,11 @@ export const FormChiNhanh = ({ closeModal, onSubmit, defaultValue, branchs }) =>
         <form>
           <div className="form-group">
             <label for="maChiNhanh">Mã chi nhánh</label>
-            <input name="maChiNhanh" 
-            onChange={handleChange} 
-            value={formState.maChiNhanh} />
+            <input
+              name="maChiNhanh"
+              onChange={handleChange}
+              value={formState.maChiNhanh}
+            />
           </div>
           <div className="form-group">
             <label for="tenChiNhanh">Tên chi nhánh</label>
@@ -100,7 +124,7 @@ export const FormChiNhanh = ({ closeModal, onSubmit, defaultValue, branchs }) =>
               value={formState.soLuongPhong}
             />
           </div>
-          
+
           {errors && <div className="error">{errors}</div>}
           <button type="submit" className="btnSummit" onClick={handleSubmit}>
             Lưu

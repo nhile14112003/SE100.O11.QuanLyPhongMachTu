@@ -1,55 +1,75 @@
 import React, { useState } from "react";
 
-export const FormDichVu = ({ closeModal, onSubmit, defaultValue, services}) => {
+export const FormDichVu = ({
+  closeModal,
+  onSubmit,
+  defaultValue,
+  services,
+}) => {
   const [formState, setFormState] = useState(
     defaultValue || {
       maDichVu: "",
       tenDichVu: "",
       loaiDichVu: "",
       giaDichVu: "",
-      baoHanh: "Có",
-      coTraGop: "Có",
+      baoHanh: "Không",
+      coTraGop: "Không",
     }
   );
   const [errors, setErrors] = useState("");
 
   const validateForm = () => {
-    if (formState.maDichVu != "" && formState.tenDichVu != "" && formState.loaiDichVu != "" && formState.giaDichVu != "") {
-      const isIdExists = services.some(service => service.maDichVu == formState.maDichVu);
-      if(!defaultValue && isIdExists){
-        setErrors("Mã dịch vụ này đã tồn tại! Vui lòng nhập một mã dịch vụ khác.");
+    if (
+      formState.maDichVu != "" &&
+      formState.tenDichVu != "" &&
+      formState.loaiDichVu != "" &&
+      formState.giaDichVu != ""
+    ) {
+      const isIdExists = services.some(
+        (service) => service.maDichVu == formState.maDichVu
+      );
+      if (
+        !defaultValue &&
+        defaultValue.maDichVu != formState.maDichVu &&
+        isIdExists
+      ) {
+        setErrors(
+          "Mã dịch vụ này đã tồn tại! Vui lòng nhập một mã dịch vụ khác."
+        );
         return false;
-      }
-      else {
+      } else {
         setErrors("");
         return true;
       }
-    } 
-    else {
+    } else {
       let errorFields = [];
       for (const [key, value] of Object.entries(formState)) {
         if (value == "") {
-          switch (key){
-            case 'maDichVu': 
-              errorFields.push("Mã dịch vụ"); break;
-            case 'tenDichVu': 
-              errorFields.push("Tên dịch vụ"); break;
-            case 'loaiDichVu': 
-              errorFields.push("Loại dịch vụ"); break;
-            case 'giaDichVu': 
-              errorFields.push("Giá dịch vụ"); break; 
-            default: break;         
+          switch (key) {
+            case "maDichVu":
+              errorFields.push("Mã dịch vụ");
+              break;
+            case "tenDichVu":
+              errorFields.push("Tên dịch vụ");
+              break;
+            case "loaiDichVu":
+              errorFields.push("Loại dịch vụ");
+              break;
+            case "giaDichVu":
+              errorFields.push("Giá dịch vụ");
+              break;
+            default:
+              break;
           }
         }
       }
       setErrors("Vui lòng nhập: " + errorFields.join(", "));
       return false;
     }
-
   };
 
   const handleChange = (e) => {
-    setFormState({ ...formState, [e.target.name]: e.target.value })
+    setFormState({ ...formState, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
@@ -73,9 +93,11 @@ export const FormDichVu = ({ closeModal, onSubmit, defaultValue, services}) => {
         <form>
           <div className="form-group">
             <label for="maDichVu">Mã dịch vụ</label>
-            <input name="maDichVu" 
-            onChange={handleChange} 
-            value={formState.maDichVu} />
+            <input
+              name="maDichVu"
+              onChange={handleChange}
+              value={formState.maDichVu}
+            />
           </div>
           <div className="form-group">
             <label for="tenDichVu">Tên dịch vụ</label>
@@ -111,8 +133,8 @@ export const FormDichVu = ({ closeModal, onSubmit, defaultValue, services}) => {
               onChange={handleChange}
               value={formState.baoHanh}
             >
-              <option value="Có">Có</option>
               <option value="Không">Không</option>
+              <option value="Có">Có</option>
             </select>
           </div>
           <div className="form-group">
@@ -122,8 +144,8 @@ export const FormDichVu = ({ closeModal, onSubmit, defaultValue, services}) => {
               onChange={handleChange}
               value={formState.coTraGop}
             >
-              <option value="Có">Có</option>
               <option value="Không">Không</option>
+              <option value="Có">Có</option>
             </select>
           </div>
           {errors && <div className="error">{errors}</div>}

@@ -1,154 +1,282 @@
-import { useState } from "react";
-import moment from 'moment'
+import { useState, useEffect } from "react";
+import moment from "moment";
 import { FormBookingSchedule } from "../components/FormBookingSchedule";
+import Api from "../api/Api";
+
 const BookingSchedule = () => {
-    const [modalOpen, setModalOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(null);
-    const doctors = [
-        {
-            MaNS: "NS001",
-            TenNS: "Nguyễn Văn A",
-            HocVi: "Tiến sĩ",
-            KinhNghiem: "6",
-        },
-        {
-            MaNS: "NS003",
-            TenNS: "Ngô Nguyễn Trường An",
-            HocVi: "Tiến sĩ",
-            KinhNghiem: "3",
-        }
-    ]
-    const schedules = [
-        {
-            MaLH: "LH001",
-            TenBN: "Lê Văn Dần",
-            MaBN: "BN001",
-            TenNS: "Nguyễn Văn A",
-            MaNS: "NS001",
-            NgayHen: '2023-12-23',
-            GioBatDau: "08:00",
-            GioKetThuc: "08:30",
-            DichVu: "Nhổ răng khôn",
-            GhiChu: "",
-            TinhTrang: "Đã đặt"
-        },
-        {
-            MaLH: "LH002",
-            TenBN: "",
-            MaBN: "",
-            MaNS: "NS003",
-            TenNS: "Ngô Nguyễn Trường An",
-            NgayHen: '2023-12-27',
-            GioBatDau: "06:00",
-            GioKetThuc: "06:30",
-            DichVu: "Niềng răng",
-            GhiChu: "",
-            TinhTrang: "Trống"
-        },
-        {
-            MaLH: "LH004",
-            TenBN: "",
-            MaBN: "",
-            TenNS: "Nguyễn Văn A",
-            MaNS: "NS001",
-            NgayHen: '2023-12-27',
-            GioBatDau: "09:00",
-            GioKetThuc: "09:30",
-            DichVu: "Nhổ răng khôn",
-            GhiChu: "",
-            TinhTrang: "Trống"
-        },
-        {
-            MaLH: "LH003",
-            TenBN: "Lê Văn Sơn",
-            MaBN: "BN002",
-            MaNS: "NS003",
-            TenNS: "Ngô Nguyễn Trường An",
-            NgayHen: '2023-12-27',
-            GioBatDau: "15:00",
-            GioKetThuc: "15:30",
-            DichVu: "Niềng răng",
-            GhiChu: "",
-            TinhTrang: "Đã đặt"
-        }
-    ];
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [doctorSchedules, setDoctorSchedules] = useState();
+  const [doctors, setDoctors] = useState([]);
+  const [flag, setFlag] = useState("");
 
-    //set date picker for each doctors
-    const [dateDoctors, setDateDoctors] = useState(doctors.map(item => { return { ...item, date: moment().format('YYYY-MM-DD') } }))
+  useEffect(() => {
+    getDoctorSchedules();
+  }, []);
 
-    //change date for each doctor
-    const changeDate = (e, MaNS) => {
-        setDateDoctors(dateDoctors.map(item => item.MaNS === MaNS ? { ...item, date: e.target.value } : item));
+  const getDoctorSchedules = async () => {
+    const endpoint1 = "/ScheduleManagement/getAll/LichBacSi";
+    const doctorSchedules = await Api.getDocs(endpoint1);
+
+    const endpoint2 = "/ScheduleManagement/getAll/NhanVien";
+    const doctors = await Api.getDocs(endpoint2);
+
+    setDoctorSchedules(doctorSchedules);
+    setDoctors(
+      doctors.filter((item) => {
+        item.date = moment().format("YYYY-MM-DD");
+        return item.chucVu === "Nha sĩ";
+      })
+    );
+  };
+
+  const changeDate = (e, MaNS) => {
+    setDoctors(
+      doctors.map((item) =>
+        item.maNhanVien === MaNS ? { ...item, date: e.target.value } : item
+      )
+    );
+  };
+
+  const handleSubmit = async (newData) => {
+    if (flag == "add") {
+      const endpoint = "/ScheduleManagement/add/LichHen";
+      const id = await Api.addDoc(endpoint, newData);
+
+      const newWorkTime = {
+        gio: selectedItem.selectedWorkTime.gio,
+        maLichHen: id,
+      };
+
+      const newWorkTimes = selectedItem.workTimes.map((item) =>
+        item.gio === newWorkTime.gio ? newWorkTime : item
+      );
+
+      selectedItem.doctorSchedule.lich[
+        convertDateFormat(selectedItem.doctor.date)
+      ] = newWorkTimes;
+      const newDoctorSchedule = selectedItem.doctorSchedule;
+      const endpoint2 =
+        "/ScheduleManagement/update/LichBacSi/" +
+        selectedItem.doctorSchedule.Id;
+      console.log(newDoctorSchedule);
+      const success = await Api.updateDoc(endpoint2, newDoctorSchedule);
+
+      if (success) {
+        setDoctorSchedules(
+          doctorSchedules.map((item) =>
+            item.Id == newDoctorSchedule.Id ? newDoctorSchedule : item
+          )
+        );
+      }
+    } else if (flag == "edit") {
+      const endpoint = "/ScheduleManagement/update/LichHen/" + newData.Id;
+      const success = await Api.updateDoc(endpoint, newData);
     }
+  };
 
-    const handleSubmit = () => {
+  const handleDelete = async (formData) => {
+    const endpoint = "/ScheduleManagement/delete/LichHen/" + formData.Id;
+    const success = await Api.deleteDoc(endpoint);
+    if (success) {
+      const newWorkTime = {
+        gio: selectedItem.selectedWorkTime.gio,
+        maLichHen: null,
+      };
 
+      const newWorkTimes = selectedItem.workTimes.map((item) =>
+        item.gio === newWorkTime.gio ? newWorkTime : item
+      );
+
+      selectedItem.doctorSchedule.lich[
+        convertDateFormat(selectedItem.doctor.date)
+      ] = newWorkTimes;
+      const newDoctorSchedule = selectedItem.doctorSchedule;
+      const endpoint2 =
+        "/ScheduleManagement/update/LichBacSi/" +
+        selectedItem.doctorSchedule.Id;
+      console.log(newDoctorSchedule);
+      const success2 = await Api.updateDoc(endpoint2, newDoctorSchedule);
+
+      if (success2) {
+        setDoctorSchedules(
+          doctorSchedules.map((item) =>
+            item.Id == newDoctorSchedule.Id ? newDoctorSchedule : item
+          )
+        );
+      }
     }
-    const setItemToEdit = (id) => {
-        setSelectedItem(id);
-        setModalOpen(true);
+  };
+
+  const setItemToEdit = async (worktime, doctor) => {
+    const doctorSchedule = doctorSchedules.find((item1) => {
+      return (
+        doctor.maNhanVien === item1.maNS &&
+        new Date(doctor.date).getMonth() + 1 === parseInt(item1.thang) &&
+        new Date(doctor.date).getFullYear() === parseInt(item1.nam)
+      );
+    });
+    if (worktime.maLichHen === null) {
+      setFlag("add");
+      const appointment = {
+        MaBN: "",
+        TenBN: "",
+        SDT: "",
+        MaNS: doctor.maNhanVien,
+        TenNS: doctor.tenNhanVien,
+        NgayHen: doctor.date,
+        Gio: worktime.gio,
+        DichVu: "",
+        GhiChu: "",
+        TinhTrang: "Đang chờ",
+      };
+      setSelectedItem({
+        appointment: appointment,
+        doctor: doctor,
+        doctorSchedule: doctorSchedule,
+        workTimes: doctorSchedule.lich[convertDateFormat(doctor.date)],
+        selectedWorkTime: worktime,
+      });
+      setModalOpen(true);
+    } else {
+      setFlag("edit");
+      const endpoint = "/ScheduleManagement/get/LichHen/" + worktime.maLichHen;
+      const appointment = await Api.getDoc(endpoint);
+      setSelectedItem({
+        appointment: { ...appointment, Id: worktime.maLichHen },
+        doctor: doctor,
+        doctorSchedule: doctorSchedule,
+        workTimes: doctorSchedule.lich[convertDateFormat(doctor.date)],
+        selectedWorkTime: worktime,
+      });
+      setModalOpen(true);
     }
-    return (
-        <div>
-            {dateDoctors.map((item) => {
-                return (
-                    <div className="row p-2 mt-3" style={{ border: "2px solid grey", borderRadius: "5px", boxShadow: "3px 3px #888888" }}>
-                        <div className="col-lg-6 mt-2">
-                            <div className="row justify-content-center align-items-center">
-                                <div className="col-auto">
-                                    <img alt="" src="/images/ava.png" style={{ borderRadius: "50%", width: "100px" }} />
-                                </div>
-                                <div className="col">
-                                    <div>{item.HocVi}, Nha sĩ {item.TenNS}</div>
-                                    <div>Kinh nghiệm: {item.KinhNghiem} năm</div>
-                                </div>
-                            </div>
+  };
+
+  function convertDateFormat(targetDate) {
+    const parts = targetDate.split("-");
+    const formattedDate = `${parseInt(parts[2])}/${parseInt(
+      parts[1]
+    )}/${parseInt(parts[0])}`;
+    return formattedDate;
+  }
+
+  function getWorkTimes(item) {
+    const doctorSchedule = doctorSchedules.find((item1) => {
+      return (
+        item.maNhanVien === item1.maNS &&
+        new Date(item.date).getMonth() + 1 === parseInt(item1.thang) &&
+        new Date(item.date).getFullYear() === parseInt(item1.nam)
+      );
+    });
+    return doctorSchedule.lich[convertDateFormat(item.date)];
+  }
+
+  function getWorkTime(item) {
+    return doctorSchedules.find((item1) => {
+      return (
+        item.maNhanVien === item1.maNS &&
+        new Date(item.date).getMonth() + 1 === parseInt(item1.thang) &&
+        new Date(item.date).getFullYear() === parseInt(item1.nam) &&
+        item1.lich[convertDateFormat(item.date)].length !== 0
+      );
+    });
+  }
+
+  return (
+    <div>
+      {doctors.map((item) => {
+        return (
+          <div
+            className="row p-2 mt-3"
+            style={{
+              border: "2px solid grey",
+              borderRadius: "5px",
+              boxShadow: "3px 3px #888888",
+            }}
+          >
+            <div className="col-lg-6 mt-2">
+              <div className="row justify-content-center align-items-center">
+                <div className="col-auto">
+                  <img
+                    alt=""
+                    src="/images/ava.png"
+                    style={{ borderRadius: "50%", width: "100px" }}
+                  />
+                </div>
+                <div className="col">
+                  <div>
+                    {item.bangCap}, {item.tenNhanVien}
+                  </div>
+                  <div>Kinh nghiệm: {item.kinhNghiem}</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-lg-6">
+              <div className="datepicker-wrp">
+                <div className="btn-wrp">
+                  <input
+                    type="date"
+                    className="btn-clck"
+                    value={item.date}
+                    min={moment().format("YYYY-MM-DD")}
+                    onChange={(e) => changeDate(e, item.maNhanVien)}
+                  />
+                </div>
+                <button className="btn btnIconDate">
+                  <img alt="" src="/images/dropdown.png" />
+                </button>
+              </div>
+              <div
+                style={{
+                  height: "340px",
+                  overflowY: "auto",
+                  fontWeight: "bold",
+                }}
+              >
+                <div className="row ms-0 me-0" style={{ fontWeight: "bold" }}>
+                  {!getWorkTime(item) ? (
+                    <div className="mt-3">Không có lịch</div>
+                  ) : (
+                    getWorkTimes(item).map((worktime, index) => {
+                      return (
+                        <div className="col-auto" style={{ cursor: "default" }}>
+                          <div
+                            className="mt-3 p-2"
+                            style={{
+                              backgroundColor:
+                                worktime.maLichHen !== null
+                                  ? "#bfbfbf"
+                                  : "#0096FF",
+                            }}
+                            onClick={() => setItemToEdit(worktime, item)}
+                          >
+                            {worktime.gio}
+                          </div>
                         </div>
-
-                        <div className="col-lg-6">
-                            <div className="datepicker-wrp">
-                                <div className="btn-wrp">
-                                    <input type="date" className="btn-clck" value={item.date} min={moment().format('YYYY-MM-DD')} onChange={(e) => changeDate(e, item.MaNS)} />
-                                </div>
-                                <button className="btn btnIconDate">
-                                    <img alt="" src="/images/dropdown.png" />
-                                </button>
-                            </div>
-                            <div style={{ height: "340px", overflowY: "auto", fontWeight: "bold" }}>
-                                <div className="row ms-0 me-0" style={{ fontWeight: "bold" }}>
-                                    {schedules.filter((item1) => item1.NgayHen === item.date && item.MaNS === item1.MaNS).length === 0 ?
-                                        <div className="mt-3">
-                                            Không có lịch
-                                        </div>
-                                        : (schedules.filter((item1) => item1.NgayHen === item.date && item.MaNS === item1.MaNS)).map((item, index) => {
-                                            return (
-                                                <div className="col-auto" style={{ cursor: "default" }}>
-                                                    <div className="mt-3 p-2" style={{ backgroundColor: item.TinhTrang === "Đã đặt" ? "#bfbfbf" : "#0096FF" }} onClick={() => setItemToEdit(item)}>
-                                                        {item.GioBatDau} - {item.GioKetThuc}
-                                                    </div>
-                                                </div>
-                                            )
-                                        })}
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            })}
-            {modalOpen && (
-                <FormBookingSchedule
-                    closeModal={() => {
-                        setModalOpen(false);
-                        setSelectedItem(null);
-                    }}
-                    onSubmit={handleSubmit}
-                    defaultValue={selectedItem !== null && selectedItem}
-                    schedules={schedules}
-                />
-            )}
-
-        </div >
-    )
-}
-export default BookingSchedule
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+      {modalOpen && (
+        <FormBookingSchedule
+          closeModal={() => {
+            setModalOpen(false);
+            setSelectedItem(null);
+          }}
+          onSubmit={handleSubmit}
+          onDelete={handleDelete}
+          defaultValue={selectedItem !== null && selectedItem.appointment}
+          flag={flag}
+        />
+      )}
+    </div>
+  );
+};
+export default BookingSchedule;

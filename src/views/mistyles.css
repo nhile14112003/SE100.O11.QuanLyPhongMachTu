@@ -321,6 +321,14 @@ iframe {
   margin-bottom: 1rem;
 }
 
+.success-message {
+  background-color: #c6ecf7;
+  color: #1838a3;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  margin-bottom: 1rem;
+}
+
 .btnSummit {
   margin-top: 1rem;
   border: none;
