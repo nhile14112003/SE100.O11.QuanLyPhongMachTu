@@ -103,7 +103,7 @@ const MaterialUsed = () => {
                             <td>{item.maVatTu}</td>
                             <td>{item.tenVatTu}</td>
                             <td>{item.SL}</td>
-                            <td>{item.donGiaNhap}</td>
+                            <td>{new Intl.NumberFormat('en-DE').format(item.donGiaNhap)}</td>
                             <td>{item.NgaySuDung}</td>
                             <td className="fit">
                                 <span className="actions">

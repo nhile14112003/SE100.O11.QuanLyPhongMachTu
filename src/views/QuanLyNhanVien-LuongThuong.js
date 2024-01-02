@@ -87,7 +87,7 @@ const LuongThuong = () => {
           {bonuses.map((item, index) => (
             <tr key={index}>
               <td>{item.LoaiLuongThuong}</td>
-              <td>{item.Tien}</td>
+              <td>{new Intl.NumberFormat('en-DE').format(item.Tien)}</td>
               <td>{item.GhiChu}</td>
               <td>{item.Thang}</td>
               <td>{item.Nam}</td>

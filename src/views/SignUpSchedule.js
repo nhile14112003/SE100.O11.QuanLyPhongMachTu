@@ -158,16 +158,16 @@ const SignUpSchedule = () => {
       scheduleSignedUp.map((item) =>
         item.Thu === Thu
           ? {
-              ...item,
-              [Buoi]: !GiaTri,
-            }
+            ...item,
+            [Buoi]: !GiaTri,
+          }
           : item
       )
     );
   };
 
   return (
-    <div className="row g-0">
+    <div>
       <div className="mb-3">
         <h1 className="noteVND">**Sáng: 8h-12h</h1>
         <h1 className="noteVND">**Chiều: 13h-17h </h1>
@@ -182,95 +182,99 @@ const SignUpSchedule = () => {
           <option value="next">Đăng ký lịch tháng sau</option>
         </select>
       </div>
-      {selectedMonth === "current" &&
-        currentSchedule.map((item, index) => (
-          <div
-            className="col-lg col-auto seven-color text-center"
-            style={{ color: "#FFF" }}
-          >
+      <div className="row g-0">
+        {selectedMonth === "current" &&
+          currentSchedule.map((item, index) => (
             <div
-              className="wrapcolor d-flex align-items-center justify-content-center"
-              style={{ height: "65px" }}
+              className="col-lg col-auto seven-color text-center"
+              style={{ color: "#FFF" }}
             >
-              <b>{item.Thu}</b>
+              <div
+                className="wrapcolor d-flex align-items-center justify-content-center"
+                style={{ height: "65px" }}
+              >
+                <b>{item.Thu}</b>
+              </div>
+              <div className="p-3">
+                <div
+                  className="mb-3 p-2"
+                  style={{
+                    backgroundColor: item.Sang ? "#bfbfbf" : "#0096FF",
+                    borderRadius: "10px",
+                  }}
+                >
+                  Sáng
+                </div>
+                <div
+                  className="mb-3 p-2"
+                  style={{
+                    backgroundColor: item.Chieu ? "#bfbfbf" : "#0096FF",
+                    borderRadius: "10px",
+                  }}
+                >
+                  Chiều
+                </div>
+                <div
+                  className="mb-3 p-2"
+                  style={{
+                    backgroundColor: item.Toi ? "#bfbfbf" : "#0096FF",
+                    borderRadius: "10px",
+                  }}
+                >
+                  Tối
+                </div>
+              </div>
             </div>
-            <div className="p-3">
-              <div
-                className="mb-3 p-2"
-                style={{
-                  backgroundColor: item.Sang ? "#bfbfbf" : "#0096FF",
-                  borderRadius: "10px",
-                }}
-              >
-                Sáng
-              </div>
-              <div
-                className="mb-3 p-2"
-                style={{
-                  backgroundColor: item.Chieu ? "#bfbfbf" : "#0096FF",
-                  borderRadius: "10px",
-                }}
-              >
-                Chiều
-              </div>
-              <div
-                className="mb-3 p-2"
-                style={{
-                  backgroundColor: item.Toi ? "#bfbfbf" : "#0096FF",
-                  borderRadius: "10px",
-                }}
-              >
-                Tối
-              </div>
-            </div>
-          </div>
-        ))}
-      {selectedMonth === "next" &&
-        scheduleSignedUp.map((item, index) => (
-          <div
-            className="col-lg col-auto seven-color text-center"
-            style={{ color: "#FFF" }}
-          >
+          ))}
+      </div>
+      <div className="row g-0">
+        {selectedMonth === "next" &&
+          scheduleSignedUp.map((item, index) => (
             <div
-              className="wrapcolor d-flex align-items-center justify-content-center"
-              style={{ height: "65px" }}
+              className="col-lg col-auto seven-color text-center"
+              style={{ color: "#FFF" }}
             >
-              <b>{item.Thu}</b>
+              <div
+                className="wrapcolor d-flex align-items-center justify-content-center"
+                style={{ height: "65px" }}
+              >
+                <b>{item.Thu}</b>
+              </div>
+              <div className="p-3">
+                <div
+                  className="mb-3 p-2"
+                  style={{
+                    backgroundColor: item.Sang ? "#bfbfbf" : "#0096FF",
+                    borderRadius: "10px",
+                  }}
+                  onClick={() => handleChange(item.Thu, "Sang", item.Sang)}
+                >
+                  Sáng
+                </div>
+                <div
+                  className="mb-3 p-2"
+                  style={{
+                    backgroundColor: item.Chieu ? "#bfbfbf" : "#0096FF",
+                    borderRadius: "10px",
+                  }}
+                  onClick={() => handleChange(item.Thu, "Chieu", item.Chieu)}
+                >
+                  Chiều
+                </div>
+                <div
+                  className="mb-3 p-2"
+                  style={{
+                    backgroundColor: item.Toi ? "#bfbfbf" : "#0096FF",
+                    borderRadius: "10px",
+                  }}
+                  onClick={() => handleChange(item.Thu, "Toi", item.Toi)}
+                >
+                  Tối
+                </div>
+              </div>
             </div>
-            <div className="p-3">
-              <div
-                className="mb-3 p-2"
-                style={{
-                  backgroundColor: item.Sang ? "#bfbfbf" : "#0096FF",
-                  borderRadius: "10px",
-                }}
-                onClick={() => handleChange(item.Thu, "Sang", item.Sang)}
-              >
-                Sáng
-              </div>
-              <div
-                className="mb-3 p-2"
-                style={{
-                  backgroundColor: item.Chieu ? "#bfbfbf" : "#0096FF",
-                  borderRadius: "10px",
-                }}
-                onClick={() => handleChange(item.Thu, "Chieu", item.Chieu)}
-              >
-                Chiều
-              </div>
-              <div
-                className="mb-3 p-2"
-                style={{
-                  backgroundColor: item.Toi ? "#bfbfbf" : "#0096FF",
-                  borderRadius: "10px",
-                }}
-                onClick={() => handleChange(item.Thu, "Toi", item.Toi)}
-              >
-                Tối
-              </div>
-            </div>
-          </div>
-        ))}
+          ))}
+      </div>
       {selectedMonth === "next" && (
         <div className="text-end">
           <button

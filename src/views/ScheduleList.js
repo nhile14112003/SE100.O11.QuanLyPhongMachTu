@@ -157,11 +157,6 @@ const ScheduleList = () => {
               <td>{item.Gio}</td>
               <td>{item.DichVu}</td>
               <td>{item.GhiChu}</td>
-              <td className="fit">
-                {/* <span className="actions">
-                  <BsFillTrashFill className="delete-btn" />
-                </span> */}
-              </td>
             </tr>
           ))}
         </tbody>

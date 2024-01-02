@@ -166,8 +166,8 @@ const QuanLyThuoc = (props) => {
                             <td>{row.tenThuoc}</td>
                             <td>{row.soLuongNhap}</td>
                             <td>{row.soLuongTonKho}</td>
-                            <td>{row.donGiaNhap}</td>
-                            <td>{row.donGia}</td>
+                            <td>{new Intl.NumberFormat('en-DE').format(row.donGiaNhap)}</td>
+                            <td>{new Intl.NumberFormat('en-DE').format(row.donGia)}</td>
                             <td>{row.hanSuDung}</td>
                             <td>{row.ngayNhap}</td>
                             <td className="fit">

@@ -142,7 +142,7 @@ const QuanLyTrangThietBi = (props) => {
                             <td>{row.tenVatTu}</td>
                             <td>{row.soLuongNhap}</td>
                             <td>{row.soLuongTonKho}</td>
-                            <td>{row.donGiaNhap}</td>
+                            <td>{new Intl.NumberFormat('en-DE').format(row.donGiaNhap)}</td>
                             <td>{row.ngayNhap}</td>
                             <td className="fit">
                                 <span className="actions">

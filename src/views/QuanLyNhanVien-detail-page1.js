@@ -137,10 +137,10 @@ const XemBangLuong = (props) => {
             <tr key={index}>
               <td>{item.MaNV}</td>
               <td>{item.TenNV}</td>
-              <td>{item.LuongGio}</td>
+              <td>{new Intl.NumberFormat('en-DE').format(item.LuongGio)}</td>
               <td>{item.SoGioLam}</td>
-              <td>{item.LuongThuong}</td>
-              <td>{item.TongLuong}</td>
+              <td>{new Intl.NumberFormat('en-DE').format(item.LuongThuong)}</td>
+              <td>{new Intl.NumberFormat('en-DE').format(item.TongLuong)}</td>
             </tr>
           ))}
         </tbody>

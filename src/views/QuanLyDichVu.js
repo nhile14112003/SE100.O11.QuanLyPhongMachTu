@@ -33,7 +33,7 @@ const QuanLyDichVu = (props) => {
         if (shouldDelete) {
             setServices(services.filter((_, idx) => idx !== targetIndex));
             api.deleteService(services[targetIndex].Id);
-        } 
+        }
     };
 
     const handleEditRow = (idx) => {
@@ -41,9 +41,9 @@ const QuanLyDichVu = (props) => {
         setModalOpen(true);
     };
 
-    const handleSubmit = async (newRow) => {  
-        console.log(newRow);  
-        if(rowToEdit == null){
+    const handleSubmit = async (newRow) => {
+        console.log(newRow);
+        if (rowToEdit == null) {
             const id = await api.addService(newRow);
             newRow.Id = id;
             setServices([...services, newRow]);
@@ -60,12 +60,12 @@ const QuanLyDichVu = (props) => {
 
     const handleChange = (e) => {
         setSearchCriteria({ ...searchCriteria, [e.target.name]: e.target.value });
-      };
-    
+    };
+
     const onSearch = async () => {
         console.log(searchCriteria)
 
-        const searchResults = await api.getServicesBySeacrh(searchCriteria);        
+        const searchResults = await api.getServicesBySeacrh(searchCriteria);
         console.log(searchResults);
         setServices(searchResults);
     }
@@ -73,19 +73,19 @@ const QuanLyDichVu = (props) => {
         <div>
             <div className="mb-3 mt-3">
                 <input className="block m-2 px-4 customBox" type="text" id="maDichVu" placeholder="Nhập mã dịch vụ" name="maDichVu" value={searchCriteria.maDichVu}
-                onChange={handleChange} />
+                    onChange={handleChange} />
                 <input className="block m-2 px-4 customBox" type="text" id="tenDichVu" placeholder="Nhập tên dịch vụ" name="tenDichVu" value={searchCriteria.tenDichVu}
-                onChange={handleChange} />
+                    onChange={handleChange} />
                 <input className="block m-2 px-4 customBox" type="text" id="loaiDichVu" placeholder="Nhập loại dịch vụ" name="loaiDichVu" value={searchCriteria.loaiDichVu}
-                onChange={handleChange} />
+                    onChange={handleChange} />
                 <div>
-                <text>Đơn giá:  Từ </text>
-                <input className="block m-2 px-4 customBox" type="number" placeholder="0" name="giaDau" value={searchCriteria.giaDau}
-                onChange={handleChange} />
-                <text>đến</text>
-                <input className="block m-2 px-4 customBox" type="number" placeholder="1000000000" name="giaCuoi" value={searchCriteria.giaCuoi}
-                onChange={handleChange} />
-                </div>              
+                    <text>Đơn giá:  Từ </text>
+                    <input className="block m-2 px-4 customBox" type="number" placeholder="0" name="giaDau" value={searchCriteria.giaDau}
+                        onChange={handleChange} />
+                    <text>đến</text>
+                    <input className="block m-2 px-4 customBox" type="number" placeholder="1000000000" name="giaCuoi" value={searchCriteria.giaCuoi}
+                        onChange={handleChange} />
+                </div>
             </div>
             <button
                 onClick={onSearch}
@@ -110,49 +110,49 @@ const QuanLyDichVu = (props) => {
                     </tr>
                 </thead>
                 {services.map((row, idx) => {
-                    
+
                     return (
-                    <tr key={row.Id}>
-                        <td>{row.maDichVu}</td>
-                        <td>{row.tenDichVu}</td>
-                        <td>{row.loaiDichVu}</td>
-                        <td>{row.giaDichVu}</td>
-                        <td>
-                        {row.baoHanh}
-                        </td>
-                        <td>
-                        {row.coTraGop}
-                        </td>
-                        <td className="fit">
-                            <span className="actions">
-                                <BsFillTrashFill
-                                className="delete-btn"
-                                onClick={() => handleDeleteRow(idx)}
-                                />
-                                <BsFillPencilFill
-                                className="edit-btn"
-                                onClick={() => handleEditRow(idx)}
-                                />
-                            </span>
-                        </td>
-                    </tr>
+                        <tr key={row.Id}>
+                            <td>{row.maDichVu}</td>
+                            <td>{row.tenDichVu}</td>
+                            <td>{row.loaiDichVu}</td>
+                            <td>{new Intl.NumberFormat('en-DE').format(row.giaDichVu)}</td>
+                            <td>
+                                {row.baoHanh}
+                            </td>
+                            <td>
+                                {row.coTraGop}
+                            </td>
+                            <td className="fit">
+                                <span className="actions">
+                                    <BsFillTrashFill
+                                        className="delete-btn"
+                                        onClick={() => handleDeleteRow(idx)}
+                                    />
+                                    <BsFillPencilFill
+                                        className="edit-btn"
+                                        onClick={() => handleEditRow(idx)}
+                                    />
+                                </span>
+                            </td>
+                        </tr>
                     );
-                    })}
-                    
+                })}
+
                 <tbody>
                 </tbody>
             </table>
-            {modalOpen &&(
-        <FormDichVu
-        closeModal={() => {
-            setModalOpen(false);
-            setRowToEdit(null);
-          }}
-          onSubmit={handleSubmit}
-          defaultValue={rowToEdit !== null && services[rowToEdit]}
-          services={services}
-        />
-      )}
+            {modalOpen && (
+                <FormDichVu
+                    closeModal={() => {
+                        setModalOpen(false);
+                        setRowToEdit(null);
+                    }}
+                    onSubmit={handleSubmit}
+                    defaultValue={rowToEdit !== null && services[rowToEdit]}
+                    services={services}
+                />
+            )}
         </div>
     );
 }

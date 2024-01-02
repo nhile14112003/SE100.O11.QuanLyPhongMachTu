@@ -380,7 +380,7 @@ const BillManagement = (props) => {
                     <th>Dịch vụ</th>
                     <th>Đơn giá</th>
                     <th>Số lượng</th>
-                    <th>Trả góp</th>
+                    <th>Có trả góp hay không</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -393,7 +393,7 @@ const BillManagement = (props) => {
                           onClick={() => setSelectedRowById(index)}
                         >
                           <td>{item.tenDichVu}</td>
-                          <td>{item.DonGia}</td>
+                          <td>{new Intl.NumberFormat('en-DE').format(item.DonGia)}</td>
                           <td>{item.SL}</td>
                           <td>{item.coTraGop}</td>
                         </tr>
@@ -405,7 +405,7 @@ const BillManagement = (props) => {
                 </tbody>
               </table>
               <div style={{ fontSize: "18px" }}>
-                <b>Tổng tiền điều trị: {TongTienDT}</b>
+                <b>Tổng tiền điều trị: {new Intl.NumberFormat('en-DE').format(TongTienDT)}</b>
               </div>
               <div
                 align="center"
@@ -436,7 +436,7 @@ const BillManagement = (props) => {
                             </div>
                           </td>
                           <td>{item.SL} viên</td>
-                          <td>{item.DonGia}/viên</td>
+                          <td>{new Intl.NumberFormat('en-DE').format(item.DonGia)}/viên</td>
                         </tr>
                       );
                     })
@@ -446,7 +446,7 @@ const BillManagement = (props) => {
                 </tbody>
               </table>
               <div style={{ fontSize: "18px" }}>
-                <b>Tổng tiền thuốc: {TongTienThuoc}</b>
+                <b>Tổng tiền thuốc: {new Intl.NumberFormat('en-DE').format(TongTienThuoc)}</b>
               </div>
 
               <div align="right" className="mt-3">
@@ -461,21 +461,20 @@ const BillManagement = (props) => {
                   <tbody>
                     <tr>
                       <th>Thành tiền:</th>
-                      <th>{TongTienDT + TongTienThuoc}</th>
+                      <th>{new Intl.NumberFormat('en-DE').format(TongTienDT + TongTienThuoc)}</th>
                     </tr>
                     <tr>
                       <th>Mã giảm giá:</th>
                       <th>
                         {disableDiscount ? (
                           <Select
-                            className="mb-2"
                             value={recentDiscount}
                             isDisabled
                             onChange={(value) =>
                               value !== null
                                 ? (setSoTienGiam(
-                                    (TongTienDT * value.phanTram) / 100
-                                  ),
+                                  (TongTienDT * value.phanTram) / 100
+                                ),
                                   setTTSGG(TongTienDT - SoTienGiam),
                                   setConNo(TongTienDT - SoTienGiam),
                                   setNoSauThanhToan(TongTienDT - SoTienGiam),
@@ -490,13 +489,12 @@ const BillManagement = (props) => {
                           />
                         ) : (
                           <Select
-                            className="mb-2"
                             value={recentDiscount}
                             onChange={(value) =>
                               value !== null
                                 ? (setSoTienGiam(
-                                    (TongTienDT * value.phanTram) / 100
-                                  ),
+                                  (TongTienDT * value.phanTram) / 100
+                                ),
                                   setTTSGG(TongTienDT - SoTienGiam),
                                   setConNo(TongTienDT - SoTienGiam),
                                   setRecentDiscount(value))
@@ -513,15 +511,15 @@ const BillManagement = (props) => {
                     </tr>
                     <tr>
                       <th>Số tiền giảm:</th>
-                      <th>{SoTienGiam}</th>
+                      <th>{new Intl.NumberFormat('en-DE').format(SoTienGiam)}</th>
                     </tr>
                     <tr>
                       <th>Thành tiền sau khi giảm:</th>
-                      <th>{ThanhTienSauGiamGia}</th>
+                      <th>{new Intl.NumberFormat('en-DE').format(ThanhTienSauGiamGia)}</th>
                     </tr>
                     <tr>
                       <th>Công nợ trước thanh toán:</th>
-                      <th>{conNo}</th>
+                      <th>{new Intl.NumberFormat('en-DE').format(conNo)}</th>
                     </tr>
                     <tr>
                       <th>Số tiền đã thanh toán:</th>
@@ -535,11 +533,11 @@ const BillManagement = (props) => {
                           onChange={(value) => {
                             setNoSauThanhToan(
                               conNo -
-                                parseInt(
-                                  document.getElementById("soTienDaThanhToan")
-                                    .value,
-                                  0
-                                )
+                              parseInt(
+                                document.getElementById("soTienDaThanhToan")
+                                  .value,
+                                0
+                              )
                             );
                           }}
                           placeholder=""
@@ -555,7 +553,7 @@ const BillManagement = (props) => {
                     </tr>
                     <tr>
                       <th> Công nợ sau thanh toán:</th>
-                      <th>{noSauThanhToan}</th>
+                      <th>{new Intl.NumberFormat('en-DE').format(noSauThanhToan)}</th>
                     </tr>
                   </tbody>
                 </table>
@@ -576,15 +574,15 @@ const BillManagement = (props) => {
                     onChange={(value) =>
                       value !== null
                         ? setRecentStaff({
-                            ...recentStaff,
-                            maNhanVien: value.maNhanVien,
-                            tenVatTu: value.tenNhanVien,
-                          })
+                          ...recentStaff,
+                          maNhanVien: value.maNhanVien,
+                          tenVatTu: value.tenNhanVien,
+                        })
                         : setRecentStaff({
-                            ...recentStaff,
-                            maNhanVien: "",
-                            tenNhanVien: "",
-                          })
+                          ...recentStaff,
+                          maNhanVien: "",
+                          tenNhanVien: "",
+                        })
                     }
                     options={staffs}
                     id="maNhanVien"
@@ -617,15 +615,15 @@ const BillManagement = (props) => {
                     onChange={(value) =>
                       value !== null
                         ? setRecentStaff({
-                            ...recentStaff,
-                            maNhanVien: value.maNhanVien,
-                            tenVatTu: value.tenNhanVien,
-                          })
+                          ...recentStaff,
+                          maNhanVien: value.maNhanVien,
+                          tenVatTu: value.tenNhanVien,
+                        })
                         : setRecentStaff({
-                            ...recentStaff,
-                            maNhanVien: "",
-                            tenNhanVien: "",
-                          })
+                          ...recentStaff,
+                          maNhanVien: "",
+                          tenNhanVien: "",
+                        })
                     }
                     options={staffs}
                     isClearable
