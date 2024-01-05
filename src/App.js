@@ -17,12 +17,14 @@ import ServicesPage from './views/ServicesPage';
 import ContactPage from './views/ContactPage';
 import ForgetPassword from './views/ForgetPassword';
 import Profile from './views/Profile';
+import XemHSDT from './views/XemHSDT';
+import { AuthProvider } from './hook/AuthProvider';
 
 function App() {
 
   return (
-
-    <Router>
+<AuthProvider>
+<Router>
       <ScrollToTop />
       <Switch>
         <Route path="/doctors">
@@ -52,6 +54,9 @@ function App() {
         <Route path="/manager">
           <Manager />
         </Route>
+        <Route path="/mytreatmentrecord">
+          <XemHSDT />
+        </Route>
 
         <Route path="/" exact>
           <IntroductionPage />
@@ -61,6 +66,8 @@ function App() {
         </Route>
       </Switch>
     </Router >
+</AuthProvider>
+   
   );
 }
 

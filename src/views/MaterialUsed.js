@@ -4,41 +4,96 @@ import api from '../api/Api';
 import Select from 'react-select';
 import { FormMaterialUsed } from "../components/FormMaterialUsed";
 const MaterialUsed = () => {
-    const materialsUsed = [
-        {
-            maVatTu: "VT001",
-            tenVatTu: "Mắc cài",
-            NgaySuDung: '2023-11-12',
-            SL: "3",
-            donGiaNhap: "150000"
-        },
-        {
-            maVatTu: "VT001",
-            tenVatTu: "Mắc cài",
-            NgaySuDung: '2023-11-26',
-            SL: "3",
-            donGiaNhap: "150000"
-        }
-    ]
+    // const materialsUsed = [
+    //     {
+    //         maVatTu: "VT001",
+    //         tenVatTu: "Mắc cài",
+    //         NgaySuDung: '2023-11-12',
+    //         SL: "3",
+    //         donGiaNhap: "150000"
+    //     },
+    //     {
+    //         maVatTu: "VT001",
+    //         tenVatTu: "Mắc cài",
+    //         NgaySuDung: '2023-11-26',
+    //         SL: "3",
+    //         donGiaNhap: "150000"
+    //     }
+    // ]
     const [modalOpen, setModalOpen] = useState(false);
     const [materials, setMaterials] = useState([]);
     const [rowToEdit, setRowToEdit] = useState(null);
-    useEffect(() => {
-        getMaterials();
+    const [materialsUsed, setMaterialUsed] = useState(null)
+    const [khoiphucSL, setKhoiPhucSL] = useState(null)
+    useEffect(async () => {
+        await getMaterials();
+        getMatierialUsed()
     }, []);
     const getMaterials = async () => {
         const materials = await api.getAllMaterials()
         setMaterials(materials);
     }
-    const handleDeleteRow = (id) => {
-
+    const getMatierialUsed = async()=>{
+        const res = await api.getMaterialsUsed()
+        setMaterialUsed(res)
+    
+    }
+    const handleDeleteRow = async (item,id) => {
+        
+            const shouldDelete = window.confirm('Bạn có chắc muốn xóa không?');
+            if (shouldDelete) {
+              await  api.deleteMaterialUsed(item.Id)
+              setMaterialUsed(materialsUsed.filter((_, idx) => idx !== id));
+              const result = materials.filter((item1, idx) => item1.maVatTu === item.maVatTu)
+              let x = parseInt(result[0].soLuongTonKho) + parseInt(item.SL)
+              console.log('1:'+result[0].soLuongTonKho+'2:'+item.SL+'ll'+x)
+              let updated2 = materials.map((item1, idx) => {
+                if (item1.maVatTu !== item.maVatTu) return item1;
+                return {...item1, soLuongTonKho:x};
+              })
+              setMaterials(updated2)
+              await api.updateMaterial({soLuongTonKho:x.toString()},result[0].Id)
+            }
     }
     const handleEditRow = (index) => {
         setRowToEdit(index);
-        setModalOpen(true);
+            const result = materials.filter((item1, idx) => item1.maVatTu === materialsUsed[index].maVatTu)
+            let lamlai = parseInt(result[0].soLuongTonKho) + parseInt(materialsUsed[index].SL)
+            console.log('1:'+result[0].soLuongTonKho+'2:'+materialsUsed[index].SL+'ll'+lamlai)
+          setKhoiPhucSL(lamlai)
+          setModalOpen(true);
     }
-    const handleSubmit = () => {
-
+    const handleSubmit = async (newRow) => {
+        if (rowToEdit == null) {
+            const id = await api.addMaterialUsed(newRow);
+            newRow.Id = id.docId;
+            setMaterialUsed([...materialsUsed, newRow]);
+                const result = materials.filter((item1, idx) => item1.maVatTu === newRow.maVatTu)
+                let x = parseInt(result[0].soLuongTonKho) - parseInt(newRow.SL)
+                let updated2 = materials.map((item, idx) => {
+                    if (item.maVatTu !== newRow.maVatTu) return item;
+                    return {...item, soLuongTonKho:x};
+                  })
+                  setMaterials(updated2)
+                await api.updateMaterial({soLuongTonKho:x.toString()},result[0].Id)
+          }
+          else {
+            await api.updateMaterialUsed(newRow,newRow.Id);
+            let updated = materialsUsed.map((currRow, idx) => {
+              if (idx !== rowToEdit) return currRow;
+              return newRow;
+            })
+            const result = materials.filter((item1, idx) => item1.maVatTu === newRow.maVatTu)
+                let x = parseInt(khoiphucSL) - parseInt(newRow.SL)
+                console.log('x'+x)
+                let updated2 = materials.map((item, idx) => {
+                    if (item.maVatTu !== newRow.maVatTu) return item;
+                    return {...item, soLuongTonKho:x};
+                  })
+                  setMaterials(updated2)
+                await api.updateMaterial({soLuongTonKho:x.toString()},result[0].Id)
+            setMaterialUsed(updated)
+          }
     }
     const [searchCriteria, setSearchCriteria] = useState({
         maVatTu: "",
@@ -46,11 +101,17 @@ const MaterialUsed = () => {
         NgaySuDung: "",
         SL: ""
     })
+    const onSearch = async () => {
+    
+        const searchResults = await api.getMaterialUsedBySearch(searchCriteria);
+        console.log(searchResults);
+        setMaterialUsed(searchResults);
+      }
     return (
         <div>
             <div className="row">
                 <div className="col-lg-4 col-md-6">
-                    <div className="mb-2"><b>Mã bệnh nhân</b></div>
+                    <div className="mb-2"><b>Mã vật tư</b></div>
                     <Select className="mb-2"
                         value={materials.find(item => item.maVatTu === searchCriteria.maVatTu) || ''}
                         onChange={(value) => value !== null ? setSearchCriteria({ ...searchCriteria, maVatTu: value.maVatTu, tenVatTu: value.tenVatTu }) : setSearchCriteria({ ...searchCriteria, maVatTu: "", tenVatTu: "" })}
@@ -62,10 +123,10 @@ const MaterialUsed = () => {
                     />
                 </div>
                 <div className="col-lg-4 col-md-6">
-                    <div className="mb-2"><b>Tên bệnh nhân</b></div>
+                    <div className="mb-2"><b>Tên vật tư</b></div>
                     <Select className="mb-2"
                         value={materials.find(item => item.maVatTu === searchCriteria.maVatTu) || ''}
-                        onChange={(value) => value !== null ? setSearchCriteria({ ...searchCriteria, maVatTu: value.maVatTu, TenVT: value.tenVatTu }) : setSearchCriteria({ ...searchCriteria, maVatTu: "", tenVatTu: "" })}
+                        onChange={(value) => value !== null ? setSearchCriteria({ ...searchCriteria, maVatTu: value.maVatTu, tenVatTu: value.tenVatTu }) : setSearchCriteria({ ...searchCriteria, maVatTu: "", tenVatTu: "" })}
                         options={materials}
                         isClearable
                         placeholder=""
@@ -78,7 +139,7 @@ const MaterialUsed = () => {
                     <input type="date" className="form-control pb-2 pt-2" id="NgaySuDung" name="NgaySuDung" value={searchCriteria.NgaySuDung} onChange={(e) => { setSearchCriteria({ ...searchCriteria, [e.target.name]: e.target.value }) }} />
                 </div>
                 <div className="text-end">
-                    <button type="submit" className="btn pb-2 pt-2 mt-3 me-2" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} >
+                    <button type="submit" className="btn pb-2 pt-2 mt-3 me-2" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={onSearch}>
                         Tìm kiếm
                     </button>
                     <button type="submit" className="btn pb-2 pt-2 mt-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={() => setModalOpen(true)}>
@@ -98,18 +159,18 @@ const MaterialUsed = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {materialsUsed.map((item, index) => (
+                    {materialsUsed?.map((item, index) => (
                         <tr key={index}>
                             <td>{item.maVatTu}</td>
                             <td>{item.tenVatTu}</td>
                             <td>{item.SL}</td>
-                            <td>{new Intl.NumberFormat('en-DE').format(item.donGiaNhap)}</td>
+                            <td>{item.donGiaNhap}</td>
                             <td>{item.NgaySuDung}</td>
                             <td className="fit">
                                 <span className="actions">
                                     <BsFillTrashFill
                                         className="delete-btn"
-                                        onClick={() => handleDeleteRow(index)}
+                                        onClick={() => handleDeleteRow(item,index)}
                                     />
                                     <BsFillPencilFill
                                         className="edit-btn"

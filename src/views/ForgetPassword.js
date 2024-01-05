@@ -4,9 +4,17 @@ import TopNav from '../components/TopNav.js'
 import { NavLink } from "react-router-dom"
 import Footer from '../components/Footer.js'
 import CodeGetPass from '../components/CodeGetPass.js'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { AuthContext } from '../hook/AuthProvider'
 const ForgetPassword = (props) => {
     const [codePopup, setCodePopup] = useState(false);
+    const {forgotPassword} = useContext(AuthContext);
+    const [email, setEmail] = useState('');
+    const handleForgot = async(e)=>{
+         e.preventDefault();
+        // await api.sendEmail()
+        forgotPassword(email)
+    }
     return (
         <div>
             <TopNav />
@@ -17,12 +25,12 @@ const ForgetPassword = (props) => {
                         <form>
                             <h4 align="center" className="mt-5 mb-4">Quên mật khẩu</h4>
                             <div className="mb-3 mt-3 col-10">
-                                <input type="text" className="form-control pb-3 pt-3" id="username" name="username" placeholder="Email đăng ký" onInvalid={e => e.target.setCustomValidity('Mời bạn nhập email')} onInput={e => e.target.setCustomValidity('')} required />
+                                <input type="text" className="form-control pb-3 pt-3" id="username" name="username" placeholder="Email đăng ký" onInvalid={e => e.target.setCustomValidity('Mời bạn nhập email')} onInput={e => e.target.setCustomValidity('')} required onChange={(e) => setEmail(e.target.value)}/>
                             </div>
 
                             <NavLink to="/sign_in" className="text-decoration-none d-flex justify-content-end col-10" style={{ fontWeight: "600", color: "black" }}>Quay về trang đăng nhập</NavLink>
                             <br></br>
-                            <button type="submit" className="btn col-10 pb-3 pt-3" onClick={() => setCodePopup(true)} style={{ backgroundColor: "#0096FF", color: "#FFFFFF", marginBottom: "300px" }}>Nhận mã</button>
+                            <button type="submit" className="btn col-10 pb-3 pt-3" onClick={(e) => {handleForgot(e)}} style={{ backgroundColor: "#0096FF", color: "#FFFFFF", marginBottom: "300px" }} >Gửi</button>
                             {codePopup && (
                                 <CodeGetPass trigger="true">
                                     <div className="mb-3 mt-3 col-10">

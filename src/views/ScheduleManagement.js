@@ -1,56 +1,47 @@
-import React from "react";
-import "./mistyles.css";
+import React, { useState,useEffect, useContext} from 'react';
+import './mistyles.css'
 import {
-  NavLink,
-  useLocation,
-  Switch,
-  Route,
-  Redirect,
+  NavLink, useLocation, Switch, Route, Redirect
 } from "react-router-dom";
-import HandleSchedule from "./HandleSchedule";
-import ScheduleDetail from "./ScheduleDetail";
-import ScheduleList from "./ScheduleList";
-import BookingSchedule from "./BookingSchedule";
-import SignUpSchedule from "./SignUpSchedule";
+import HandleSchedule from './HandleSchedule';
+import ScheduleDetail from './ScheduleDetail';
+import ScheduleList from './ScheduleList';
+import BookingSchedule from './BookingSchedule';
+import SignUpSchedule from './SignUpSchedule';
+import { AuthContext } from '../hook/AuthProvider'
 const ScheduleManagement = (props) => {
   const { pathname } = useLocation();
-
+  const {scopeQLLH} = useContext(AuthContext);
   return (
     <div>
       <div className="container mt-3">
         <ul className="nav nav-tabs" id="schedule_tab">
-          <li className="nav-item">
-            <NavLink className="nav-link" to="/manager/schedule/handleSchedule">
-              Xử lý lịch hẹn
-            </NavLink>
+          {/* <li className="nav-item">
+            <NavLink className="nav-link" to="/manager/schedule/handleSchedule">Xử lý lịch hẹn</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink
-              className="nav-link"
-              to="/manager/schedule/bookingSchedule"
-            >
-              Đặt lịch
-            </NavLink>
+            <NavLink className="nav-link" to="/manager/schedule/bookingSchedule">Đặt lịch</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="/manager/schedule/scheduleList">
-              Danh sách lịch hẹn
-            </NavLink>
+            <NavLink className="nav-link" to="/manager/schedule/scheduleList">Danh sách lịch hẹn</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="/manager/schedule/detail">
-              Xem lịch biểu
-            </NavLink>
+            <NavLink className="nav-link" to="/manager/schedule/detail">Xem lịch biểu</NavLink>
           </li>
           <li className="nav-item">
-            <NavLink className="nav-link" to="/manager/schedule/signUpSchedule">
-              Đăng ký lịch
-            </NavLink>
+            <NavLink className="nav-link" to="/manager/schedule/signUpSchedule">Đăng ký lịch</NavLink>
+          </li> */}
+          {scopeQLLH?.map((val, idx) => {
+                return (
+                  <li className="nav-item">
+            <NavLink className="nav-link" to={val.path}>{val.name}</NavLink>
           </li>
+                );
+              })}
         </ul>
       </div>
       <div className="container mt-3">
-        <Route>
+        <Route >
           <Switch>
             <Route path="/manager/schedule/handleSchedule">
               <HandleSchedule />
@@ -67,15 +58,20 @@ const ScheduleManagement = (props) => {
             <Route path="/manager/schedule/bookingSchedule">
               <BookingSchedule />
             </Route>
-            {pathname === "/manager/schedule" ? (
-              <Redirect to="/manager/schedule/handleSchedule" />
-            ) : null}
+            {/* {scopeQLLH.map((val, idx) => {
+                return (
+                  <Route path={val.path}>
+                  <BookingSchedule />
+                </Route>
+                );
+              })} */}
+            {pathname === "/manager/schedule" ? <Redirect to="/manager/schedule/handleSchedule" /> : null}
             <Switch />
           </Switch>
         </Route>
       </div>
     </div>
   );
-};
+}
 
 export default ScheduleManagement;

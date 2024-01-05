@@ -533,6 +533,260 @@ const getDocsBySeacrh = async (endpoint, searchCriteria) => {
     return [];
   }
 };
+const getAllPatients = async() => {
+  try{
+      const response = await client.get('/PatientManagement/getPatients')
+      if(response.data.success){
+          return response.data.patients;           
+      }
+      else{
+          console.log("not get patients")
+      }        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+      return [];
+  }
+}
+const addPatient= async (data) => {
+  const endpoint = "/PatientManagement/add";
+  try{
+    const response = await client.post(endpoint, data);
+    return {docId:response.data.docId, hsdtId:response.data.IDhsdt};    
+  }
+  catch(error){
+    console.log('error: ', error.message)
+  }
+}
+const deletePatient = async (id)=>{
+  try{
+      await client.delete('/PatientManagement/delete/' + id);        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+  }
+}
+const updatePatient = async(data, id) => {
+  const endpoint = '/PatientManagement/update/' + id;
+  try {
+      const response = await client.put(endpoint, data);
+  } catch (error) {
+      console.error('error: ', error.message);
+  }
+}
+const getPatientsBySeacrh = async (searchCriteria) => {
+  try {
+    const queryParams = new URLSearchParams(searchCriteria).toString();
+    const response = await client.get(`/PatientManagement/Patients?${queryParams}`);
+
+    if (response.data.success) {
+      return response.data.patients;
+    } else {
+      console.log("not get patients");
+    }
+  } catch (error) {
+    console.log('error: ', error.message);
+    return [];
+  }
+};
+const getHSDT = async(id) => {
+  try{
+      const response = await client.get('/PatientManagement/getHSDT/'+id)
+      if(response.data.success){
+          return response.data.HSDT;           
+      }
+      else{
+          console.log("not get HSDT")
+      }        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+      return {};
+  }
+}
+// router.post('/PatientManagement/chitietHSDT/add', addchitietHSDT);
+// router.put('/PatientManagement/chitietHSDT/update/:Id', updateCTHSDT);
+const addCTHSDT= async (data) => {
+  const endpoint = "/PatientManagement/chitietHSDT/add";
+  try{
+    const response = await client.post(endpoint, data);
+    return response.data.docId;    
+  }
+  catch(error){
+    console.log('error: ', error.message)
+  }
+}
+const updateCTHSDT = async(data, id) => {
+  const endpoint = '/PatientManagement/chitietHSDT/update/' + id;
+  try {
+      const response = await client.put(endpoint, data);
+  } catch (error) {
+      console.error('error: ', error.message);
+  }
+}
+// router.get('/PatientManagement/getCTHSDT/:HSId', getCTHSDT);
+const getListCTHSDT = async(id) => {
+  try{
+      const response = await client.get('/PatientManagement/getCTHSDT/'+id)
+      if(response.data.success){
+          return response.data.cthsdt;           
+      }
+      else{
+          console.log("not get list CTHSDT")
+      }        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+      return [];
+  }
+}
+const updateUser = async(userData) => {
+  const endpoint = '/updateUser/' + userData.id;
+  console.log(endpoint);
+  try {
+      const response = await client.put(endpoint, userData);
+      console.log(response.data)
+    } catch (error) {
+      console.log('error: ', error.message);
+  }
+}
+const getUserData = async(userId)=>{
+  const endpoint = "/UserData/" + userId
+  try{
+      const response = await client.get(endpoint)
+      if(response.data.success){
+          return response.data.userData
+      }
+      else{
+          console.log("not get user data")
+      }        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+      return 0;
+  }
+}
+const setUserInfo = async(userData) => {
+  const endpoint = '/setUserInfo/' + userData.id;
+  console.log(endpoint);
+  try {
+      const response = await client.put(endpoint, userData);
+      console.log(response.data)
+    } catch (error) {
+      console.log('error: ', error.message);
+  }
+}
+const addUser = async(data)=>{
+  try{
+      const response = await client.post('/addUser',data)
+          return response.data     
+  }
+  catch(error){
+      console.log('error: ', error.message)
+  }
+}
+const getPatientData = async(Id)=>{
+  const endpoint = "/PatientManagement/PatientData/" + Id
+  try{
+      const response = await client.get(endpoint)
+      if(response.data.success){
+          return response.data.patientData
+      }
+      else{
+          console.log("not get patient data")
+      }        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+      return {};
+  }
+}
+// router.delete('/PatientManagement/deleteCTHSDT/:Id', deleteCTHSDT);
+const deleteCTHSDT = async (id,idHD)=>{
+  try{
+      await client.delete('/PatientManagement/deleteCTHSDT/' + id+'/'+idHD);        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+  }
+}
+// router.get('/PatientManagement/Search/CTHSDT', getCTHSDTsBySearch);
+const getCTHSDTsBySeacrh = async (searchCriteria) => {
+  try {
+    const queryParams = new URLSearchParams(searchCriteria).toString();
+    const response = await client.get(`/PatientManagement/Search/CTHSDT?${queryParams}`);
+
+    if (response.data.success) {
+      return response.data.cthsdts;
+    } else {
+      console.log("not get cthsdts");
+    }
+  } catch (error) {
+    console.log('error: ', error.message);
+    return [];
+  }
+};
+// router.get('/MaterialUsed/get', getMaterialsUsed);
+// router.get('/MaterialUsed/search', getMaterialUsedBySearch);
+// router.post('/MaterialUsed/add', addMaterialUsed);
+// router.put('/MaterialUsed/update/:Id', updateMaterialUsed);
+// router.delete('/MaterialUsed/delete/:Id', deleteMaterialUsed);
+const getMaterialsUsed = async() => {
+  try{
+      const response = await client.get('/MaterialUsed/get')
+      if(response.data.success){
+          return response.data.MU;           
+      }
+      else{
+          console.log("not get material use")
+      }        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+      return [];
+  }
+}
+const addMaterialUsed = async (data) => {
+  const endpoint = "/MaterialUsed/add";
+  try{
+    const response = await client.post(endpoint, data);
+    return response.data.docId;    
+  }
+  catch(error){
+    console.log('error: ', error.message)
+  }
+}
+const deleteMaterialUsed = async (id)=>{
+  try{
+      await client.delete('/MaterialUsed/delete/' + id);        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+  }
+}
+const updateMaterialUsed = async(data, id) => {
+  const endpoint = '/MaterialUsed/update/' + id;
+  try {
+      const response = await client.put(endpoint, data);
+  } catch (error) {
+      console.error('error: ', error.message);
+  }
+}
+const getMaterialUsedBySearch = async (searchCriteria) => {
+  try {
+    const queryParams = new URLSearchParams(searchCriteria).toString();
+    const response = await client.get(`/MaterialUsed/search?${queryParams}`);
+
+    if (response.data.success) {
+      return response.data.VatTuDaSuDung;
+    } else {
+      console.log("not get VatTuDaSuDung");
+    }
+  } catch (error) {
+    console.log('error: ', error.message);
+    return [];
+  }
+};
 
 export default {
   getAllServices,
@@ -581,4 +835,7 @@ export default {
   getDocsBySeacrh,
   addDoctorSchedule,
   updateDoctorSchedule,
+  getAllPatients, addPatient, updatePatient, deletePatient, getPatientsBySeacrh, getHSDT, addCTHSDT, updateCTHSDT, getListCTHSDT,getPatientData,deleteCTHSDT,getCTHSDTsBySeacrh,
+  addUser, updateUser, setUserInfo,getUserData,
+  addMaterialUsed, getMaterialsUsed, updateMaterialUsed, deleteMaterialUsed, getMaterialUsedBySearch,
 };

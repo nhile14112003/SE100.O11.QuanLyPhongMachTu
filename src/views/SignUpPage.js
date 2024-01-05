@@ -1,10 +1,50 @@
-import React from 'react'
+import React, { useState,useEffect, useContext} from 'react';
 import './style.css'
 import { NavLink } from "react-router-dom"
 import TopNav from '../components/TopNav'
 import Footer from '../components/Footer'
 import moment from 'moment'
+import { AuthContext } from '../hook/AuthProvider'
 const SignUpPage = (props) => {
+    const [fullname, setFullName]=useState('')
+    const [birthday, setBirthday]=useState('')
+    const [phone, setPhone]=useState('')
+    const [address, setAddress]=useState('')
+    const [email, setEmail]=useState('')
+    const [identify, setIdentify]=useState('')
+    const [signinName, setSigninName]=useState('')
+    const [password, setPassWord]=useState('')
+    const [againPass, setAgainPass]=useState('')
+    const {registerforKH} = useContext(AuthContext);
+    const handleSignup=async(e)=>{
+        
+        // const flag = await api.checkUserName(signinName)
+        // if(flag){
+        //     alert('Tên đăng nhập đã tồn tai, vui lòng nhập tên khác!')
+        // }
+        // else{
+        //     const data = {
+        //         Fullname:fullname,
+        //         Birthday:birthday,
+        //         Phone: phone,
+        //         Address: address,
+        //         Email: email,
+        //         CCCD: identify,
+        //         SigninName: signinName,
+        //         password: password
+        //     }
+        //    await api.addUser(data)
+        // }
+        e.preventDefault();
+        if(password == againPass){
+            console.log('đk')
+            registerforKH(email, password, fullname,phone,identify,birthday,address)
+          }
+          else{
+            alert('Password confirmation does not match!')
+          }
+        
+    }
     return (
         <div>
             <TopNav />
@@ -15,39 +55,39 @@ const SignUpPage = (props) => {
                         <form>
                             <h4 align="center" className="mt-5 mb-4">Đăng ký</h4>
                             <div className="mb-3 mt-3 col-10">
-                                <input type="text" className="form-control pb-3 pt-3" id="fullName" name="fullName" placeholder="Họ và tên" required />
+                                <input type="text" className="form-control pb-3 pt-3" id="fullName" name="fullName" placeholder="Họ và tên" required onChange={(e) => setFullName(e.target.value)} value={fullname}/>
 
                             </div>
                             <div className="mb-3 mt-3 col-10">
-                                <input type="date" className="form-control pb-3 pt-3" id="birthday" name="birthday" placeholder="Ngày sinh: " max={moment().add(-4, "years").format('YYYY-MM-DD')} required onInvalid={e => e.target.setCustomValidity('Mời bạn nhập ngày sinh')} onInput={e => e.target.setCustomValidity('')} />
+                                <input type="date" className="form-control pb-3 pt-3" id="birthday" name="birthday" placeholder="Ngày sinh: " max={moment().add(-4, "years").format('YYYY-MM-DD')} required onInvalid={e => e.target.setCustomValidity('Mời bạn nhập ngày sinh')} onInput={e => e.target.setCustomValidity('')} onChange={(e) => setBirthday(e.target.value)} value={birthday} />
                             </div>
                             <div className="mb-3 mt-3 col-10">
-                                <input type="tel" className="form-control pb-3 pt-3" id="phone" name="phone" placeholder="Số điện thoại" required />
+                                <input type="tel" className="form-control pb-3 pt-3" id="phone" name="phone" placeholder="Số điện thoại" required onChange={(e) => setPhone(e.target.value)} value={phone}/>
                             </div>
                             <div className="mb-3 mt-3 col-10">
-                                <input type="text" className="form-control pb-3 pt-3" id="address" name="address" placeholder="Địa chỉ" required />
+                                <input type="text" className="form-control pb-3 pt-3" id="address" name="address" placeholder="Địa chỉ" required onChange={(e) => setAddress(e.target.value)} value={address}/>
                             </div>
                             <div className="mb-3 mt-3 col-10">
-                                <input type="email" className="form-control pb-3 pt-3" id="email" name="email" placeholder="Email" required />
+                                <input type="email" className="form-control pb-3 pt-3" id="email" name="email" placeholder="Email" required onChange={(e) => setEmail(e.target.value)} value={email}/>
                             </div>
                             <div className="mb-3 mt-3 col-10">
-                                <input type="text" className="form-control pb-3 pt-3" id="CCCD" name="CCCD" placeholder="Căn cước công dân" required />
+                                <input type="text" className="form-control pb-3 pt-3" id="CCCD" name="CCCD" placeholder="Căn cước công dân" required onChange={(e) => setIdentify(e.target.value)} value={identify}/>
                             </div>
-                            <div className="mb-3 mt-3 col-10">
-                                <input type="text" className="form-control pb-3 pt-3" id="username" name="username" placeholder="Tên đăng nhập" required />
-                            </div>
+                            {/* <div className="mb-3 mt-3 col-10">
+                                <input type="text" className="form-control pb-3 pt-3" id="username" name="username" placeholder="Tên đăng nhập" required onChange={(e) => setSigninName(e.target.value)} value={signinName}/>
+                            </div> */}
                             <div className="col-10 mb-3 mt-3">
-                                <input type="password" className="form-control pb-3 pt-3" id="password" name="password" placeholder="Mật khẩu" required />
+                                <input type="password" className="form-control pb-3 pt-3" id="password" name="password" placeholder="Mật khẩu" required onChange={(e) => setPassWord(e.target.value)} value={password}/>
                             </div>
 
 
                             <div className="col-10 mb-3 mt-3">
-                                <input type="password" className="form-control pb-3 pt-3" id="re-enter_password" name="re-enter_password" placeholder="Nhập lại mật khẩu" required />
+                                <input type="password" className="form-control pb-3 pt-3" id="re-enter_password" name="re-enter_password" placeholder="Nhập lại mật khẩu" required onChange={(e) => setAgainPass(e.target.value)} value={againPass}/>
                             </div>
 
                             <NavLink to="/sign_in" className="btn d-flex justify-content-center col-10 mb-2 mt-2" style={{ color: "#0096FF" }}>Đăng nhập nếu bạn đã có tài khoản</NavLink>
 
-                            <button type="submit" className="btn col-10 pb-3 pt-3 mb-5" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>Đăng ký</button>
+                            <button type="submit" className="btn col-10 pb-3 pt-3 mb-5" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={(e)=>{handleSignup(e)}}>Đăng ký</button>
 
 
                         </form>

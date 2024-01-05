@@ -1,9 +1,38 @@
-import React from 'react'
+import React, { useState,useEffect, useContext} from 'react';
 import './style.css'
 import TopNav from '../components/TopNav.js'
-import { NavLink } from "react-router-dom"
+import { NavLink,useHistory } from "react-router-dom"
 import Footer from '../components/Footer.js'
+import { AuthContext } from '../hook/AuthProvider'
+
 const SignInPage = (props) => {
+    const [name, setName]=useState('')
+    const [pass, setPass]=useState('')
+    const [userInfo, setUserInfo] = useState(null)
+    const [flag, setFlag] = useState(false)
+    const {login, user} = useContext(AuthContext);
+    const history = useHistory();
+
+    
+    const handleSignin=async (e) =>{     
+        e.preventDefault(); 
+    //    const user = await api.SignIn(name,pass)
+    //    setUserInfo(user.userInfo)
+    //    if(user.flag)
+    //    {
+    //     history.push('/')
+    //    }
+    //    else{
+    //     alert('Sign in unsuccessfully')
+    //    }
+    login(name, pass, history)
+    // if(user!=null){
+    //     console.log('redirect'+redirectTo)
+    //     history.push(redirectTo);
+    // }
+       
+    }
+    
     return (
         <div>
             <TopNav />
@@ -14,16 +43,16 @@ const SignInPage = (props) => {
                         <form>
                             <h4 align="center" className="mt-5 mb-4">Đăng nhập</h4>
                             <div className="mb-3 mt-3 col-10">
-                                <input type="text" className="form-control pb-3 pt-3" id="username" name="username" placeholder="Tên đăng nhập" onInvalid={e => e.target.setCustomValidity('Mời bạn nhập tên đăng nhập')} onInput={e => e.target.setCustomValidity('')} required />
+                                <input type="email" className="form-control pb-3 pt-3" id="username" name="username" placeholder="Email" onInvalid={e => e.target.setCustomValidity('Mời bạn nhập email')} onInput={e => e.target.setCustomValidity('')} required onChange={(e) => setName(e.target.value)} value={name}/>
                             </div>
                             <div className="col-10 mt-3 mb-2">
-                                <input type="password" className="form-control pb-3 pt-3" id="password" name="password" placeholder="Mật khẩu" onInvalid={e => e.target.setCustomValidity('Mời bạn nhập mật khẩu')} onInput={e => e.target.setCustomValidity('')} required />
+                                <input type="password" className="form-control pb-3 pt-3" id="password" name="password" placeholder="Mật khẩu" onInvalid={e => e.target.setCustomValidity('Mời bạn nhập mật khẩu')} onInput={e => e.target.setCustomValidity('')} required onChange={(e) => setPass(e.target.value)} value={pass}/>
                             </div>
                             <NavLink to="/forgetpassword" className="text-decoration-none d-flex justify-content-end col-10" style={{ fontWeight: "600", color: "black" }}>Bạn quên mật khẩu?</NavLink>
 
                             <NavLink to="/sign_up" className="btn d-flex justify-content-center col-10 mb-2 mt-2" style={{ color: "#0096FF" }}>Nếu bạn chưa có tài khoản, đăng ký ngay!</NavLink>
 
-                            <button type="submit" className="btn col-10 pb-3 pt-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF", marginBottom: "300px" }}>Đăng nhập</button>
+                            {<button type="submit" className="btn col-10 pb-3 pt-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF", marginBottom: "300px" }} onClick={handleSignin}>Đăng nhập</button>}
                         </form>
                     </div>
                 </div>

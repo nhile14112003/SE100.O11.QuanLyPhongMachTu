@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState,useEffect, useContext} from 'react';
 import './style.css'
 import { NavLink, useLocation, Switch, Route, Redirect } from "react-router-dom";
 import BaoCao from './BaoCao';
@@ -14,17 +14,19 @@ import ScheduleManagement from './ScheduleManagement';
 import PatientManagement from './PatientManagement';
 import BillManagement from './BillManagement';
 import MaterialUsed from './MaterialUsed';
+import { AuthContext } from '../hook/AuthProvider'
 const Manager = (props) => {
     const { pathname } = useLocation();
+    const {scopeQL} = useContext(AuthContext);
     return (
-        <div >
-            <TopNav />
-            <nav className="container-fluid">
-                <div className="row flex-nowrap">
-                    <div className="col-auto bg-primary" id="slide-menu">
-                        <div className="d-flex flex-column sticky-top" id="stickyTop">
-                            <ul className="nav nav-pills d-flex flex-column" id="menu">
-                                <li className="nav-item mt-2 mb-2">
+      <div>
+        <TopNav />
+        <nav className="container-fluid">
+          <div className="row flex-nowrap">
+            <div className="col-auto bg-primary" id="slide-menu">
+              <div className="d-flex flex-column sticky-top" id="stickyTop">
+                <ul className="nav nav-pills d-flex flex-column" id="menu">
+                  {/* <li className="nav-item mt-2 mb-2">
                                     <NavLink to="/manager/schedule" className="nav-link">
                                         <img src="/images/qlylichhen_48px.png" alt="" /> <span className="ms-1 d-none d-sm-inline">Quản lý lịch hẹn</span>
                                     </NavLink>
@@ -80,56 +82,66 @@ const Manager = (props) => {
                                     <NavLink to="/manager/quanlydanhgia" className="nav-link">
                                         <img src="/images/tiepnhandanhgia_48px.png" alt="" /> <span className="ms-1 d-none d-sm-inline">Quản lý đánh giá</span>
                                     </NavLink>
-                                </li>
+                                </li> */}
+                  {scopeQL?.map((val, idx) => {
+                    return (
+                        <li className="nav-item mb-2">
+                        <NavLink to={val.path} className="nav-link">
+                            <img src={val.srcImg} alt="" /> <span className="ms-1 d-none d-sm-inline">{val.name}</span>
+                        </NavLink>
+                    </li> 
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+            <div className="col py-3" style={{ overflowX: "auto" }}>
+              <Route>
+                <Switch />
+                <Route path="/manager/schedule">
+                  <ScheduleManagement />
+                </Route>
+                <Route path="/manager/patient">
+                  <PatientManagement />
+                </Route>
+                <Route path="/manager/quanlynhanvien">
+                  <QuanLyNhanVien />
+                </Route>
+                <Route path="/manager/baocao">
+                  <BaoCao />
+                </Route>
+                <Route path="/manager/quanlykho">
+                  <QuanLyKho />
+                </Route>
+                <Route path="/manager/bill">
+                  <BillManagement />
+                </Route>
+                <Route path="/manager/quanlydichvu">
+                  <QuanLyDichVu />
+                </Route>
+                <Route path="/manager/quanlychinhanh">
+                  <QuanLyChiNhanh />
+                </Route>
+                <Route path="/manager/quanlymagiamgia">
+                  <QuanLyMaGiamGia />
+                </Route>
+                <Route path="/manager/quanlydanhgia">
+                  <QuanLyDanhGia />
+                </Route>
+                <Route path="/manager/deviceUsed">
+                  <MaterialUsed />
+                </Route>
 
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="col py-3" style={{ overflowX: "auto" }}>
-                        <Route >
-                            <Switch />
-                            <Route path="/manager/schedule">
-                                <ScheduleManagement />
-                            </Route>
-                            <Route path="/manager/patient">
-                                <PatientManagement />
-                            </Route>
-                            <Route path="/manager/quanlynhanvien">
-                                <QuanLyNhanVien />
-                            </Route>
-                            <Route path="/manager/baocao">
-                                <BaoCao />
-                            </Route>
-                            <Route path="/manager/quanlykho">
-                                <QuanLyKho />
-                            </Route>
-                            <Route path="/manager/bill">
-                                <BillManagement />
-                            </Route>
-                            <Route path="/manager/quanlydichvu">
-                                <QuanLyDichVu />
-                            </Route>
-                            <Route path="/manager/quanlychinhanh">
-                                <QuanLyChiNhanh />
-                            </Route>
-                            <Route path="/manager/quanlymagiamgia">
-                                <QuanLyMaGiamGia />
-                            </Route>
-                            <Route path="/manager/quanlydanhgia" >
-                                <QuanLyDanhGia />
-                            </Route>
-                            <Route path="/manager/deviceUsed" >
-                                <MaterialUsed />
-                            </Route>
-
-                            {pathname === "/manager" ? <Redirect to="/manager/schedule" /> : null}
-                            <Switch />
-                        </Route>
-                    </div>
-                </div>
-            </nav>
-            <Footer style={{ marginTop: 0 }} />
-        </div >
+                {pathname === "/manager" ? (
+                  <Redirect to="/manager/schedule" />
+                ) : null}
+                <Switch />
+              </Route>
+            </div>
+          </div>
+        </nav>
+        <Footer style={{ marginTop: 0 }} />
+      </div>
     );
 }
 export default Manager;
