@@ -1,12 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {
-  setUserInfo,
-  addUser,
-  SignIn,
-  sendEmail,
-  checkUserName,
-} = require("../controllers/User");
+const {setUserInfo, addUser, SignIn, sendEmail, checkUserName, updateUser, getUserData} = require ('../controllers/User')
 const {
   getAllServices,
   addService,
@@ -69,13 +63,17 @@ const {
   getDocumentByField,
   updateDoctorSchedule,
 } = require("../controllers/Schedule");
+const {getAllPatients, addPatient, updatePatient, deletePatient, getPatientsBySearch, getHSDT, addchitietHSDT,updateCTHSDT, getListCTHSDT, getPatientData, deleteCTHSDT, getCTHSDTsBySearch} = require('../controllers/Patient')
+const {getMaterialUsedBySearch, getMaterialsUsed, updateMaterialUsed, deleteMaterialUsed, addMaterialUsed} = require('../controllers/MaterialUsed')
 
 //user
-router.put("/setUserInfo/:userId", setUserInfo);
-router.post("/addUser", addUser);
-router.post("/sendEmail", sendEmail);
-router.get("/SignIn/:name/:pass", SignIn);
-router.get("/checkUserName/:name", checkUserName);
+router.put('/setUserInfo/:userId', setUserInfo)
+router.post('/addUser', addUser)
+router.post('/sendEmail', sendEmail)
+router.get('/SignIn/:name/:pass',SignIn)
+router.get('/checkUserName/:name',checkUserName)
+router.get('/UserData/:userId', getUserData)
+router.put('/updateUser/:userId', updateUser)
 //service
 router.get("/ServiceManagement/getServices", getAllServices);
 router.get("/ServiceManagement/Services", getServicesBySearch);
@@ -149,5 +147,24 @@ router.put(
   "/ScheduleManagement/DoctorSchedule/update/:id",
   updateDoctorSchedule
 );
+//Patient
+router.get('/PatientManagement/getPatients', getAllPatients);
+router.get('/PatientManagement/Patients', getPatientsBySearch);
+router.post('/PatientManagement/add', addPatient);
+router.put('/PatientManagement/update/:patientId', updatePatient);
+router.delete('/PatientManagement/delete/:patientId', deletePatient);
+router.get('/PatientManagement/getHSDT/:IDhsdt', getHSDT);
+router.post('/PatientManagement/chitietHSDT/add', addchitietHSDT);
+router.put('/PatientManagement/chitietHSDT/update/:Id', updateCTHSDT);
+router.get('/PatientManagement/getCTHSDT/:HSId', getListCTHSDT);
+router.get('/PatientManagement/PatientData/:Id', getPatientData)
+router.delete('/PatientManagement/deleteCTHSDT/:Id/:IdHD', deleteCTHSDT);
+router.get('/PatientManagement/Search/CTHSDT', getCTHSDTsBySearch);
+//materialused
+router.get('/MaterialUsed/get', getMaterialsUsed);
+router.get('/MaterialUsed/search', getMaterialUsedBySearch);
+router.post('/MaterialUsed/add', addMaterialUsed);
+router.put('/MaterialUsed/update/:Id', updateMaterialUsed);
+router.delete('/MaterialUsed/delete/:Id', deleteMaterialUsed);
 
 module.exports = router;

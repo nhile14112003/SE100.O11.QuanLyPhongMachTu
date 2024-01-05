@@ -4,7 +4,7 @@ const firestore = getFirestore(firebase);
 const nodemailer = require('nodemailer');
 const setUserInfo = async (req, res) => {
     try {
-      const myCollection = collection(firestore, 'Users');
+      const myCollection = collection(firestore, 'TaiKhoan');
       const docRef1 = doc(myCollection, req.params.userId);
       await setDoc(docRef1, req.body);
       console.log("Document successfully set!");
@@ -15,7 +15,7 @@ const setUserInfo = async (req, res) => {
     }
   };
   const addUser = async(req,res)=>{
-    const myCollection = collection(firestore, 'Users');
+    const myCollection = collection(firestore, 'TaiKhoan');
     try{
       const data = req.body;
       await addDoc(myCollection, data)
@@ -34,7 +34,7 @@ const setUserInfo = async (req, res) => {
     }
   }
   const SignIn = async (req,res) => {
-    const myCollection = collection(firestore, 'Users');
+    const myCollection = collection(firestore, 'TaiKhoan');
     try{
     const querySnapshot = await getDocs(myCollection);
     let flag = false;
@@ -54,7 +54,7 @@ const setUserInfo = async (req, res) => {
     }
   };
   const checkUserName = async(req,res)=>{
-    const myCollection = collection(firestore, 'Users');
+    const myCollection = collection(firestore, 'TaiKhoan');
     try{
     const querySnapshot = await getDocs(myCollection);
     let flag = false;
@@ -98,4 +98,34 @@ const setUserInfo = async (req, res) => {
       console.error('Error sending email:', error);
     }
   };
-  module.exports={setUserInfo, addUser, SignIn, sendEmail, checkUserName}
+  const updateUser = async (req, res) => {
+    try {
+      const myCollection = collection(firestore, 'TaiKhoan');
+      const docRef1 = doc(myCollection, req.params.userId);
+      let data = req.body
+      await updateDoc(docRef1, data);
+      console.log("Document successfully updated!");
+      res.send({ message: 'Document successfully updated!' });
+    } catch (error) {
+      console.error("Error updating user document: ", error);
+      res.status(500).json({ success: false, message: 'something went wrong when update user data' });
+    }
+  };
+  const getUserData = async (req, res) => {
+    try {
+  
+      const myCollection = collection(firestore, 'TaiKhoan');
+      const docRef1 = doc(myCollection, req.params.userId);
+      const documentSnapshot = await getDoc(docRef1);
+  
+      if (documentSnapshot.exists()) {
+        res.send({ success: true, userData: documentSnapshot.data() });
+      } else {
+        res.status(404).send({ success: false, message: 'User not found' });
+      }
+    } catch (error) {
+      console.error("Error get user document: ", error);
+      res.status(500).json({ success: false, message: 'something went wrong when get data from users' });
+    }
+  };
+  module.exports={setUserInfo, addUser, SignIn, sendEmail, checkUserName, updateUser, getUserData}
