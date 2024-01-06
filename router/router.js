@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {setUserInfo, addUser, SignIn, sendEmail, checkUserName, updateUser, getUserData} = require ('../controllers/User')
+const {setUserInfo, addUser, SignIn, sendEmail, checkUserName, updateUser, getUserData, findStaffbymaNV, deleteUser} = require ('../controllers/User')
 const {
   getAllServices,
   addService,
@@ -74,6 +74,8 @@ router.get('/SignIn/:name/:pass',SignIn)
 router.get('/checkUserName/:name',checkUserName)
 router.get('/UserData/:userId', getUserData)
 router.put('/updateUser/:userId', updateUser)
+router.get('/findAccountofStaff/:maNV',findStaffbymaNV)
+router.delete("/deleteUserAccount/:Id", deleteUser);
 //service
 router.get("/ServiceManagement/getServices", getAllServices);
 router.get("/ServiceManagement/Services", getServicesBySearch);

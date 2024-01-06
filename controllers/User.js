@@ -1,5 +1,5 @@
-const { getFirestore, collection, getDocs, addDoc, updateDoc, doc, setDoc,getDoc} = require('firebase/firestore');
-const {firebase} = require('../config')
+const { getFirestore, collection, getDocs, addDoc, updateDoc, doc, setDoc,getDoc, deleteDoc} = require('firebase/firestore');
+const {firebase, admin} = require('../config')
 const firestore = getFirestore(firebase);
 const nodemailer = require('nodemailer');
 const setUserInfo = async (req, res) => {
@@ -128,4 +128,40 @@ const setUserInfo = async (req, res) => {
       res.status(500).json({ success: false, message: 'something went wrong when get data from users' });
     }
   };
-  module.exports={setUserInfo, addUser, SignIn, sendEmail, checkUserName, updateUser, getUserData}
+  const findStaffbymaNV = async (req, res)=>{
+    try{
+      const myCollection = collection(firestore, 'TaiKhoan');
+      const querySnapshot = await getDocs(myCollection);
+      let id = ''
+       querySnapshot.docs.map((doc) => {
+          const data = doc.data();
+          if(data.maNV == req.params.maNV)
+          {
+            id = doc.id
+          }
+        });
+        res.json({success:true,idTK:id});
+
+    } catch (error){
+      console.error("Error get user document: ", error);
+      res.status(500).json({ success: false, message: 'something went wrong ' });
+    }
+  }
+  const deleteUser = async (req, res) => {
+    try {
+      const documentRef = doc(firestore, 'TaiKhoan', req.params.Id);
+      await deleteDoc(documentRef);
+      console.log('Document deleted successfully.');
+      admin.auth().deleteUser(req.params.Id).then(() => {
+        console.log('Successfully deleted user account authentication');
+      })
+      .catch((error) => {
+        console.error('Error deleting user:', error);
+      });
+      res.send({ success:true, message: 'Document successfully delete!' });
+    } catch (error) {
+      console.log('Error deleting staff document:', error);
+      res.status(500).json({ success: false, message: 'something went wrong when delete document' });
+    }
+};
+  module.exports={setUserInfo, addUser, SignIn, sendEmail, checkUserName, updateUser, getUserData, findStaffbymaNV, deleteUser}
