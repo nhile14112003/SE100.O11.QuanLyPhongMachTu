@@ -113,6 +113,7 @@ const getMaterialsBySearch = async (req, res) => {
     giaCuoi,
     ngayDau,
     ngayCuoi,
+    chiNhanh
   } = req.query;
   const myCollection = collection(firestore, "VatTu");
   try {
@@ -124,7 +125,7 @@ const getMaterialsBySearch = async (req, res) => {
     });
     const searchResults = list.filter((vatTu) => {
       const normalizeText = (text) => text.toLowerCase();
-
+      const matchChiNhanh = chiNhanh===""||chiNhanh==="Tất cả"|| normalizeText(vatTu.chiNhanh).includes(normalizeText(chiNhanh));
       const matchMaVatTu =
         maVatTu === "" ||
         normalizeText(vatTu.maVatTu).includes(normalizeText(maVatTu));
@@ -190,7 +191,8 @@ const getMaterialsBySearch = async (req, res) => {
         matchGiaNhap &&
         matchSoLuongNhap &&
         matchSoLuongTonKho &&
-        matchNgayNhap
+        matchNgayNhap &&
+        matchChiNhanh
       );
     });
     const sortList = searchResults.sort((a, b) =>
@@ -301,6 +303,7 @@ const getDrugsBySearch = async (req, res) => {
     hsdCuoi,
     ngayDau,
     ngayCuoi,
+    chiNhanh
   } = req.query;
   const myCollection = collection(firestore, "Thuoc");
   try {
@@ -312,7 +315,7 @@ const getDrugsBySearch = async (req, res) => {
     });
     const searchResults = list.filter((thuoc) => {
       const normalizeText = (text) => text.toLowerCase();
-
+      const matchChiNhanh = chiNhanh===""|| chiNhanh==="Tất cả"|| normalizeText(thuoc.chiNhanh).includes(normalizeText(chiNhanh));
       const matchMaThuoc =
         maThuoc === "" ||
         normalizeText(thuoc.maThuoc).includes(normalizeText(maThuoc));
@@ -406,7 +409,8 @@ const getDrugsBySearch = async (req, res) => {
         matchSoLuongNhap &&
         matchSoLuongTonKho &&
         matchHanSuDung &&
-        matchNgayNhap
+        matchNgayNhap &&
+        matchChiNhanh
       );
     });
     const sortList = searchResults.sort((a, b) =>
