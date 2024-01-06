@@ -110,7 +110,7 @@ router.get("/BillManagement/getBills", getAllBills);
 router.post("/BillManagement/add", addBill);
 router.put("/BillManagement/update/:billId", updateBill);
 router.delete("/BillManagement/delete/:billId", deleteBill);
-router.get("BillManagement/Bills", getBillsBySearch);
+router.get("/BillManagement/Bills", getBillsBySearch);
 //TreatmentRecordDetail
 router.get(
   "/TreatmentRecordDetailManagement/getTreatmentRecordDetailById/:cthsdtId",
