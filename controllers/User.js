@@ -1,10 +1,10 @@
-const { getFirestore, collection, getDocs, addDoc, updateDoc, doc, setDoc,getDoc} = require('firebase/firestore');
-const {firebase} = require('../config')
+const { getFirestore, collection, getDocs, addDoc, updateDoc, doc, setDoc,getDoc, deleteDoc} = require('firebase/firestore');
+const {firebase, admin} = require('../config')
 const firestore = getFirestore(firebase);
 const nodemailer = require('nodemailer');
 const setUserInfo = async (req, res) => {
     try {
-      const myCollection = collection(firestore, 'Users');
+      const myCollection = collection(firestore, 'TaiKhoan');
       const docRef1 = doc(myCollection, req.params.userId);
       await setDoc(docRef1, req.body);
       console.log("Document successfully set!");
@@ -15,7 +15,7 @@ const setUserInfo = async (req, res) => {
     }
   };
   const addUser = async(req,res)=>{
-    const myCollection = collection(firestore, 'Users');
+    const myCollection = collection(firestore, 'TaiKhoan');
     try{
       const data = req.body;
       await addDoc(myCollection, data)
@@ -34,7 +34,7 @@ const setUserInfo = async (req, res) => {
     }
   }
   const SignIn = async (req,res) => {
-    const myCollection = collection(firestore, 'Users');
+    const myCollection = collection(firestore, 'TaiKhoan');
     try{
     const querySnapshot = await getDocs(myCollection);
     let flag = false;
@@ -54,7 +54,7 @@ const setUserInfo = async (req, res) => {
     }
   };
   const checkUserName = async(req,res)=>{
-    const myCollection = collection(firestore, 'Users');
+    const myCollection = collection(firestore, 'TaiKhoan');
     try{
     const querySnapshot = await getDocs(myCollection);
     let flag = false;
@@ -98,4 +98,70 @@ const setUserInfo = async (req, res) => {
       console.error('Error sending email:', error);
     }
   };
-  module.exports={setUserInfo, addUser, SignIn, sendEmail, checkUserName}
+  const updateUser = async (req, res) => {
+    try {
+      const myCollection = collection(firestore, 'TaiKhoan');
+      const docRef1 = doc(myCollection, req.params.userId);
+      let data = req.body
+      await updateDoc(docRef1, data);
+      console.log("Document successfully updated!");
+      res.send({ message: 'Document successfully updated!' });
+    } catch (error) {
+      console.error("Error updating user document: ", error);
+      res.status(500).json({ success: false, message: 'something went wrong when update user data' });
+    }
+  };
+  const getUserData = async (req, res) => {
+    try {
+  
+      const myCollection = collection(firestore, 'TaiKhoan');
+      const docRef1 = doc(myCollection, req.params.userId);
+      const documentSnapshot = await getDoc(docRef1);
+  
+      if (documentSnapshot.exists()) {
+        res.send({ success: true, userData: documentSnapshot.data() });
+      } else {
+        res.status(404).send({ success: false, message: 'User not found' });
+      }
+    } catch (error) {
+      console.error("Error get user document: ", error);
+      res.status(500).json({ success: false, message: 'something went wrong when get data from users' });
+    }
+  };
+  const findStaffbymaNV = async (req, res)=>{
+    try{
+      const myCollection = collection(firestore, 'TaiKhoan');
+      const querySnapshot = await getDocs(myCollection);
+      let id = ''
+       querySnapshot.docs.map((doc) => {
+          const data = doc.data();
+          if(data.maNV == req.params.maNV)
+          {
+            id = doc.id
+          }
+        });
+        res.json({success:true,idTK:id});
+
+    } catch (error){
+      console.error("Error get user document: ", error);
+      res.status(500).json({ success: false, message: 'something went wrong ' });
+    }
+  }
+  const deleteUser = async (req, res) => {
+    try {
+      const documentRef = doc(firestore, 'TaiKhoan', req.params.Id);
+      await deleteDoc(documentRef);
+      console.log('Document deleted successfully.');
+      admin.auth().deleteUser(req.params.Id).then(() => {
+        console.log('Successfully deleted user account authentication');
+      })
+      .catch((error) => {
+        console.error('Error deleting user:', error);
+      });
+      res.send({ success:true, message: 'Document successfully delete!' });
+    } catch (error) {
+      console.log('Error deleting staff document:', error);
+      res.status(500).json({ success: false, message: 'something went wrong when delete document' });
+    }
+};
+  module.exports={setUserInfo, addUser, SignIn, sendEmail, checkUserName, updateUser, getUserData, findStaffbymaNV, deleteUser}
