@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./style.css";
 import moment from "moment";
 import api from "../api/Api";
 import Select from "react-select";
+import { AuthContext } from '../hook/AuthProvider'
 
 const BillManagement = (props) => {
+  const {user} = useContext(AuthContext);
   const [bills, setBills] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [CTHSDT, setCTHSDT] = useState(null);
@@ -52,12 +54,14 @@ const BillManagement = (props) => {
 
   const getBills = async () => {
     const bills = await api.getAllBills();
-    setBills(bills);
+    const fil = bills.filter((item, idx)=>item.tenChiNhanh===user?.chinhanh)
+    setBills(fil);
   };
 
   const getStaffs = async () => {
     const staffs = await api.getAllStaffs();
-    setStaffs(staffs);
+    const fil = staffs.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+    setStaffs(fil);
   };
 
   const getDiscounts = async () => {

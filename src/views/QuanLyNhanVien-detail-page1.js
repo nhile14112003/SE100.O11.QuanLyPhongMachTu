@@ -1,20 +1,31 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import moment from "moment";
 import "./style.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Api from "../api/Api";
 import LuongThuong from "./QuanLyNhanVien-LuongThuong";
+import { AuthContext } from '../hook/AuthProvider'
 
 const XemBangLuong = (props) => {
+  const {user} = useContext(AuthContext);
   const [table, setTable] = useState([]);
+  const [branches, setBranches] = useState(user?.chinhanh||[]);
   const [selectedMonth, setSelectedMonth] = useState(
     moment().format("YYYY-MM")
   );
+  const [targetBranch, setTargetBranch] = useState('Tất cả');
   const CHAMCONG = useRef();
   useEffect(() => {
     getWorkTimes();
+    getBranches();
   }, []);
+  const getBranches = async () => {
+    if(user?.Loai==='ChuHeThong'){
+    const branches = await Api.getAllBranchs();
+    setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
+    }
+  };
 
   const getWorkTimes = async () => {
     const endpoint = "/StaffManagement/getAll/ChamCong";
@@ -56,7 +67,17 @@ const XemBangLuong = (props) => {
           });
         });
 
-      const staffs = await Api.getAllStaffs();
+      const staffstemp = await Api.getAllStaffs();
+      let staffs = []
+      if(targetBranch=='Tất cả')
+      {
+        staffs = staffstemp
+      }
+      else{
+        staffs = staffstemp.filter((item,idx)=>
+        item.chiNhanh === targetBranch
+      )
+    }
       const bonuses = await Api.getDocs("/StaffManagement/getAll/LuongThuong");
       bonuses.filter(
         (item) => item.Thang == selectedmonth && item.Nam == selectedyear
@@ -108,7 +129,25 @@ const XemBangLuong = (props) => {
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
         />
+         <text>Chi nhánh: </text>
+        <select
+          className="customBox"
+          id="type"
+          name="chiNhanh"
+          value={targetBranch}
+          onChange={(e)=>setTargetBranch(e.target.value)}
+        >
+          {user?.Loai==='ChuHeThong'?branches.map((item, index) => (
+            <option key={index} value={item.tenChiNhanh}>
+              {item.tenChiNhanh}
+            </option>
+          )):
+          <option  value={user?.chinhanh}>
+              {user?.chinhanh}
+            </option>}
+        </select>
       </div>
+    
 
       <button
         type="submit"

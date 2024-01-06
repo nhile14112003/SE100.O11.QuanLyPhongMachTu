@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-
-export const FormThuoc = ({ closeModal, onSubmit, defaultValue }) => {
+import React, { useState,useContext } from "react";
+import { AuthContext } from '../hook/AuthProvider'
+export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
+  const {user} = useContext(AuthContext);
   const [formState, setFormState] = useState(
     defaultValue || {
       maThuoc: "",
@@ -11,6 +12,7 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue }) => {
       hanSuDung: "",
       ngayNhap: "",
       soLuongTonKho: "",
+      chiNhanh:"",
     }
   );
   const [errors, setErrors] = useState("");
@@ -138,6 +140,26 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue }) => {
               value={formState.ngayNhap}
             />
           </div>
+          {user?.Loai==='ChuHeThong'&&<div className="form-group">
+          <label for="chiNhanh">Chi nhánh</label>
+              <select
+                className="form-select pb-2 pt-2 mb-2"
+                id="type"
+                name="chiNhanh"
+                onChange={handleChange}
+                value={formState.chiNhanh}
+              >
+                {branches.map((item, index) => {
+                  if(item.tenChiNhanh!=='Tất cả')
+                  return(
+                  <option key={index} value={item.tenChiNhanh}>
+                    {item.tenChiNhanh}
+                  </option>
+                  )
+                 })
+                }
+              </select>
+            </div>}
           {defaultValue &&
             <div className="form-group">
               <label htmlFor="soLuongTonKho">Số lượng tồn kho</label>

@@ -1,9 +1,11 @@
 import moment from "moment";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext} from "react";
 import Api from "../api/Api";
 import NotificationModal from "../components/NotificationModal";
+import { AuthContext } from '../hook/AuthProvider'
 
 const ChamCong = () => {
+  const {user} = useContext(AuthContext);
   const BANGCHAMCONG = useRef();
   const [table, setTable] = useState([]);
   const [selectedDate, setSelectedDate] = useState(
@@ -11,17 +13,27 @@ const ChamCong = () => {
   );
   const [showNoti, setShowNoti] = useState(false);
   const [notiBody, setNotiBody] = useState("");
+  const [branches, setBranches] = useState(user?.chinhanh||[]);
+  const [targetBranch, setTargetBranch] = useState('Tất cả');
+  const [nhanvien, setNhanVien] = useState([]);
 
   useEffect(() => {
     getWorkTimes();
+    getBranches()
   }, []);
+  const getBranches = async () => {
+    if(user?.Loai==='ChuHeThong'){
+    const branches = await Api.getAllBranchs();
+    setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
+    }
+  };
 
   const getWorkTimes = async () => {
     const endpoint = "/StaffManagement/getAll/ChamCong";
     const worktimes = await Api.getDocs(endpoint);
 
     const staffs = await Api.getAllStaffs();
-
+    setNhanVien(staffs)
     const currentDate = new Date();
     BANGCHAMCONG.current = worktimes.find(
       (item) =>
@@ -30,16 +42,25 @@ const ChamCong = () => {
     );
     if (BANGCHAMCONG.current) {
       const result = [
-        ...BANGCHAMCONG.current[selectedDate],
+        ...BANGCHAMCONG.current[selectedDate]
+        .filter((item)=>{
+          if(targetBranch==='Tất cả')return true
+          else{
+            const find = staffs.find((nv)=>nv.maNhanVien===item.MaNV)
+            return find.chiNhanh === targetBranch
+          }      
+        })
+        ,
         // item in staffs that not in BANGCHAMCONG
         ...staffs
           .filter((item1) => {
             const item2 = BANGCHAMCONG.current[selectedDate].find(
-              (item2) => item2.MaNV === item1.maNhanVien
+              (item2) => item2.MaNV === item1.maNhanVien 
             );
 
             return !item2;
           })
+          .filter((item)=>item.chiNhanh===targetBranch||targetBranch==='Tất cả')
           .map((item1) => {
             return {
               MaNV: item1.maNhanVien,
@@ -109,7 +130,36 @@ const ChamCong = () => {
       new Date(selectedDate).getMonth() == new Date().getMonth() &&
       new Date(selectedDate).getFullYear() == new Date().getFullYear()
     ) {
-      setTable(BANGCHAMCONG.current[selectedDate]);
+      const result = [
+        ...BANGCHAMCONG.current[selectedDate]
+        .filter((item)=>{
+          if(targetBranch==='Tất cả')return true
+          else{
+            const find = nhanvien.find((nv)=>nv.maNhanVien===item.MaNV)
+            return find.chiNhanh === targetBranch
+          }      
+        })
+        ,
+        // item in staffs that not in BANGCHAMCONG
+        ...nhanvien
+          .filter((item1) => {
+            const item2 = BANGCHAMCONG.current[selectedDate].find(
+              (item2) => item2.MaNV === item1.maNhanVien 
+            );
+
+            return !item2;
+          })
+          .filter((item)=>item.chiNhanh===targetBranch||targetBranch==='Tất cả')
+          .map((item1) => {
+            return {
+              MaNV: item1.maNhanVien,
+              TenNV: item1.tenNhanVien,
+              SoGioLam: 0,
+            };
+          }),
+      ];
+      setTable(result);
+      // setTable(BANGCHAMCONG.current[selectedDate]);
     }
   };
   return (
@@ -125,6 +175,23 @@ const ChamCong = () => {
           value={selectedDate}
           onChange={(e) => setSelectedDate(e.target.value)}
         />
+           <text>Chi nhánh: </text>
+        <select
+          className="customBox"
+          id="type"
+          name="chiNhanh"
+          value={targetBranch}
+          onChange={(e)=>setTargetBranch(e.target.value)}
+        >
+          {user?.Loai==='ChuHeThong'?branches.map((item, index) => (
+            <option key={index} value={item.tenChiNhanh}>
+              {item.tenChiNhanh}
+            </option>
+          )):
+          <option  value={user?.chinhanh}>
+              {user?.chinhanh}
+            </option>}
+        </select>
         <div className="text-start">
           <button
             type="submit"

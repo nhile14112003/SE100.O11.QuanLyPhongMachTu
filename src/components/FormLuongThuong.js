@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import Api from "../api/Api";
+import { AuthContext } from '../hook/AuthProvider'
 
-export const FormLuongThuong = ({ closeModal, onSubmit, defaultValue }) => {
+export const FormLuongThuong = ({ closeModal, onSubmit, defaultValue, branches }) => {
+  const {user} = useContext(AuthContext);
   const [formState, setFormState] = useState(
     defaultValue || {
       LoaiLuongThuong: "",
@@ -11,6 +13,7 @@ export const FormLuongThuong = ({ closeModal, onSubmit, defaultValue }) => {
       LoaiNhanVien: "Tất cả",
       MaNV: "",
       GhiChu: "",
+      chiNhanh:""
     }
   );
   const [errors, setErrors] = useState("");
@@ -22,7 +25,15 @@ export const FormLuongThuong = ({ closeModal, onSubmit, defaultValue }) => {
 
   const getStaffs = async () => {
     const staffs = await Api.getAllStaffs();
-    setStaffs(staffs);
+    if(user?.Loai!=='ChuHeThong'){
+      const fil = staffs.filter((item, idx)=>item.chiNhanh===user.chinhanh)
+      setStaffs(fil)
+     }
+     else{
+      const fil = staffs.filter((item, idx)=>item.chiNhanh===formState.chiNhanh)
+      console.log(fil)
+       setStaffs(fil);
+     }
   };
   const validateForm = () => {
     let validate = true;
@@ -62,10 +73,16 @@ export const FormLuongThuong = ({ closeModal, onSubmit, defaultValue }) => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
+
     if (e.target.name == "LoaiNhanVien" && e.target.value != "Cá nhân")
       setFormState({ ...formState, [e.target.name]: e.target.value, MaNV: "" });
     else setFormState({ ...formState, [e.target.name]: e.target.value });
+        if(e.target.name==='chiNhanh'){
+      const staffs = await Api.getAllStaffs();
+      const fil = staffs.filter((item, idx)=>item.chiNhanh===e.target.value)
+       setStaffs(fil);  
+    }
   };
 
   const handleSubmit = (e) => {
@@ -140,6 +157,33 @@ export const FormLuongThuong = ({ closeModal, onSubmit, defaultValue }) => {
             <option value="Quản lý">Quản lý</option>
             <option value="Cá nhân">Cá nhân</option>
           </select>
+          {user?.Loai==='ChuHeThong'&&<div>
+              <div className="mb-2">
+                <b>Chi nhánh áp dụng</b>
+              </div>
+              <select
+                className="form-select pb-2 pt-2 mb-2"
+                id="type"
+                name="chiNhanh"
+                onChange={handleChange}
+                value={formState.chiNhanh}
+              >
+                {formState.LoaiNhanVien === "Cá nhân"?branches.map((item, index) => {
+                  if(item.tenChiNhanh!=='Tất cả')
+                  return(
+                  <option key={index} value={item.tenChiNhanh}>
+                    {item.tenChiNhanh}
+                  </option>
+                  )
+}):
+                branches.map((item, index) => (
+                  <option key={index} value={item.tenChiNhanh}>
+                    {item.tenChiNhanh}
+                  </option>
+                ))
+                }
+              </select>
+            </div>}
           {formState.LoaiNhanVien === "Cá nhân" ? (
             <div>
               <div className="mb-2">

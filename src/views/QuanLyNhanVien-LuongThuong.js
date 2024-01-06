@@ -1,34 +1,63 @@
 import { BsFillTrashFill, BsFillPencilFill, BsEye } from "react-icons/bs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { FormLuongThuong } from "../components/FormLuongThuong";
 import Api from "../api/Api";
+import { AuthContext } from '../hook/AuthProvider'
 
 const LuongThuong = () => {
+  const {user} = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [rowToEdit, setRowToEdit] = useState(null);
   const [bonuses, setBonuses] = useState([]);
-
+  const [branches, setBranches] = useState(user?.chinhanh||[]);
+  const [targetBranch, setTargetBranch] = useState('Tất cả');
   useEffect(() => {
     getBonuses();
+    getBranches();
   }, []);
-
+  const getBranches = async () => {
+    if(user?.Loai==='ChuHeThong'){
+    const branches = await Api.getAllBranchs();
+    setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
+    }
+  };
   const getBonuses = async () => {
     const endpoint = "/StaffManagement/getAll/LuongThuong";
     const bonuses = await Api.getDocs(endpoint);
     const currentDate = new Date();
-    setBonuses(
-      bonuses.filter(
-        (item) =>
-          item.Thang == currentDate.getMonth() + 1 &&
-          item.Nam == currentDate.getFullYear()
+    if(user?.Loai!=='ChuHeThong'){
+      const fil = bonuses.filter((item, idx)=>item.chiNhanh===user?.chinhanh||item.chiNhanh==='Tất cả')
+      setBonuses(
+        fil.filter(
+          (item) =>
+            item.Thang == currentDate.getMonth() + 1 &&
+            item.Nam == currentDate.getFullYear()
+        )
       )
-    );
+      }
+      else{
+        setBonuses(
+          bonuses.filter(
+            (item) =>
+              item.Thang == currentDate.getMonth() + 1 &&
+              item.Nam == currentDate.getFullYear()
+          )
+        );
+      }
+   
   };
 
   const handleSubmit = async (newRow) => {
     if (rowToEdit == null) {
+      let chiNhanh=''
+      if(user?.Loai==='ChuHeThong'){
+        chiNhanh = newRow.chiNhanh
+        }
+        else{
+          chiNhanh = user?.chinhanh
+        }
       const endpoint = "/StaffManagement/add/LuongThuong";
-      const id = await Api.addDoc(endpoint, newRow);
+      const id = await Api.addDoc(endpoint, {...newRow,chiNhanh:chiNhanh});
       newRow.Id = id;
       setBonuses([...bonuses, newRow]);
     } else {
@@ -61,6 +90,35 @@ const LuongThuong = () => {
   return (
     <div>
       <div className="text-end">
+      <text style={{ marginLeft: 10 }}>Áp dụng: </text>
+        <select
+          className="customBox"
+          id="type"
+          name="chiNhanh"
+          onChange={async (e)=>{
+            const endpoint = "/StaffManagement/getAll/LuongThuong";
+            const bonuses = await Api.getDocs(endpoint);
+            if(user?.Loai==='ChuHeThong'){
+              const fil = bonuses.filter((item, idx)=>item.chiNhanh===e.target.value)
+              setBonuses(fil)
+            }
+            else{
+              const fil = bonuses.filter((item, idx)=>item.chiNhanh===e.target.value||item.chiNhanh==='Tất cả')
+              setBonuses(fil)
+            }
+           
+          }}
+        >
+           {user?.Loai==='ChuHeThong'?branches.map((item, index) => (
+            <option key={index} value={item.tenChiNhanh}>
+              {item.tenChiNhanh}
+            </option>
+          )):
+           <option  value={user?.chinhanh}>
+              {user?.chinhanh}
+            </option>
+         }
+        </select>
         <button
           type="submit"
           className="btn pb-2 pt-2 mt-2 ms-3"
@@ -117,6 +175,7 @@ const LuongThuong = () => {
           }}
           defaultValue={rowToEdit !== null && bonuses[rowToEdit]}
           onSubmit={handleSubmit}
+          branches={branches}
         />
       )}
     </div>

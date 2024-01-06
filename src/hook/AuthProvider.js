@@ -31,9 +31,12 @@ export const AuthProvider = ({ children }) => {
   };
   const [user, setUser] = useState(null);
     const FirstLogin = async (id) => {
+      console.log('id'+id)
       const userData = await Api.getUserData(id)
         .catch(error => console.error(error));
+        console.log(userData)
       if(userData && userData.id) {
+        // console.log(userData)
         setUser(userData)
         if(userData.Loai==='KhachHang'){
           const patients = await api.getPatientsBySeacrh({ maBenhNhan: "",

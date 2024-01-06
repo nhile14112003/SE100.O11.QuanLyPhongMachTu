@@ -1,8 +1,9 @@
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext} from "react";
 import api from '../api/Api';
 import Select from 'react-select';
 import { FormMaterialUsed } from "../components/FormMaterialUsed";
+import { AuthContext } from '../hook/AuthProvider'
 const MaterialUsed = () => {
     // const materialsUsed = [
     //     {
@@ -25,17 +26,20 @@ const MaterialUsed = () => {
     const [rowToEdit, setRowToEdit] = useState(null);
     const [materialsUsed, setMaterialUsed] = useState(null)
     const [khoiphucSL, setKhoiPhucSL] = useState(null)
+    const {user} = useContext(AuthContext);
     useEffect(async () => {
         await getMaterials();
         getMatierialUsed()
     }, []);
     const getMaterials = async () => {
         const materials = await api.getAllMaterials()
-        setMaterials(materials);
+        const fil = materials.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+        setMaterials(fil);
     }
     const getMatierialUsed = async()=>{
         const res = await api.getMaterialsUsed()
-        setMaterialUsed(res)
+        const fil = res.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+        setMaterialUsed(fil)
     
     }
     const handleDeleteRow = async (item,id) => {
@@ -65,7 +69,7 @@ const MaterialUsed = () => {
     }
     const handleSubmit = async (newRow) => {
         if (rowToEdit == null) {
-            const id = await api.addMaterialUsed(newRow);
+            const id = await api.addMaterialUsed({...newRow,chiNhanh:user.chinhanh});
             newRow.Id = id.docId;
             setMaterialUsed([...materialsUsed, newRow]);
                 const result = materials.filter((item1, idx) => item1.maVatTu === newRow.maVatTu)
@@ -105,7 +109,9 @@ const MaterialUsed = () => {
     
         const searchResults = await api.getMaterialUsedBySearch(searchCriteria);
         console.log(searchResults);
-        setMaterialUsed(searchResults);
+        const fil = searchResults.filter((item, idx)=>item.chiNhanh===user.chinhanh)
+        console.log(fil)
+        setMaterialUsed(fil);
       }
     return (
         <div>

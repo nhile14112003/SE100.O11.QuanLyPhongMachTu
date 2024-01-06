@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './style.css'
 import moment from 'moment';
 import { BsFillTrashFill, BsFillPencilFill, BsEye } from "react-icons/bs";
@@ -9,6 +9,7 @@ import api from '../api/Api';
 import upload from '../api/upload';
 import axios from 'axios';
 import Select from 'react-select';
+import { AuthContext } from '../hook/AuthProvider'
 
 const PatientManagement = (props) => {
     //fake data
@@ -43,6 +44,7 @@ const PatientManagement = (props) => {
     // ])
     const [customers,setCustomers] = useState( [])
     const [imageFile1, setImageFile1] = useState(null);
+    const {user} = useContext(AuthContext);
     const CTHSDT = [
         {
             MaCTHSDT: "CTHS002",
@@ -205,7 +207,8 @@ const PatientManagement = (props) => {
         var nhasi1 = response.filter( (ns)=> {
           return ns.chucVu === 'Nha sĩ';
         });
-        setNhaSi(nhasi1)
+        const fil = nhasi1.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+        setNhaSi(fil)
     }
     useEffect(() => {
         getPatients();
@@ -215,11 +218,13 @@ const PatientManagement = (props) => {
       }, []);
     const getMedicine = async()=>{
         const medicine = await api.getAllDrugs()
-        setMedicines(medicine)
+        const fil = medicine.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+        setMedicines(fil)
     }
       const getPatients = async () => {
         const patients = await api.getAllPatients()
-        setCustomers(patients)
+        const fil = patients.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+        setCustomers(fil)
       }
     const nextPage = () => {
         setPage(page + 1);
@@ -233,9 +238,10 @@ const PatientManagement = (props) => {
         let list = []
         for (let i = 0 ; i < item.Thuoc.length; i++){
             const result = medicines.filter((item1, idx) => item1.maThuoc === item.Thuoc[i].maThuoc)
+            if(result.length>0){
             let lamlai = parseInt(result[0].soLuongTonKho) + parseInt(item.Thuoc[i].SL)
-            // api.updateDrug({soLuongTonKho:lamlai.toString()},result[0].Id)
             list.push({...result[0],soLuongTonKho:lamlai.toString()})
+            }
           }
           setKhoiPhucSL(list)
         setSelectedRecord(item);
@@ -247,7 +253,7 @@ const PatientManagement = (props) => {
     const handleSubmit = async (newRow) => {
          console.log(newRow);
         if (patientRowToEdit == null) {
-          const id = await api.addPatient(newRow);
+          const id = await api.addPatient({...newRow,chiNhanh:user?.chinhanh});
           newRow.Id = id.docId;
           newRow.IDhsdt = id.hsdtId
           setCustomers([...customers, newRow]);
@@ -264,8 +270,9 @@ const PatientManagement = (props) => {
     const onSearch = async () => {
     
         const searchResults = await api.getPatientsBySeacrh(searchCriteria);
-        // console.log(searchResults);
-        setCustomers(searchResults);
+        console.log(searchResults);
+        const fil = searchResults.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+        setCustomers(fil);
         // setSearchCriteria({
         //     maBenhNhan: "",
         //     tenBenhNhan: "",
@@ -281,7 +288,9 @@ const PatientManagement = (props) => {
       }
     const handleDeleteRecordRow = (targetIndex) => {
         const shouldDelete = window.confirm('Bạn có chắc muốn xóa hồ sơ điều trị này không?');
+        console.log('h1')
         if (shouldDelete) {
+            console.log('h2')
             api.deleteCTHSDT(listcthsdt[targetIndex].Id,listcthsdt[targetIndex].IdHoaDon)
           setListCTHSDT(listcthsdt.filter((_, idx) => idx !== targetIndex));
           setCTHSDT({
@@ -353,6 +362,7 @@ const PatientManagement = (props) => {
     const ThanhTien = ()=>{
         let tien = 0
         for(let i = 0; i < cthsdt.DichVu.length; i++){
+            if(cthsdt.DichVu[i].taiKham===false)
             tien = tien + parseInt(cthsdt.DichVu[i].DonGia)*parseInt(cthsdt.DichVu[i].SL)
         }
         for(let i = 0; i < cthsdt.Thuoc.length; i++){
@@ -361,7 +371,7 @@ const PatientManagement = (props) => {
         return tien
     }
     const handlechangeformCTHSDT = (e)=>{
-        if(cthsdt.edit===false){
+        if(cthsdt.edit===false||state==='create'){
         setCTHSDT({ ...cthsdt, [e.target.name]: e.target.value })
         }
     }
@@ -397,6 +407,8 @@ const PatientManagement = (props) => {
             var month = ("0" + (now.getMonth() + 1)).slice(-2); // Thêm '0' ở trước nếu tháng < 10
             var day = ("0" + now.getDate()).slice(-2); // Thêm '0' ở trước nếu ngày < 10
             var formattedDate = year + "-" + month + "-" + day;
+            const branchdiachi = await api.getBranchsBySeacrh({tenChiNhanh:user?.chinhanh, maChiNhanh:'', slpDau:'', slpCuoi:''})
+            console.log(branchdiachi)
             const data = {
             chitietHSDT:{
               ...cthsdt,
@@ -404,7 +416,8 @@ const PatientManagement = (props) => {
               IDhsdt: selectedPatient?.IDhsdt,
               NgayDieuTri: formattedDate,
               AnhSauDieuTri: image,
-              IdHoaDon:''
+              IdHoaDon:'',
+              tenChiNhanh:branchdiachi[0].tenChiNhanh,
             },
             HoaDon:{
                 maBenhNhan:selectedPatient.maBenhNhan,
@@ -425,7 +438,9 @@ const PatientManagement = (props) => {
                 maNhanVien:'',
                 tuoi:'',
                 tenNhanVien:'',
-                phanTram:0
+                phanTram:0,
+                tenChiNhanh:branchdiachi[0].tenChiNhanh,
+                diaChiChiNhanh:branchdiachi[0].diaChi
             }
             };
             for (let i = 0 ; i < cthsdt.Thuoc.length; i++){
@@ -606,7 +621,7 @@ const PatientManagement = (props) => {
                                         <td>{item.NgayDieuTri}</td>
                                         <td className="fit">
                                             <span className="actions">
-                                            {item?.edit===false&&<BsFillTrashFill
+                                            {item?.edit!==true&&<BsFillTrashFill
                                                     className="delete-btn"
                                                     onClick={() => handleDeleteRecordRow(index)}
                                                 />}
@@ -674,7 +689,7 @@ const PatientManagement = (props) => {
                                 objectFit: "cover"
                             }} id="imagePreview"/>
                             <input type="file" hidden accept="image/*" name="HinhAnhSauDieuTri" id="HinhAnhSauDieuTri" onChange={handleImageChange} />
-                            {cthsdt.edit===false&&<div className="mt-3" align="center">
+                            {(cthsdt.edit===false||state==='create')&&<div className="mt-3" align="center">
                                 <label for="HinhAnhSauDieuTri" className='btn d-flex btn-primary' style={{ width: "fit-content" }}>
                                     <div><i className="fa-solid fa-cloud-arrow-up me-2" style={{ color: "#FFF", fontSize: "35px" }}></i></div>
                                     <div className='m-auto'>Đăng ảnh</div>
@@ -682,7 +697,7 @@ const PatientManagement = (props) => {
                                 </label>
                             </div>}
                         </div>
-                        {cthsdt?.edit===false&&<div className="text-end">
+                        {(cthsdt?.edit===false||state=="create")&&<div className="text-end">
                             <button type="submit" className="btn pb-2 pt-2 ps-3 mt-2 pe-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={() => setServiceModalOpen(true)}>
                                 Thêm dịch vụ
                             </button>
@@ -706,7 +721,7 @@ const PatientManagement = (props) => {
                                         <td>{item.DonGia}</td>
                                         <td>{item.SL}</td>
                                         <td className="fit">
-                                        {cthsdt?.edit===false&&<span className="actions">
+                                        {cthsdt?.edit!=true&&<span className="actions">
                                                 <BsFillTrashFill
                                                     className="delete-btn"
                                                     onClick={() => handleDeleteServiceRow(index)}
@@ -734,7 +749,7 @@ const PatientManagement = (props) => {
                                         <td>{item.SL} viên</td>
                                         <td>{item.DonGia}/viên</td>
                                         <td className="fit">
-                                            {cthsdt?.edit===false&&<span className="actions">
+                                            {cthsdt?.edit!=true&&<span className="actions">
                                                 <BsFillTrashFill
                                                     className="delete-btn"
                                                     onClick={() => handleDeleteMedicineRow(index)}
@@ -750,7 +765,7 @@ const PatientManagement = (props) => {
                             </tbody>
                         </table>
                         <div className='text-end'><b>Thành tiền: {ThanhTien()}</b></div>
-                        {cthsdt.edit===false&&<div className="text-end">
+                        {(cthsdt.edit===false||state=="create")&&<div className="text-end">
                             <button type="submit" className="btn pb-2 pt-2 mt-3 mb-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={saveCTHSDT}>
                                 Lưu
                             </button>

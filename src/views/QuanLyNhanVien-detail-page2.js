@@ -15,6 +15,7 @@ import {
 import { AuthContext } from '../hook/AuthProvider'
 
 const XemThongTinNhanVien = (props) => {
+  const {user} = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [staffs, setStaffs] = useState([]);
   const [rowToEdit, setRowToEdit] = useState(null);
@@ -22,12 +23,12 @@ const XemThongTinNhanVien = (props) => {
     maNhanVien: "",
     tenNhanVien: "",
     chucVu: "Tất cả",
-    chiNhanh: "Tất cả",
+    chiNhanh: "",
     luongDau: "",
     luongCuoi: "",
   });
 
-  const [branches, setBranches] = useState([]);
+  const [branches, setBranches] = useState(user?.chinhanh||[]);
   const [positions, setPositions] = useState([
     "Tất cả",
     "Nha sĩ",
@@ -43,12 +44,20 @@ const XemThongTinNhanVien = (props) => {
 
   const getStaffs = async () => {
     const staffs = await api.getAllStaffs();
-    setStaffs(staffs);
+    if(user?.Loai!=='ChuHeThong'){
+     const fil = staffs.filter((item, idx)=>item.chiNhanh===user.chinhanh)
+     setStaffs(fil)
+    }
+    else{
+      setStaffs(staffs);
+    }
   };
 
   const getBranches = async () => {
+    if(user?.Loai==='ChuHeThong'){
     const branches = await api.getAllBranchs();
     setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
+    }
   };
 
   const handleDeleteRow = async (targetIndex) => {
@@ -179,11 +188,14 @@ const XemThongTinNhanVien = (props) => {
           name="chiNhanh"
           onChange={handleChange}
         >
-          {branches.map((item, index) => (
+           {user?.Loai==='ChuHeThong'?branches.map((item, index) => (
             <option key={index} value={item.tenChiNhanh}>
               {item.tenChiNhanh}
             </option>
-          ))}
+          )):
+          <option  value={user?.chinhanh}>
+              {user?.chinhanh}
+            </option>}
         </select>
         <div>
           <text>Lương cơ bản: Từ </text>
