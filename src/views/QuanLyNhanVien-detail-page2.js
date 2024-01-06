@@ -6,6 +6,13 @@ import { FormChiTietNhanVien } from "../components/FormChiTietNhanVien";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import api from "../api/Api";
+import { auth } from "../hook/FirebaseConfig";
+import {
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  deleteUser,
+} from "firebase/auth";
+import { AuthContext } from '../hook/AuthProvider'
 
 const XemThongTinNhanVien = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -44,13 +51,18 @@ const XemThongTinNhanVien = (props) => {
     setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
   };
 
-  const handleDeleteRow = (targetIndex) => {
+  const handleDeleteRow = async (targetIndex) => {
     const shouldDelete = window.confirm(
       "Are you sure you want to delete this staff?"
     );
     if (shouldDelete) {
       setStaffs(staffs.filter((_, idx) => idx !== targetIndex));
       api.deleteStaff(staffs[targetIndex].Id);
+      const id = await api.findAccountofStaff(staffs[targetIndex].maNhanVien)
+      console.log('id'+id)
+      if(id){
+       api.deleteUserAccount(id)
+      }
     }
   };
 
@@ -65,6 +77,40 @@ const XemThongTinNhanVien = (props) => {
       const id = await api.addStaff(newRow);
       newRow.Id = id;
       setStaffs([...staffs, newRow]);
+      createUserWithEmailAndPassword(auth, newRow.email, newRow.soDienThoai)
+      .then((userCredential) => {
+        // sendPasswordResetEmail(auth,auth.currentUser.email)
+        // .then(() => {
+        //     // Thành công, có thể thông báo cho người dùng về việc gửi email đặt lại mật khẩu, mật khẩu mặc định là số đt
+        //     console.log("Đã gửi email đặt lại mật khẩu.");
+        //   })
+        //   .catch((error) => {
+        //     // Xử lý lỗi nếu có
+        //     console.error("Lỗi khi gửi email đặt lại mật khẩu: ", error);
+        //   });
+        // Signed up
+        const user = userCredential.user;
+        console.log(user)
+        const userData = {
+            id: auth.currentUser.uid,
+            ten: newRow.tenNhanVien,
+            email: auth.currentUser.email,
+            maNV:newRow.maNhanVien,
+            chinhanh:newRow.chiNhanh,
+            tuoi:'',
+            diachi:'',
+            CCCD:'',
+            SDT:newRow.soDienThoai,
+            Loai:newRow.chucVu
+          }
+          api.setUserInfo(userData)
+          .catch(error => console.error(error));
+        // ...
+      })
+      .catch((error) => {
+        console.log("Error sign up", error);
+        // ..
+      });
     } else {
       api.updateStaff(newRow, newRow.Id);
       let updatedStaffs = staffs.map((currRow, idx) => {
@@ -72,6 +118,14 @@ const XemThongTinNhanVien = (props) => {
         return newRow;
       });
       setStaffs(updatedStaffs);
+      const id = await api.findAccountofStaff(newRow.maNhanVien)
+      api.updateUser({
+        id:id,
+        ten:newRow.tenNhanVien,
+        chinhanh:newRow.chiNhanh,
+        SDT:newRow.soDienThoai,
+        Loai:newRow.chucVu
+      })
     }
   };
 

@@ -787,7 +787,31 @@ const getMaterialUsedBySearch = async (searchCriteria) => {
     return [];
   }
 };
-
+// router.get('/findAccountofStaff/:maNV',findStaffbymaNV)
+const findAccountofStaff = async(maNV) => {
+  try{
+      const response = await client.get('/findAccountofStaff/'+maNV)
+      if(response.data.success){
+          return response.data.idTK;           
+      }
+      else{
+          console.log("not get")
+      }        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+      return {};
+  }
+}
+// router.delete("/deleteUserAccount/:Id", deleteUser);
+const deleteUserAccount = async (id)=>{
+  try{
+      await client.delete('/deleteUserAccount/' + id);        
+  }
+  catch(error){
+      console.log('error: ', error.message)
+  }
+}
 export default {
   getAllServices,
   addService,
@@ -837,5 +861,5 @@ export default {
   updateDoctorSchedule,
   getAllPatients, addPatient, updatePatient, deletePatient, getPatientsBySeacrh, getHSDT, addCTHSDT, updateCTHSDT, getListCTHSDT,getPatientData,deleteCTHSDT,getCTHSDTsBySeacrh,
   addUser, updateUser, setUserInfo,getUserData,
-  addMaterialUsed, getMaterialsUsed, updateMaterialUsed, deleteMaterialUsed, getMaterialUsedBySearch,
+  addMaterialUsed, getMaterialsUsed, updateMaterialUsed, deleteMaterialUsed, getMaterialUsedBySearch,findAccountofStaff, deleteUserAccount
 };

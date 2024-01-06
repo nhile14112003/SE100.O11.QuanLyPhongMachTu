@@ -48,21 +48,21 @@ export const AuthProvider = ({ children }) => {
         }
         else {
           setScope(nav.nav2)
-          if(userData.Loai==='NhanVienQuanLy'){
+          if(userData.Loai==='Quản lý'){
             setScopeQL(nav.nav2_1)
           }
-          else if(userData.Loai==='NhanVienTiepTan'){
+          else if(userData.Loai==='Tiếp tân'){
             setScopeQL(nav.nav2_2)
             setScopeQLLH(nav.nav2_2_1)
           }
           else if(userData.Loai==='ChuHeThong'){
             setScopeQL(nav.nav2_3)
           }
-          else if(userData.Loai==='PhuTa'){
+          else if(userData.Loai==='Phụ tá'){
             setScopeQL(nav.nav2_4)
             setScopeQLLH(nav.nav2_5_1)
           }
-          else if(userData.Loai==='NhaSi'){
+          else if(userData.Loai==='Nha sĩ'){
             setScopeQL(nav.nav2_5)
             setScopeQLLH(nav.nav2_5_1)
           }
@@ -71,11 +71,14 @@ export const AuthProvider = ({ children }) => {
     }
     useEffect(() => {
          const listen = onAuthStateChanged(auth, async (u) => {
+          if(u&&u.metadata.creationTime===u.metadata.lastSignInTime) return null
            if (u) {
+            console.log('hahaah')
              FirstLogin(u.uid)
            } else {
              setUser(null);
            }
+          
          });
          return ()=>{
           listen();
