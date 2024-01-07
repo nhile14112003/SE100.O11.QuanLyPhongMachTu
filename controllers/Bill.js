@@ -99,7 +99,6 @@ function compareDates(dateString1, dateString2) {
 
 const getBillsBySearch = async (req, res) => {
   const { maHoaDon, maBenhNhan, tenBenhNhan, ngayLap, tinhTrang } = req.query;
-  console.log("start");
   const myCollection = collection(firestore, "HoaDon");
   try {
     const querySnapshot = await getDocs(myCollection);
@@ -109,20 +108,20 @@ const getBillsBySearch = async (req, res) => {
       return { ...data, Id: docId };
     });
     const searchResults = list.filter((hoadon) => {
-      const normalizeText = (text) => text.toLowercase();
+      const normalizeText = (text) => text.toLowerCase();
       console.log("abc");
       const matchMaHoaDon =
-        maHoaDon == "" ||
+        maHoaDon === "" ||
         normalizeText(hoadon.maHoaDon).includes(normalizeText(maHoaDon));
       const matchMaBenhNhan =
-        maBenhNhan == "" ||
+        maBenhNhan === "" ||
         normalizeText(hoadon.maBenhNhan).includes(normalizeText(maBenhNhan));
       const matchTenBenhNhan =
-        tenBenhNhan == "" ||
+        tenBenhNhan === "" ||
         normalizeText(hoadon.tenBenhNhan).includes(normalizeText(tenBenhNhan));
 
       const matchNgayLap =
-        ngayLap == "" || compareDates(ngayLap, hoadon.ngayLap) == 0;
+        ngayLap === "" || compareDates(ngayLap, hoadon.ngayLap) == 0;
 
       const matchTinhTrang = tinhTrang == "" || tinhTrang == hoadon.tinhTrang;
       return (
