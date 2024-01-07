@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import moment from "moment";
 import { FormBookingSchedule } from "../components/FormBookingSchedule";
 import Api from "../api/Api";
+import { AuthContext } from '../hook/AuthProvider'
 
 const BookingSchedule = () => {
+  const {user} = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [doctorSchedules, setDoctorSchedules] = useState();
@@ -25,7 +27,7 @@ const BookingSchedule = () => {
     setDoctors(
       doctors.filter((item) => {
         item.date = moment().format("YYYY-MM-DD");
-        return item.chucVu === "Nha sĩ";
+        return item.chucVu === "Nha sĩ" && item.chiNhanh === user?.chinhanh;
       })
     );
   };
@@ -39,9 +41,10 @@ const BookingSchedule = () => {
   };
 
   const handleSubmit = async (newData) => {
+    const res = await Api.getStaffsBySeacrh()
     if (flag == "add") {
       const endpoint = "/ScheduleManagement/add/LichHen";
-      const id = await Api.addDoc(endpoint, newData);
+      const id = await Api.addDoc(endpoint, {...newData, chiNhanh:selectedItem?.doctor.chiNhanh});
 
       const newWorkTime = {
         gio: selectedItem.selectedWorkTime.gio,
@@ -71,7 +74,7 @@ const BookingSchedule = () => {
       }
     } else if (flag == "edit") {
       const endpoint = "/ScheduleManagement/update/LichHen/" + newData.Id;
-      const success = await Api.updateDoc(endpoint, newData);
+      const success = await Api.updateDoc(endpoint, {...newData, chiNhanh:selectedItem?.doctor.chiNhanh});
     }
   };
 

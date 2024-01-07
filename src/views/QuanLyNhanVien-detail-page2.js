@@ -88,15 +88,15 @@ const XemThongTinNhanVien = (props) => {
       setStaffs([...staffs, newRow]);
       createUserWithEmailAndPassword(auth, newRow.email, newRow.soDienThoai)
       .then((userCredential) => {
-        // sendPasswordResetEmail(auth,auth.currentUser.email)
-        // .then(() => {
-        //     // Thành công, có thể thông báo cho người dùng về việc gửi email đặt lại mật khẩu, mật khẩu mặc định là số đt
-        //     console.log("Đã gửi email đặt lại mật khẩu.");
-        //   })
-        //   .catch((error) => {
-        //     // Xử lý lỗi nếu có
-        //     console.error("Lỗi khi gửi email đặt lại mật khẩu: ", error);
-        //   });
+        sendPasswordResetEmail(auth,auth.currentUser.email)
+        .then(() => {
+            // Thành công, có thể thông báo cho người dùng về việc gửi email đặt lại mật khẩu, mật khẩu mặc định là số đt
+            console.log("Đã gửi email đặt lại mật khẩu.");
+          })
+          .catch((error) => {
+            // Xử lý lỗi nếu có
+            console.error("Lỗi khi gửi email đặt lại mật khẩu: ", error);
+          });
         // Signed up
         const user = userCredential.user;
         console.log(user)

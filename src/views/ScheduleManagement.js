@@ -43,7 +43,7 @@ const ScheduleManagement = (props) => {
       <div className="container mt-3">
         <Route >
           <Switch>
-            <Route path="/manager/schedule/handleSchedule">
+            {/* <Route path="/manager/schedule/handleSchedule">
               <HandleSchedule />
             </Route>
             <Route path="/manager/schedule/detail">
@@ -57,14 +57,39 @@ const ScheduleManagement = (props) => {
             </Route>
             <Route path="/manager/schedule/bookingSchedule">
               <BookingSchedule />
-            </Route>
-            {/* {scopeQLLH.map((val, idx) => {
+            </Route> */}
+            {scopeQLLH.map((val, idx) => {
+              if(val.name ==='Xử lý lịch hẹn')
+                return (
+                  <Route path={val.path}>
+                   <HandleSchedule />
+                </Route>
+                );
+              if(val.name ==='Đặt lịch')
                 return (
                   <Route path={val.path}>
                   <BookingSchedule />
                 </Route>
                 );
-              })} */}
+              if(val.name ==='Danh sách lịch hẹn')
+                return (
+                  <Route path={val.path}>
+                  <ScheduleList />
+                </Route>
+                );
+             if(val.name ==='Xem lịch biểu')
+                return (
+                  <Route path={val.path}>
+                  <ScheduleDetail />
+                </Route>
+                );
+             if(val.name ==='Đăng ký lịch')
+                return (
+                  <Route path={val.path}>
+                  <BookingSchedule />
+                </Route>
+                );
+              })}
             {pathname === "/manager/schedule" ? <Redirect to="/manager/schedule/handleSchedule" /> : null}
             <Switch />
           </Switch>

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext} from "react";
 import Select from "react-select";
 import { BsFillTrashFill } from "react-icons/bs";
 import Api from "../api/Api";
 import moment from "moment";
+import { AuthContext } from '../hook/AuthProvider'
 
 const ScheduleList = () => {
+  const {user} = useContext(AuthContext);
   const [appointments, setAppointments] = useState([]);
   const [searchCriteria, setSearchCriteria] = useState({
     MaBN: "",
@@ -28,7 +30,7 @@ const ScheduleList = () => {
 
     setAppointments(
       appointments.filter(
-        (item) => item.NgayHen == moment().format("YYYY-MM-DD")
+        (item) =>  item.NgayHen == moment().format("YYYY-MM-DD")&&item.chiNhanh===user?.chinhanh
       )
     );
   };
@@ -36,7 +38,9 @@ const ScheduleList = () => {
   const onSearch = async () => {
     const endpoint = "/ScheduleManagement/getAppointments";
     const appointments = await Api.getDocsBySeacrh(endpoint, searchCriteria);
-    setAppointments(appointments);
+    setAppointments(appointments.filter(
+      (item) => item.chiNhanh===user?.chinhanh
+    ));
   };
 
   const handleChange = (e) => {

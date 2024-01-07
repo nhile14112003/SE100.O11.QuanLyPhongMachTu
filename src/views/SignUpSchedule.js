@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect,useContext } from "react";
 import Api from "../api/Api";
 import NotificationModal from "../components/NotificationModal";
+import { AuthContext } from '../hook/AuthProvider'
 
 const table = [
   {
@@ -47,8 +48,11 @@ const table = [
   },
 ];
 const SignUpSchedule = () => {
-  const doctorId = "NV023";
-  const doctorName = "Phan Nguyễn Cao Trí";
+  // const doctorId = "NV023";
+  // const doctorName = "Phan Nguyễn Cao Trí";
+  const {user} = useContext(AuthContext);
+  const [doctorId, setDoctorId]=useState(user?.maNV)
+  const [doctorName, setDoctorName]=useState(user?.ten)
   const [scheduleSignedUp, setScheduleSignUp] = useState(table);
   const [currentSchedule, setCurrentSchedule] = useState(table);
   const [doctorSchedule, setDoctorSchedule] = useState(null);

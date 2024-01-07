@@ -1,20 +1,19 @@
 import React, {useState, useContext, useEffect} from 'react'
 import { AuthContext } from './AuthProvider';
 import { auth } from './FirebaseConfig';
+// {path:'/booking',name:'Đặt lịch'},
 //Khách hàng
 const nav0 = [
     {path:'/',name:'Giới thiệu'},
     {path:'/doctors',name:'Bác sĩ'},
     {path:'/services',name:'Dịch vụ'},
     {path:'/contacts',name:'Liên lạc'},
-    {path:'/booking',name:'Đặt lịch'},
     ]
  const nav1 = [
 {path:'/',name:'Giới thiệu'},
 {path:'/doctors',name:'Bác sĩ'},
 {path:'/services',name:'Dịch vụ'},
 {path:'/contacts',name:'Liên lạc'},
-{path:'/booking',name:'Đặt lịch'},
 {path:'/mytreatmentrecord',name:'Hồ sơ điều trị'}
 ]
 //NhanVien
@@ -23,7 +22,6 @@ const nav2 = [
     {path:'/doctors',name:'Bác sĩ'},
     {path:'/services',name:'Dịch vụ'},
     {path:'/contacts',name:'Liên lạc'},
-    {path:'/booking',name:'Đặt lịch'},
     {path:'/manager',name:'Quản lý'}
     ]
 //NhanVienQuanLy Xem báo cáo và thống kê, quản lý kho, quản lý nhân viên, tiếp nhận đánh giá, thu hút khách hàng.
@@ -68,9 +66,14 @@ const nav2_2_1 = [
 {path:'/manager/schedule/scheduleList',name:'Danh sách lịch hẹn'},
 {path:'/manager/schedule/detail',name:'Xem lịch biểu'},
 ]
-//Nha sĩ, phụ tá 2 tab cuối
+//Nha sĩ 
 const nav2_5_1 = [
     {path:'/manager/schedule/detail',name:'Xem lịch biểu'},
     {path:'/manager/schedule/signUpSchedule',name:'Đăng ký lịch'},
     ]
-export default {nav1, nav2, nav2_1, nav2_2, nav2_3, nav2_4, nav2_5, nav2_2_1, nav2_5_1,nav0}
+    //Phụ tá
+    const nav2_4_1 = [
+        {path:'/manager/schedule/detail',name:'Xem lịch biểu'},
+        ]
+
+export default {nav1, nav2, nav2_1, nav2_2, nav2_3, nav2_4, nav2_5, nav2_2_1, nav2_5_1,nav0, nav2_4_1}

@@ -23,8 +23,13 @@ export const FormMaterialUsed = ({ closeModal, onSubmit, defaultValue, materials
             const Day = currentDate.getDate(); 
             const Month = currentDate.getMonth() + 1; 
             const Year = currentDate.getFullYear();
+            const vattu = materials.find(item=>item.maVatTu===formState.maVatTu)
           if( parseInt(formState.SL)<=0){
             setErrors("Số lượng phải là một số nguyên dương lớn hơn 0.");
+            return false;
+          }
+          else if( parseInt(formState.SL) > vattu.soLuongTonKho){
+            setErrors("Số lượng tồn kho của vật tư "+formState.tenVatTu+ " chỉ còn lại "+vattu.soLuongTonKho);
             return false;
           }
           else if(namSD>Year||thangSD>Month||ngaySD>Day){

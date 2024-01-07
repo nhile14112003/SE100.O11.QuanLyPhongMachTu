@@ -223,8 +223,8 @@ const PatientManagement = (props) => {
     }
       const getPatients = async () => {
         const patients = await api.getAllPatients()
-        const fil = patients.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
-        setCustomers(fil)
+        // const fil = patients.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+        setCustomers(patients)
       }
     const nextPage = () => {
         setPage(page + 1);
@@ -253,7 +253,7 @@ const PatientManagement = (props) => {
     const handleSubmit = async (newRow) => {
          console.log(newRow);
         if (patientRowToEdit == null) {
-          const id = await api.addPatient({...newRow,chiNhanh:user?.chinhanh});
+          const id = await api.addPatient(newRow);
           newRow.Id = id.docId;
           newRow.IDhsdt = id.hsdtId
           setCustomers([...customers, newRow]);
@@ -440,7 +440,9 @@ const PatientManagement = (props) => {
                 tenNhanVien:'',
                 phanTram:0,
                 tenChiNhanh:branchdiachi[0].tenChiNhanh,
-                diaChiChiNhanh:branchdiachi[0].diaChi
+                diaChiChiNhanh:branchdiachi[0].diaChi,
+                dsThanhToan:[],
+                IdBenhNhan:selectedPatient?.Id
             }
             };
             for (let i = 0 ; i < cthsdt.Thuoc.length; i++){

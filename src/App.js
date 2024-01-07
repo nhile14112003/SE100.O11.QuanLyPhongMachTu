@@ -57,6 +57,9 @@ function App() {
         <Route path="/mytreatmentrecord">
           <XemHSDT />
         </Route>
+        <Route path="/bookingOnline">
+           
+        </Route>
 
         <Route path="/" exact>
           <IntroductionPage />
