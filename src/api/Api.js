@@ -350,7 +350,6 @@ const deleteDiscount = async (id) => {
 const getDiscountsBySearch = async (searchCriteria) => {
   try {
     const queryParams = new URLSearchParams(searchCriteria).toString();
-    alert(queryParams);
     const response = await client.get(
       `/DiscountManagement/Discounts?${queryParams}`
     );
@@ -406,9 +405,9 @@ const deleteBill = async (id) => {
 const getBillsBySearch = async (searchCriteria) => {
   try {
     const queryParams = new URLSearchParams(searchCriteria).toString();
-    const response = await client.get(`/BillManagement/Bills${queryParams}`);
+    const response = await client.get(`/BillManagement/Bills?${queryParams}`);
+
     if (response.data.success) {
-      alert("true");
       return response.data.bills;
     } else {
       console.log("not get bills");
