@@ -303,7 +303,7 @@ const BillManagement = (props) => {
         {page === 1 ? (
           <div>
             <div className="row">
-              <form className="row ms-0 me-0" style={{ fontWeight: "500" }}>
+              <div className="row ms-0 me-0" style={{ fontWeight: "500" }}>
                 <div className="col-md-6">
                   <div className="mb-2 col-md-6">Mã hóa đơn</div>
                   <input
@@ -373,7 +373,7 @@ const BillManagement = (props) => {
                     Tìm kiếm
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
 
             <table className="table">
