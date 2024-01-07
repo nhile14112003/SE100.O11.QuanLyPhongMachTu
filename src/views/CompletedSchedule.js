@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FormHandleSchedule } from "../components/FormHandleSchedule";
 import Api from "../api/Api";
+import { AuthContext } from '../hook/AuthProvider'
 
 const CompletedSchedule = () => {
+  const {user} = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [sentSchedules, setSentSchedule] = useState([]);
@@ -14,7 +16,7 @@ const CompletedSchedule = () => {
   const getBookings = async () => {
     const endpoint = "/ScheduleManagement/getAll/DatLich";
     const bookings = await Api.getDocs(endpoint);
-    const list = bookings.filter((item) => item.TinhTrang == "Đã xử lý");
+    const list = bookings.filter((item) => item.TinhTrang == "Đã xử lý"&&item.ChiNhanh===user?.chinhanh);
     setSentSchedule(list);
   };
 

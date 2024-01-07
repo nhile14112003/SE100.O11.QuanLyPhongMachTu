@@ -18,7 +18,6 @@ export const FormRecordMedicine = ({ closeModal, onSubmit, defaultValue, medicin
             maThuoc: "",
             tenThuoc: "",
             SL: "",
-            DonGia: "",
             GhiChu: ""
         }
     );
@@ -26,8 +25,13 @@ export const FormRecordMedicine = ({ closeModal, onSubmit, defaultValue, medicin
 
     const validateForm = () => {
         if (formState.maThuoc!='' && formState.tenThuoc!='' && formState.SL!='') {
+          const thuoc = medicines.find(item=>item.maThuoc===formState.maThuoc)
           if( parseInt(formState.SL)<=0){
             setErrors("Số lượng phải là một số nguyên dương lớn hơn 0.");
+            return false;
+          }
+          else if( parseInt(formState.SL) > thuoc.soLuongTonKho){
+            setErrors("Số lượng tồn kho của loại thuốc "+formState.tenThuoc+ " chỉ còn lại "+thuoc.soLuongTonKho);
             return false;
           }
           else {
@@ -84,7 +88,7 @@ export const FormRecordMedicine = ({ closeModal, onSubmit, defaultValue, medicin
                     <div className="mb-2"><b>Mã thuốc</b></div>
                     <Select className="mb-2"
                         value={medicines.find(item => item.maThuoc === formState.maThuoc) || ''}
-                        onChange={(value) => value !== null ? setFormState({ ...formState, ...value, DonGia:value.donGia }) : setFormState({ ...formState, maThuoc: "", tenThuoc: "" })}
+                        onChange={(value) => value !== null ? setFormState({ ...formState, ...value }) : setFormState({ ...formState, maThuoc: "", tenThuoc: "" })}
                         options={medicines}
                         isClearable
                         getOptionLabel={(item) => item.maThuoc}
@@ -94,7 +98,7 @@ export const FormRecordMedicine = ({ closeModal, onSubmit, defaultValue, medicin
                     <div className="mb-2"><b>Tên thuốc</b></div>
                     <Select className="mb-2"
                         value={medicines.find(item => item.maThuoc === formState.maThuoc) || ''}
-                        onChange={(value) => value !== null ? setFormState({ ...formState, ...value, DonGia:value.donGia}) : setFormState({ ...formState, maThuoc: "", tenThuoc: "" })}
+                        onChange={(value) => value !== null ? setFormState({ ...formState, ...value}) : setFormState({ ...formState, maThuoc: "", tenThuoc: "" })}
                         options={medicines}
                         isClearable
                         getOptionLabel={(item) => item.tenThuoc}
@@ -104,7 +108,7 @@ export const FormRecordMedicine = ({ closeModal, onSubmit, defaultValue, medicin
                     <div className="mb-2"><b>Số lượng</b></div>
                     <input type="number" className="form-control pb-2 pt-2 mb-2" min="0" max={formState.SL} id="SL" name="SL" value={formState.SL} onChange={(e) => { setFormState({ ...formState, [e.target.name]: e.target.value}) }} required />
                     <div className="mb-2"><b>Đơn giá</b></div>
-                    <div className="form-control pb-2 pt-2 mb-2" style={{ minHeight: "40px" }}>{formState.DonGia}</div>
+                    <div className="form-control pb-2 pt-2 mb-2" style={{ minHeight: "40px" }}>{formState.donGia}</div>
                     <div className="mb-2"><b>Ghi chú</b></div>
                     <input type="text" className="form-control pb-2 pt-2 mb-2" value={formState.GhiChu} id="GhiChu" name="GhiChu" onChange={handleChange} />
                     {errors && <div className="error">{errors}</div>}

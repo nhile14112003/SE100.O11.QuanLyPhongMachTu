@@ -39,6 +39,7 @@ export const AuthProvider = ({ children }) => {
         // console.log(userData)
         setUser(userData)
         if(userData.Loai==='KhachHang'){
+          if(userData.CCCD!==""){
           const patients = await api.getPatientsBySeacrh({ maBenhNhan: "",
         tenBenhNhan: "",
         CCCD: userData.CCCD,
@@ -47,6 +48,8 @@ export const AuthProvider = ({ children }) => {
           setScope(nav.nav1)
         }
         else setScope(nav.nav0)
+      }
+      else setScope(nav.nav0)
           
         }
         else {
@@ -63,7 +66,7 @@ export const AuthProvider = ({ children }) => {
           }
           else if(userData.Loai==='Phụ tá'){
             setScopeQL(nav.nav2_4)
-            setScopeQLLH(nav.nav2_5_1)
+            setScopeQLLH(nav.nav2_4_1)
           }
           else if(userData.Loai==='Nha sĩ'){
             setScopeQL(nav.nav2_5)
