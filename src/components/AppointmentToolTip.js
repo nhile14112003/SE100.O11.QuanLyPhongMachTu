@@ -1,7 +1,7 @@
 const AppointmentToolTip = (props) => {
   const { targetedAppointmentData } = props.data;
   return (
-    <div className="d-flex p-3">
+    <div className="d-flex p-3 wordWrap">
       <div
         className="col-auto"
         style={{
@@ -11,18 +11,18 @@ const AppointmentToolTip = (props) => {
           borderRadius: "50%",
         }}
       ></div>
-      <div style={{ textAlign: "left" }} className="ms-3">
+      <div style={{ textAlign: "left" }} className="ms-3 wordWrap">
         <div style={{ fontSize: "20px", fontWeight: "bold" }}>
           {targetedAppointmentData.DichVu}
         </div>
         <div style={{ fontSize: "13px", color: "#8A8A8A" }}>
           {targetedAppointmentData.Gio}
         </div>
-        <div className="mt-2">
+        <div className="mt-2 wordWrap">
           <span style={{ fontWeight: "500" }}>Nha sĩ:</span>{" "}
           {targetedAppointmentData.TenNS}
         </div>
-        <div className="mt-1">
+        <div className="mt-1 wordWrap">
           <span style={{ fontWeight: "500" }}>Bệnh nhân:</span>{" "}
           {targetedAppointmentData.TenBN}
         </div>
