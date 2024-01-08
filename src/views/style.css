@@ -494,3 +494,29 @@ input[type=file]::-webkit-file-upload-button {
     align-items: center;
     justify-content: center;
 }
+
+/* input type date format DD/MM/YYYY*/
+/*
+input[type="date"] {
+    position: relative;
+}
+
+input[type='date']::-webkit-datetime-edit-text {
+    padding: 0 0.15em;
+}
+
+input[type="date"]::-webkit-datetime-edit-year-field {
+    position: relative !important;
+}
+
+input[type="date"]::-webkit-datetime-edit-month-field {
+    position: relative !important;
+    left: 33px;
+}
+
+
+input[type="date"]::-webkit-datetime-edit-day-field {
+    position: relative !important;
+    left: -28px;
+}
+*/

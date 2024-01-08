@@ -24,7 +24,7 @@ const Manager = (props) => {
       <nav className="container-fluid">
         <div className="row flex-nowrap">
           <div className="col-auto bg-primary" id="slide-menu">
-            <div className="d-flex flex-column sticky-top" id="stickyTop">
+            <div className="d-flex flex-column sticky-top" id="stickyTop" style={{ minHeight: "350px" }}>
               <ul className="nav nav-pills d-flex flex-column mt-2" id="menu">
                 {/* <li className="nav-item mt-2 mb-2">
                                     <NavLink to="/manager/schedule" className="nav-link">

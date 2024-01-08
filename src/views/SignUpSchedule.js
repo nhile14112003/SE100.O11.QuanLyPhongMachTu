@@ -163,9 +163,9 @@ const SignUpSchedule = () => {
       scheduleSignedUp.map((item) =>
         item.Thu === Thu
           ? {
-              ...item,
-              [Buoi]: !GiaTri,
-            }
+            ...item,
+            [Buoi]: !GiaTri,
+          }
           : item
       )
     );
@@ -173,19 +173,23 @@ const SignUpSchedule = () => {
 
   return (
     <div>
-      <div className="mb-3">
-        <h1 className="noteVND">**Sáng: 8h-12h</h1>
-        <h1 className="noteVND">**Chiều: 13h-17h </h1>
-        <h1 className="noteVND">**Tối: 17h-20h </h1>
-        <select
-          className="form-control pb-2 pt-2 mb-2"
-          name="thang"
-          onChange={(e) => setSelectedMonth(e.target.value)}
-          value={selectedMonth}
-        >
-          <option value="current">Lịch tháng này</option>
-          <option value="next">Đăng ký lịch tháng sau</option>
-        </select>
+      <div>
+        <div className="d-flex">
+          <h1 className="noteVND me-3 col-auto ms-auto">**Sáng: 8h-12h</h1>
+          <h1 className="noteVND me-3 col-auto">**Chiều: 13h-17h </h1>
+          <h1 className="noteVND me-3 col-auto">**Tối: 17h-20h </h1>
+        </div>
+        <div className="col-lg-4 col-md-6 mt-3 mb-3">
+          <select
+            className="form-control pb-2 pt-2"
+            name="thang"
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            value={selectedMonth}
+          >
+            <option value="current">Lịch tháng này</option>
+            <option value="next">Đăng ký lịch tháng sau</option>
+          </select>
+        </div>
       </div>
       <div className="row g-0">
         {selectedMonth === "current" &&

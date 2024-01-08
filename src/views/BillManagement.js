@@ -168,9 +168,9 @@ const BillManagement = (props) => {
         if (!matchSoTienThanhToan)
           alert(
             "Vui lòng nhập số tiền thanh toán lớn hơn " +
-              0 +
-              " và không vượt quá " +
-              patient.congNo
+            0 +
+            " và không vượt quá " +
+            patient.congNo
           );
         return matchSoTienThanhToan;
       } else return true;
@@ -185,9 +185,9 @@ const BillManagement = (props) => {
       if (!matchSoTienThanhToan)
         alert(
           "Vui lòng nhập số tiền thanh toán ít nhất " +
-            minimum +
-            " và không vượt quá " +
-            (TongTienDV + TongTienThuoc - SoTienGiam)
+          minimum +
+          " và không vượt quá " +
+          (TongTienDV + TongTienThuoc - SoTienGiam)
         );
       return matchSoTienThanhToan;
     } else return true;
@@ -289,15 +289,15 @@ const BillManagement = (props) => {
     getDiscounts();
   }, []);
 
-  useEffect(() => {}, [selectedRow]);
+  useEffect(() => { }, [selectedRow]);
 
   useEffect(() => {
     if (!disableDiscount) {
       setSoTienGiam((TongTienDV * recentDiscount.phanTram) / 100 || 0);
       setTTSGG(
         TongTienDV +
-          TongTienThuoc -
-          ((TongTienDV * recentDiscount.phanTram) / 100 || 0)
+        TongTienThuoc -
+        ((TongTienDV * recentDiscount.phanTram) / 100 || 0)
       );
       setConNo(patient.congNo);
       if (traGop) {
@@ -519,7 +519,6 @@ const BillManagement = (props) => {
                       return (
                         <tr
                           key={item.Id}
-                          onClick={() => setSelectedRowById(index)}
                         >
                           <td>{item.tenDichVu}</td>
                           {item.taiKham ? (
@@ -660,57 +659,57 @@ const BillManagement = (props) => {
                             isDisabled
                             onChange={(value) =>
                               value !== null &&
-                              traGop &&
-                              bills[selectedRow].tinhTrang == "Chưa thanh toán"
+                                traGop &&
+                                bills[selectedRow].tinhTrang == "Chưa thanh toán"
                                 ? (setSoTienGiam(
-                                    (TongTienDV * value.phanTram) / 100
-                                  ),
+                                  (TongTienDV * value.phanTram) / 100
+                                ),
                                   setTTSGG(
                                     TongTienDV +
-                                      TongTienThuoc -
-                                      (TongTienDV * value.phanTram) / 100
+                                    TongTienThuoc -
+                                    (TongTienDV * value.phanTram) / 100
                                   ),
                                   setConNo(
                                     patient.congNo +
-                                      TongTienDV +
-                                      TongTienThuoc -
-                                      (TongTienDV * value.phanTram) / 100
+                                    TongTienDV +
+                                    TongTienThuoc -
+                                    (TongTienDV * value.phanTram) / 100
                                   ),
                                   setNoSauThanhToan(
                                     patient.congNo +
-                                      TongTienDV +
-                                      TongTienThuoc -
-                                      (TongTienDV * value.phanTram) / 100
+                                    TongTienDV +
+                                    TongTienThuoc -
+                                    (TongTienDV * value.phanTram) / 100
                                   ),
                                   setRecentDiscount(value))
                                 : value !== null &&
                                   traGop &&
                                   bills[selectedRow].tinhTrang ==
-                                    "Đã thanh toán"
-                                ? (setSoTienGiam(
+                                  "Đã thanh toán"
+                                  ? (setSoTienGiam(
                                     (TongTienDV * value.phanTram) / 100
                                   ),
-                                  setTTSGG(
-                                    TongTienDV +
+                                    setTTSGG(
+                                      TongTienDV +
                                       TongTienThuoc -
                                       (TongTienDV * value.phanTram) / 100
-                                  ),
-                                  setConNo(patient.congNo),
-                                  setNoSauThanhToan(patient.congNo),
-                                  setRecentDiscount(value))
-                                : value !== null && !traGop
-                                ? (setSoTienGiam(
-                                    (TongTienDV * value.phanTram) / 100
-                                  ),
-                                  setTTSGG(
-                                    TongTienDV +
-                                      TongTienThuoc -
+                                    ),
+                                    setConNo(patient.congNo),
+                                    setNoSauThanhToan(patient.congNo),
+                                    setRecentDiscount(value))
+                                  : value !== null && !traGop
+                                    ? (setSoTienGiam(
                                       (TongTienDV * value.phanTram) / 100
-                                  ),
-                                  setConNo(patient.congNo),
-                                  setNoSauThanhToan(patient.congNo),
-                                  setRecentDiscount(value))
-                                : setRecentDiscount("")
+                                    ),
+                                      setTTSGG(
+                                        TongTienDV +
+                                        TongTienThuoc -
+                                        (TongTienDV * value.phanTram) / 100
+                                      ),
+                                      setConNo(patient.congNo),
+                                      setNoSauThanhToan(patient.congNo),
+                                      setRecentDiscount(value))
+                                    : setRecentDiscount("")
                             }
                             options={maGiamGia}
                             id="maGiamGia"
@@ -724,12 +723,12 @@ const BillManagement = (props) => {
                             onChange={(value) =>
                               value !== null
                                 ? (setSoTienGiam(
-                                    (TongTienDV * value.phanTram) / 100
-                                  ),
+                                  (TongTienDV * value.phanTram) / 100
+                                ),
                                   setTTSGG(
                                     TongTienDV +
-                                      TongTienThuoc -
-                                      (TongTienDV * value.phanTram) / 100
+                                    TongTienThuoc -
+                                    (TongTienDV * value.phanTram) / 100
                                   ),
                                   setConNo(patient.congNo),
                                   setRecentDiscount(value))
@@ -776,19 +775,19 @@ const BillManagement = (props) => {
                               if (traGop) {
                                 if (
                                   bills[selectedRow]?.tinhTrang ==
-                                    "Chưa thanh toán" &&
+                                  "Chưa thanh toán" &&
                                   document.getElementById("soTienDaThanhToan")
                                     .value != ""
                                 ) {
                                   setNoSauThanhToan(
                                     patient.congNo +
-                                      ThanhTienSauGiamGia -
-                                      parseInt(
-                                        document.getElementById(
-                                          "soTienDaThanhToan"
-                                        ).value || 0,
-                                        0
-                                      )
+                                    ThanhTienSauGiamGia -
+                                    parseInt(
+                                      document.getElementById(
+                                        "soTienDaThanhToan"
+                                      ).value || 0,
+                                      0
+                                    )
                                   );
                                 } else if (
                                   bills[selectedRow]?.tinhTrang ==
@@ -803,12 +802,12 @@ const BillManagement = (props) => {
                                 ) {
                                   setNoSauThanhToan(
                                     patient.congNo -
-                                      parseInt(
-                                        document.getElementById(
-                                          "soTienDaThanhToan"
-                                        ).value,
-                                        0
-                                      )
+                                    parseInt(
+                                      document.getElementById(
+                                        "soTienDaThanhToan"
+                                      ).value,
+                                      0
+                                    )
                                   );
                                 } else {
                                   setNoSauThanhToan(patient.congNo);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Select from "react-select";
 import { BsFillTrashFill } from "react-icons/bs";
 import Api from "../api/Api";
@@ -6,15 +6,15 @@ import moment from "moment";
 import { AuthContext } from '../hook/AuthProvider'
 
 const ScheduleList = () => {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [appointments, setAppointments] = useState([]);
   const [searchCriteria, setSearchCriteria] = useState({
-    MaBN: "",
     TenBN: "",
     MaNS: "",
     TenNS: "",
     NgayHen: "",
     DichVu: "",
+    SDT: ""
   });
   const [selectedDate, setSelectedDate] = useState(
     moment().format("YYYY-MM-DD")
@@ -30,7 +30,7 @@ const ScheduleList = () => {
 
     setAppointments(
       appointments.filter(
-        (item) =>  item.NgayHen == moment().format("YYYY-MM-DD")&&item.chiNhanh===user?.chinhanh
+        (item) => item.NgayHen == moment().format("YYYY-MM-DD") && item.chiNhanh === user?.chinhanh
       )
     );
   };
@@ -39,7 +39,7 @@ const ScheduleList = () => {
     const endpoint = "/ScheduleManagement/getAppointments";
     const appointments = await Api.getDocsBySeacrh(endpoint, searchCriteria);
     setAppointments(appointments.filter(
-      (item) => item.chiNhanh===user?.chinhanh
+      (item) => item.chiNhanh === user?.chinhanh
     ));
   };
 
@@ -56,17 +56,6 @@ const ScheduleList = () => {
       <div className="row">
         <div className="col-lg-4 col-md-6">
           <div className="mb-2">
-            <b>Mã bệnh nhân</b>
-          </div>
-          <input
-            className="form-control pb-2 pt-2 mb-3"
-            name="MaBN"
-            onChange={handleChange}
-            value={searchCriteria.MaBN}
-          ></input>
-        </div>
-        <div className="col-lg-4 col-md-6">
-          <div className="mb-2">
             <b>Tên bệnh nhân</b>
           </div>
           <input
@@ -74,6 +63,18 @@ const ScheduleList = () => {
             name="TenBN"
             onChange={handleChange}
             value={searchCriteria.TenBN}
+          ></input>
+        </div>
+        <div className="col-lg-4 col-md-6">
+          <div className="mb-2">
+            <b>Số điện thoại</b>
+          </div>
+          <input
+            type="number"
+            className="form-control pb-2 pt-2 mb-3"
+            name="SDT"
+            onChange={handleChange}
+            value={searchCriteria.SDT}
           ></input>
         </div>
         <div className="col-lg-4 col-md-6">
@@ -137,7 +138,6 @@ const ScheduleList = () => {
       <table className="table">
         <thead>
           <tr className="table-secondary">
-            <th>Mã bệnh nhân</th>
             <th>Tên bệnh nhân</th>
             <th>Số điện thoại</th>
             <th>Mã nha sĩ</th>
@@ -152,7 +152,6 @@ const ScheduleList = () => {
         <tbody>
           {appointments.map((item, index) => (
             <tr key={index}>
-              <td>{item.MaBN}</td>
               <td>{item.TenBN}</td>
               <td>{item.SDT}</td>
               <td>{item.MaNS}</td>

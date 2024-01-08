@@ -146,16 +146,16 @@ const BookingOnline = () => {
       setFlag("edit");
       const endpoint = "/ScheduleManagement/get/LichHen/" + worktime.maLichHen;
       const appointment = await Api.getDoc(endpoint);
-      if(user!==null&&appointment.TenBN===user?.ten&&appointment.SDT===user?.SDT){
-      setSelectedItem({
-        appointment: { ...appointment, Id: worktime.maLichHen },
-        doctor: doctor,
-        doctorSchedule: doctorSchedule,
-        workTimes: doctorSchedule.lich[convertDateFormat(doctor.date)],
-        selectedWorkTime: worktime,
-      });
-      setModalOpen(true);
-    }
+      if (user !== null && appointment.TenBN === user?.ten && appointment.SDT === user?.SDT) {
+        setSelectedItem({
+          appointment: { ...appointment, Id: worktime.maLichHen },
+          doctor: doctor,
+          doctorSchedule: doctorSchedule,
+          workTimes: doctorSchedule.lich[convertDateFormat(doctor.date)],
+          selectedWorkTime: worktime,
+        });
+        setModalOpen(true);
+      }
     }
   };
 
@@ -192,98 +192,100 @@ const BookingOnline = () => {
   return (
     <div>
       <TopNav />
-      {doctors.map((item) => {
-        return (
-          <div
-            className="row p-2 m-3"
-            style={{
-              border: "2px solid grey",
-              borderRadius: "5px",
-              boxShadow: "3px 3px #888888",
-            }}
-          >
-            <div className="col-lg-6 mt-2">
-              <div className="row justify-content-center align-items-center">
-                <div className="col-auto">
-                  <img
-                    alt=""
-                    src="/images/ava.png"
-                    style={{ borderRadius: "50%", width: "100px" }}
-                  />
-                </div>
-                <div className="col">
-                  <div>
-                    {item.bangCap}, {item.tenNhanVien}
+      <div style={{ minHeight: "300px" }}>
+        {doctors.map((item) => {
+          return (
+            <div
+              className="row p-2 m-3"
+              style={{
+                border: "2px solid grey",
+                borderRadius: "5px",
+                boxShadow: "3px 3px #888888",
+              }}
+            >
+              <div className="col-lg-6 mt-2">
+                <div className="row justify-content-center align-items-center">
+                  <div className="col-auto">
+                    <img
+                      alt=""
+                      src="/images/ava.png"
+                      style={{ borderRadius: "50%", width: "100px" }}
+                    />
                   </div>
-                  <div>Kinh nghiệm: {item.kinhNghiem}</div>
+                  <div className="col">
+                    <div>
+                      {item.bangCap}, {item.tenNhanVien}
+                    </div>
+                    <div>Kinh nghiệm: {item.kinhNghiem}</div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="col-lg-6">
-              <div className="datepicker-wrp">
-                <div className="btn-wrp">
-                  <input
-                    type="date"
-                    className="btn-clck"
-                    value={item.date}
-                    min={moment().format("YYYY-MM-DD")}
-                    onChange={(e) => changeDate(e, item.maNhanVien)}
-                  />
+              <div className="col-lg-6">
+                <div className="datepicker-wrp">
+                  <div className="btn-wrp">
+                    <input
+                      type="date"
+                      className="btn-clck"
+                      value={item.date}
+                      min={moment().format("YYYY-MM-DD")}
+                      onChange={(e) => changeDate(e, item.maNhanVien)}
+                    />
+                  </div>
+                  <button className="btn btnIconDate">
+                    <img alt="" src="/images/dropdown.png" />
+                  </button>
                 </div>
-                <button className="btn btnIconDate">
-                  <img alt="" src="/images/dropdown.png" />
-                </button>
-              </div>
-              <div
-                style={{
-                  height: "340px",
-                  overflowY: "auto",
-                  fontWeight: "bold",
-                }}
-              >
-                <div className="row ms-0 me-0" style={{ fontWeight: "bold" }}>
-                  {!getWorkTime(item) ? (
-                    <div className="mt-3">Không có lịch</div>
-                  ) : (
-                    getWorkTimes(item).map((worktime, index) => {
-                      return (
-                        <div className="col-auto" style={{ cursor: "default" }}>
-                          <div
-                            className="mt-3 p-2"
-                            style={{
-                              backgroundColor:
-                                worktime.maLichHen !== null
-                                  ? "#bfbfbf"
-                                  : "#0096FF",
-                            }}
-                            onClick={() => 
+                <div
+                  style={{
+                    height: "340px",
+                    overflowY: "auto",
+                    fontWeight: "bold",
+                  }}
+                >
+                  <div className="row ms-0 me-0" style={{ fontWeight: "bold" }}>
+                    {!getWorkTime(item) ? (
+                      <div className="mt-3">Không có lịch</div>
+                    ) : (
+                      getWorkTimes(item).map((worktime, index) => {
+                        return (
+                          <div className="col-auto" style={{ cursor: "default" }}>
+                            <div
+                              className="mt-3 p-2"
+                              style={{
+                                backgroundColor:
+                                  worktime.maLichHen !== null
+                                    ? "#bfbfbf"
+                                    : "#0096FF",
+                              }}
+                              onClick={() =>
                                 setItemToEdit(worktime, item)}
-                          >
-                            {worktime.gio}
+                            >
+                              {worktime.gio}
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })
-                  )}
+                        );
+                      })
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        );
-      })}
-      {modalOpen && (
-        <FormBookingSchedule
-          closeModal={() => {
-            setModalOpen(false);
-            setSelectedItem(null);
-          }}
-          onSubmit={handleSubmit}
-          onDelete={handleDelete}
-          defaultValue={selectedItem !== null && selectedItem.appointment}
-          flag={flag}
-        />
-      )}
+          );
+        })}
+        {modalOpen && (
+          <FormBookingSchedule
+            closeModal={() => {
+              setModalOpen(false);
+              setSelectedItem(null);
+            }}
+            onSubmit={handleSubmit}
+            onDelete={handleDelete}
+            defaultValue={selectedItem !== null && selectedItem.appointment}
+            flag={flag}
+          />
+        )}
+      </div>
       <Footer style={{ marginTop: 0 }} />
     </div>
   );

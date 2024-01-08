@@ -49,22 +49,6 @@ const IncompletedSchedule = () => {
 
   return (
     <div className="container">
-      <div className="col-lg-4 col-md-6">
-        <div>
-          <div className="mb-2">
-            <b>Thời gian</b>
-          </div>
-          <input type="date" className="form-control pb-2 pt-2" />
-          <div className="text-end">
-            <button
-              className="btn pb-2 pt-2 ps-3 pe-3 mt-3"
-              style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
-            >
-              Xem
-            </button>
-          </div>
-        </div>
-      </div>
       <div className="row">
         {sentSchedules.map((item, index) => {
           return (
