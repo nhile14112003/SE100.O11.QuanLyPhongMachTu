@@ -364,7 +364,8 @@ const PatientManagement = (props) => {
                 tenChiNhanh:branchdiachi[0].tenChiNhanh,
                 diaChiChiNhanh:branchdiachi[0].diaChi,
                 dsThanhToan:[],
-                IdBenhNhan:selectedPatient?.Id
+                IdBenhNhan:selectedPatient?.Id,
+                congNo:0,
             }
             };
             for (let i = 0 ; i < cthsdt.Thuoc.length; i++){
@@ -587,7 +588,7 @@ const PatientManagement = (props) => {
                         onChange={(value) => value !== null ? setCTHSDT({ ...cthsdt, MaNhaSi:value.maNhanVien }) : setCTHSDT({ ...cthsdt, MaNhaSi:''})}
                         options={nhasi}
                         isClearable
-                        getOptionLabel={(item) => item.tenNhanVien}
+                        getOptionLabel={(item) => item.maNhanVien+'-'+item.tenNhanVien}
                         getOptionValue={(item) => item}
                         placeholder=""
                     />}

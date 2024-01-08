@@ -4,9 +4,9 @@ import { FormBookingSchedule } from "../components/FormBookingSchedule";
 import Api from "../api/Api";
 import { AuthContext } from '../hook/AuthProvider'
 import TopNav from "../components/TopNav";
-
+import Footer from "../components/Footer";
 const BookingOnline = () => {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [doctorSchedules, setDoctorSchedules] = useState();
@@ -45,7 +45,7 @@ const BookingOnline = () => {
     const res = await Api.getStaffsBySeacrh()
     if (flag == "add") {
       const endpoint = "/ScheduleManagement/add/LichHen";
-      const id = await Api.addDoc(endpoint, {...newData, chiNhanh:selectedItem?.doctor.chiNhanh});
+      const id = await Api.addDoc(endpoint, { ...newData, chiNhanh: selectedItem?.doctor.chiNhanh });
 
       const newWorkTime = {
         gio: selectedItem.selectedWorkTime.gio,
@@ -75,7 +75,7 @@ const BookingOnline = () => {
       }
     } else if (flag == "edit") {
       const endpoint = "/ScheduleManagement/update/LichHen/" + newData.Id;
-      const success = await Api.updateDoc(endpoint, {...newData, chiNhanh:selectedItem?.doctor.chiNhanh});
+      const success = await Api.updateDoc(endpoint, { ...newData, chiNhanh: selectedItem?.doctor.chiNhanh });
     }
   };
 
@@ -146,6 +146,7 @@ const BookingOnline = () => {
       setFlag("edit");
       const endpoint = "/ScheduleManagement/get/LichHen/" + worktime.maLichHen;
       const appointment = await Api.getDoc(endpoint);
+      if(user!==null&&appointment.TenBN===user?.ten&&appointment.SDT===user?.SDT){
       setSelectedItem({
         appointment: { ...appointment, Id: worktime.maLichHen },
         doctor: doctor,
@@ -154,6 +155,7 @@ const BookingOnline = () => {
         selectedWorkTime: worktime,
       });
       setModalOpen(true);
+    }
     }
   };
 
@@ -189,11 +191,11 @@ const BookingOnline = () => {
 
   return (
     <div>
-    <TopNav />
+      <TopNav />
       {doctors.map((item) => {
         return (
           <div
-            className="row p-2 mt-3"
+            className="row p-2 m-3"
             style={{
               border: "2px solid grey",
               borderRadius: "5px",
@@ -255,7 +257,8 @@ const BookingOnline = () => {
                                   ? "#bfbfbf"
                                   : "#0096FF",
                             }}
-                            onClick={() => setItemToEdit(worktime, item)}
+                            onClick={() => 
+                                setItemToEdit(worktime, item)}
                           >
                             {worktime.gio}
                           </div>
@@ -281,6 +284,7 @@ const BookingOnline = () => {
           flag={flag}
         />
       )}
+      <Footer style={{ marginTop: 0 }} />
     </div>
   );
 };

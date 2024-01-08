@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import moment from 'moment'
 import { AuthContext } from '../hook/AuthProvider'
 const SignUpPage = (props) => {
+    const [errors, setErrors] = useState("");
     const [fullname, setFullName]=useState('')
     const [birthday, setBirthday]=useState('')
     const [phone, setPhone]=useState('')
@@ -16,29 +17,73 @@ const SignUpPage = (props) => {
     const [password, setPassWord]=useState('')
     const [againPass, setAgainPass]=useState('')
     const {registerforKH} = useContext(AuthContext);
+    function isPositiveInteger(A) {
+        // && Number.isInteger(A)
+          if (A > 0) {
+            return true; // A là số nguyên dương
+          } else {
+            return false; // A không phải là số nguyên dương
+          }
+        }
+    const validateForm = () => {
+        if(fullname!=''&&birthday!=''&&phone!=''&&address!=''&&email!=''&&identify!=''&&password!=''&&againPass!=''){
+            if(password.length<6){
+                setErrors('Mật khẩu phải lớn hơn 6 kí tự')
+                return false
+            }
+            else if(password!==againPass){
+                setErrors('Mật khẩu nhắc lại không đúng')
+                return false
+            }
+            else if(identify.length != 12){
+                setErrors("Căn cước công dân này không hợp lệ! Vui lòng nhập căn cước công dân có 12 chữ số.");
+                return false;
+              }
+            else if(phone.length != 10){
+                setErrors("Số điện thoại này không hợp lệ! Vui lòng nhập số điện thoại có 10 chữ số.");
+                return false;
+              }
+              else if(!isPositiveInteger(identify)){
+                setErrors("Căn cước công dân này không hợp lệ! Vui lòng nhập căn cước công dân là số nguyên dương.");
+                return false;
+              }
+              else if(!isPositiveInteger(phone)){
+                setErrors("Số điện thoại này không hợp lệ! Vui lòng nhập số điện thoại là số nguyên dương.");
+                return false;
+              }
+              else {
+                setErrors("");
+                return true;
+              }
+        }
+        else{
+            let errorFields = [];
+            if(fullname=='') errorFields.push('tên')
+            if(birthday=='') errorFields.push('ngày sinh')
+            if(phone=='')errorFields.push('SDT')
+            if(address=='') errorFields.push('địa chỉ')
+            if(email=='') errorFields.push('email')
+            if(identify=='') errorFields.push('CCCD')
+            if(password=='') errorFields.push('mật khẩu')
+            if(againPass=='') errorFields.push('nhắc lại mật khẩu')
+          setErrors("Vui lòng nhập: " + errorFields.join(", "));
+          return false;
+        }
+    }
     const handleSignup=async(e)=>{
-        
-        // const flag = await api.checkUserName(signinName)
-        // if(flag){
-        //     alert('Tên đăng nhập đã tồn tai, vui lòng nhập tên khác!')
-        // }
-        // else{
-        //     const data = {
-        //         Fullname:fullname,
-        //         Birthday:birthday,
-        //         Phone: phone,
-        //         Address: address,
-        //         Email: email,
-        //         CCCD: identify,
-        //         SigninName: signinName,
-        //         password: password
-        //     }
-        //    await api.addUser(data)
-        // }
         e.preventDefault();
+        if (!validateForm()) return;
         if(password == againPass){
             console.log('đk')
             registerforKH(email, password, fullname,phone,identify,birthday,address)
+            setFullName('')
+            setAddress('')
+            setAgainPass('')
+            setBirthday('')
+            setEmail('')
+            setIdentify('')
+            setPassWord('')
+            setPhone('')
           }
           else{
             alert('Password confirmation does not match!')
@@ -84,9 +129,9 @@ const SignUpPage = (props) => {
                             <div className="col-10 mb-3 mt-3">
                                 <input type="password" className="form-control pb-3 pt-3" id="re-enter_password" name="re-enter_password" placeholder="Nhập lại mật khẩu" required onChange={(e) => setAgainPass(e.target.value)} value={againPass}/>
                             </div>
-
+                            
                             <NavLink to="/sign_in" className="btn d-flex justify-content-center col-10 mb-2 mt-2" style={{ color: "#0096FF" }}>Đăng nhập nếu bạn đã có tài khoản</NavLink>
-
+                            {errors && <div className="error">{errors}</div>}
                             <button type="submit" className="btn col-10 pb-3 pt-3 mb-5" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={(e)=>{handleSignup(e)}}>Đăng ký</button>
 
 

@@ -140,7 +140,46 @@ const Manager = (props) => {
           </div>
         </div>
       </nav>
-      <Footer style={{ marginTop: 0 }} />
+      <footer style={{ backgroundColor: "#0096FF", color: "white" }}>
+        <div className="container pt-4 pb-5">
+          <div className="row">
+
+            <div className="col-lg-4 col-md-5">
+              <img alt="" src="/images/logo2.png" />
+              <p className="mt-3" style={{ fontSize: "20px" }}>Giới thiệu</p>
+              <p>Phòng khám ABC đã được thành lập hơn 7 năm. Với kinh nghiệm và đội ngũ nha sĩ chuyện nghiệp chúng tôi tự tin sẽ đem đến nhưng dịch vụ tốt nhất.</p>
+            </div>
+            <div className="col-1"></div>
+            <div className="col-lg-7 col-md-6 row mt-3">
+              <div className="mt-lg-3 col-lg-4">
+                <span style={{ fontSize: "19px" }}>Giờ mở cửa toàn chi nhánh</span>
+                <br />
+                <ul>
+                  <li>Sáng: 08:30 - 11:30</li>
+                  <li>Chiều: 13:30 - 17:00</li>
+                  <li>Tối: 17:00 - 20:00</li>
+                </ul>
+              </div>
+              <div className="mt-lg-3 col-lg-4">
+                <span style={{ fontSize: "19px" }}>Địa chỉ</span>
+                <ul>
+                  <li>Quận 7, thành phố Hồ Chí Minh</li>
+                  <li>Quận 8, thành phố Hồ Chí Minh</li>
+                  <li>Bình Thạnh, thành phố Hồ Chí Minh</li>
+                </ul>
+              </div>
+              <div className="mt-lg-3 col-lg-4" style={{ fontSize: "19px" }}>
+                Email: abc@gmail.com
+                <br />
+                Phone: 0843593598
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+
+      </footer>
     </div>
   );
 }

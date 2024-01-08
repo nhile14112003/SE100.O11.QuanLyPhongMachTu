@@ -44,7 +44,7 @@ export const FormPatient = ({ closeModal, onSubmit, defaultValue, customers }) =
         return false
       }
       else if(namS > Year - 3){
-        setErrors("Năm sinh phải nhỏ hơn năm hiện tại ít nhất "+Year-3+" năm");
+        setErrors("Năm sinh phải nhỏ hơn năm hiện tại ít nhất 4 năm");
         return false
       }
       else if(isIdExists1 == true){
@@ -133,8 +133,8 @@ export const FormPatient = ({ closeModal, onSubmit, defaultValue, customers }) =
                     <input type="text" className="form-control pb-2 pt-2 mb-2" value={formState.tenBenhNhan} id="TenBN" name="tenBenhNhan" onChange={handleChange} />
                     <div className="mb-2"><b>Giới tính</b></div>
                     <select className="form-select pb-2 pt-2 mb-2" aria-label="Chọn chi nhánh" value={formState.GioiTinh} onChange={handleGioiTinhChange}>
-                        <option selected value="nam">Nam</option>
-                        <option value="nữ">Nữ</option>
+                        <option selected value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
                     </select>
                     <div className="mb-2"><b>CCCD</b></div>
                     <input type="number" className="form-control pb-2 pt-2 mb-2" value={formState.CCCD} id="CCCD" name="CCCD" onChange={handleChange} />
