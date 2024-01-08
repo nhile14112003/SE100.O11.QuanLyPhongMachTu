@@ -63,96 +63,102 @@ const XemBaoCaoTheoDichVuTheoNam = (props) => {
     if (user?.Loai === "ChuHeThong") await getBills();
 
     const revenueTable = [];
+    if (bills.current.length !== 0) {
+      bills.current.forEach(async (bill) => {
+        if (Array.isArray(bill.dsThanhToan))
+          bill.dsThanhToan?.forEach((item, index) => {
+            if (item.ngayThanhToan?.startsWith(selectedYear)) {
+              let CTHSDT = tcDetails.current.find(
+                (item) => item.Id === bill.maCTHSDT
+              );
+              let HSDT = treatmentRecords.current.find(
+                (item) => item.Id === CTHSDT.IDhsdt
+              );
+              let tienThuoc =
+                tcDetails.current.Thuoc?.reduce(
+                  (total, thuoc) =>
+                    total + parseInt(thuoc.donGia) * parseInt(thuoc.SL),
+                  0
+                ) || 0;
 
-    bills.current.forEach(async (bill) => {
-      if (Array.isArray(bill.dsThanhToan))
-        bill.dsThanhToan?.forEach((item, index) => {
-          if (item.ngayThanhToan?.startsWith(selectedYear)) {
-            let CTHSDT = tcDetails.current.find(
-              (item) => item.Id === bill.maCTHSDT
-            );
-            let HSDT = treatmentRecords.current.find(
-              (item) => item.Id === CTHSDT.IDhsdt
-            );
-            let tienThuoc =
-              tcDetails.current.Thuoc?.reduce(
-                (total, thuoc) =>
-                  total + parseInt(thuoc.donGia) * parseInt(thuoc.SL),
-                0
-              ) || 0;
-
-            if (Array.isArray(CTHSDT.DichVu))
-              CTHSDT.DichVu.forEach((dv) => {
-                let tienDVKhac = CTHSDT.DichVu.reduce((total, dvk) => {
-                  if (dvk.maDichVu !== dv.maDichVu) {
-                    return (
-                      total +
-                      parseInt(dvk.giaDichVu) *
-                        parseInt(dvk.SL) *
-                        (1 - bill.phanTram / 100)
-                    );
-                  }
-                  return total;
-                }, 0);
-
-                revenueTable.push({
-                  dichVu: dv.tenDichVu + " - " + dv.loaiDichVu,
-                  soLuongDaBan: index === 0 && !dv.taiKham ? 1 : 0,
-                  maBN: index === 0 ? HSDT.IDBenhNhan : null,
-                  tienTT:
-                    index === 0
-                      ? dv.coTraGop === "Có"
-                        ? parseInt(item.tienThanhToan) - tienThuoc - tienDVKhac
-                        : parseInt(dv.giaDichVu) *
-                          parseInt(dv.SL) *
+              if (Array.isArray(CTHSDT.DichVu))
+                CTHSDT.DichVu.forEach((dv) => {
+                  let tienDVKhac = CTHSDT.DichVu.reduce((total, dvk) => {
+                    if (dvk.maDichVu !== dv.maDichVu) {
+                      return (
+                        total +
+                        parseInt(dvk.giaDichVu) *
+                          parseInt(dvk.SL) *
                           (1 - bill.phanTram / 100)
-                      : parseInt(item.tienThanhToan),
+                      );
+                    }
+                    return total;
+                  }, 0);
+
+                  revenueTable.push({
+                    dichVu: dv.tenDichVu + " - " + dv.loaiDichVu,
+                    soLuongDaBan: index === 0 && !dv.taiKham ? 1 : 0,
+                    maBN: index === 0 ? HSDT.IDBenhNhan : null,
+                    tienTT:
+                      index === 0
+                        ? dv.coTraGop === "Có"
+                          ? parseInt(item.tienThanhToan) -
+                            tienThuoc -
+                            tienDVKhac
+                          : parseInt(dv.giaDichVu) *
+                            parseInt(dv.SL) *
+                            (1 - bill.phanTram / 100)
+                        : parseInt(item.tienThanhToan),
+                  });
                 });
-              });
+            }
+          });
+
+        const revenueSummary = {};
+        const tongDoanhThu = revenueTable.reduce(
+          (total, row) => total + row.tienTT,
+          0
+        );
+        revenueTable.forEach((item) => {
+          const { dichVu, soLuongDaBan, maBN, tienTT } = item;
+
+          if (!revenueSummary[dichVu]) {
+            revenueSummary[dichVu] = {
+              dichVu: dichVu,
+              soLuongDaBan: 0,
+              soBenhNhan: 0,
+              doanhThu: 0,
+              tyLe: 0,
+            };
           }
+
+          revenueSummary[dichVu].soLuongDaBan += soLuongDaBan;
+
+          // Kiểm tra xem bệnh nhân đã được tính vào bảng thống kê chưa
+          if (maBN !== null) {
+            if (!revenueSummary[dichVu][maBN]) {
+              revenueSummary[dichVu].soBenhNhan += 1;
+              revenueSummary[dichVu][maBN] = true;
+            }
+          }
+
+          revenueSummary[dichVu].doanhThu += tienTT;
+          revenueSummary[dichVu].tyLe =
+            (revenueSummary[dichVu].doanhThu * 100) / tongDoanhThu;
+          revenueSummary[dichVu].tyLe = parseFloat(
+            revenueSummary[dichVu].tyLe.toFixed(1)
+          );
         });
 
-      const revenueSummary = {};
-      const tongDoanhThu = revenueTable.reduce(
-        (total, row) => total + row.tienTT,
-        0
-      );
-      revenueTable.forEach((item) => {
-        const { dichVu, soLuongDaBan, maBN, tienTT } = item;
+        const result = Object.values(revenueSummary);
 
-        if (!revenueSummary[dichVu]) {
-          revenueSummary[dichVu] = {
-            dichVu: dichVu,
-            soLuongDaBan: 0,
-            soBenhNhan: 0,
-            doanhThu: 0,
-            tyLe: 0,
-          };
-        }
-
-        revenueSummary[dichVu].soLuongDaBan += soLuongDaBan;
-
-        // Kiểm tra xem bệnh nhân đã được tính vào bảng thống kê chưa
-        if (maBN !== null) {
-          if (!revenueSummary[dichVu][maBN]) {
-            revenueSummary[dichVu].soBenhNhan += 1;
-            revenueSummary[dichVu][maBN] = true;
-          }
-        }
-
-        revenueSummary[dichVu].doanhThu += tienTT;
-        revenueSummary[dichVu].tyLe =
-          (revenueSummary[dichVu].doanhThu * 100) / tongDoanhThu;
-        revenueSummary[dichVu].tyLe = parseFloat(
-          revenueSummary[dichVu].tyLe.toFixed(1)
-        );
+        setTable(result);
+        setTotalRevenue(tongDoanhThu);
       });
-
-      const result = Object.values(revenueSummary);
-
-      setTable(result);
-      setTotalRevenue(tongDoanhThu);
-    });
+    } else {
+      setTable([]);
+      setTotalRevenue(0);
+    }
   };
 
   return (

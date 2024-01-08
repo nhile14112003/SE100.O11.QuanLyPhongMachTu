@@ -23,8 +23,8 @@ const XemBaoCaoCPPKTheoThang = (props) => {
     const fetchData = async () => {
       try {
         if (user?.Loai === "ChuHeThong") await getBranches();
-        drugs.current = await Api.getAllDrugs();
-        materials.current = await Api.getAllMaterials();
+        await getDrugs();
+        await getMaterials();
         CHAMCONG.current = await Api.getDocs(
           "/StaffManagement/getAll/ChamCong"
         );
@@ -42,14 +42,28 @@ const XemBaoCaoCPPKTheoThang = (props) => {
     setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
   };
 
+  const getDrugs = async () => {
+    if (user?.Loai === "ChuHeThong" && selectedBranch === "Tất cả")
+      drugs.current = await Api.getDocs("/StatisticalReport/getAll/Thuoc");
+    else
+      drugs.current = await Api.getDocs(
+        `/StatisticalReport/getByField/Thuoc/chiNhanh?fieldValue=${selectedBranch}`
+      );
+  };
+
+  const getMaterials = async () => {
+    if (user?.Loai === "ChuHeThong" && selectedBranch === "Tất cả")
+      materials.current = await Api.getDocs("/StatisticalReport/getAll/VatTu");
+    else
+      materials.current = await Api.getDocs(
+        `/StatisticalReport/getByField/VatTu/chiNhanh?fieldValue=${selectedBranch}`
+      );
+  };
+
   const updateTable = async () => {
-    if (user?.Loai !== "ChuHeThong" || selectedBranch !== "Tất cả") {
-      drugs.current = drugs.current.filter(
-        (item) => item.chiNhanh === selectedBranch
-      );
-      materials.current = materials.current.filter(
-        (item) => item.chiNhanh === selectedBranch
-      );
+    if (user?.Loai === "ChuHeThong") {
+      await getDrugs();
+      await getMaterials();
     }
 
     const salaries = await calSalary();
@@ -63,6 +77,7 @@ const XemBaoCaoCPPKTheoThang = (props) => {
       }
       return sum;
     }, 0);
+
     const totalMaterialExpense = materials.current.reduce((sum, material) => {
       if (material.ngayNhap.startsWith(selectedMonth)) {
         return (
