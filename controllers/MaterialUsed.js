@@ -22,8 +22,17 @@ const getMaterialsUsed = async (req, res) => {
         const docId = doc.id;
         return { ...data, Id: docId };
       });
-    const newList = list.sort((a, b) => a.maVatTu.localeCompare(b.maVatTu));
-    res.json({success:true, MU:newList});
+    // const newList = list.sort((a, b) => a.maVatTu.localeCompare(b.maVatTu));
+    list.sort(function(a, b) {
+      if (a.NgaySuDung > b.NgaySuDung) {
+          return -1; // Trả về số âm để đưa a lên trước b trong mảng
+      } else if (a.NgaySuDung < b.NgaySuDung) {
+          return 1; // Trả về số dương để đưa b lên trước a trong mảng
+      } else {
+          return 0; // Trả về 0 nếu a và b bằng nhau
+      }
+  });
+    res.json({success:true, MU:list});
     }
     catch(error){
         res.status(500).json({success:false, message: 'something went wrong when get data from VTDSD'})

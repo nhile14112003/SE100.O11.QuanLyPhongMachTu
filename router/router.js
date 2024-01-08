@@ -86,6 +86,7 @@ const {
   getPatientData,
   deleteCTHSDT,
   getCTHSDTsBySearch,
+  checktinhtrang
 } = require("../controllers/Patient");
 const {
   getMaterialUsedBySearch,
@@ -183,7 +184,7 @@ router.get("/PatientManagement/getPatients", getAllPatients);
 router.get("/PatientManagement/Patients", getPatientsBySearch);
 router.post("/PatientManagement/add", addPatient);
 router.put("/PatientManagement/update/:patientId", updatePatient);
-router.delete("/PatientManagement/delete/:patientId", deletePatient);
+router.delete("/PatientManagement/delete/:patientId/:HSId", deletePatient);
 router.get("/PatientManagement/getHSDT/:IDhsdt", getHSDT);
 router.post("/PatientManagement/chitietHSDT/add", addchitietHSDT);
 router.put("/PatientManagement/chitietHSDT/update/:Id", updateCTHSDT);
@@ -191,6 +192,7 @@ router.get("/PatientManagement/getCTHSDT/:HSId", getListCTHSDT);
 router.get("/PatientManagement/PatientData/:Id", getPatientData);
 router.delete("/PatientManagement/deleteCTHSDT/:Id/:IdHD", deleteCTHSDT);
 router.get("/PatientManagement/Search/CTHSDT", getCTHSDTsBySearch);
+router.get("/PatientManagement/Checkpayment/:Id", checktinhtrang);
 //materialused
 router.get("/MaterialUsed/get", getMaterialsUsed);
 router.get("/MaterialUsed/search", getMaterialUsedBySearch);

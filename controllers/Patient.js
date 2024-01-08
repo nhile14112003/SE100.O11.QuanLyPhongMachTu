@@ -39,6 +39,26 @@ const checkThanhToan =async(id)=>{
   }
   return false
 }
+const checktinhtrang = async (req,res)=>{
+  try{
+    const myCollection1 = collection(firestore, 'HoaDon');
+  const querySnapshot1 = await getDocs(myCollection1);
+  querySnapshot1.docs.map(async (doc1) => {
+    const data = doc1.data();
+    if(data.maCTHSDT==req.params.Id)
+    {
+    if(data.tinhTrang=='Đã thanh toán'){
+      res.json({success:true, edit:true});
+    }
+    else   res.json({success:true, edit:false});
+    }
+  });
+
+  }catch(e){
+    res.status(500).json({success:false, message: 'something went wrong when check tinh trang'})
+    console.log(e);
+  }
+}
 const getListCTHSDT = async (req, res) => {
   const myCollection1 = collection(firestore, 'HoaDon');
   const querySnapshot1 = await getDocs(myCollection1);
@@ -241,6 +261,9 @@ const deletePatient = async (req, res) => {
       const documentRef = doc(firestore, 'BenhNhan', req.params.patientId);
       await deleteDoc(documentRef);
       console.log('Document patient deleted successfully.');
+      const documentRef1 = doc(firestore, 'HoSoDieuTri', req.params.HSId);
+      await deleteDoc(documentRef1);
+      console.log('Document HSDT deleted successfully.');
       res.send({ success:true, message: 'Document successfully updated!' });
     } catch (error) {
       console.log('Error deleting patient document:', error);
@@ -270,6 +293,7 @@ const getPatientsBySearch = async (req, res) => {
       return matchMaBenhNhan&&matchTenBenhNhan&&matchsoDienThoai&&matchCCCD;
     });
     const sortList = searchResults.sort((a, b) => a.maBenhNhan.localeCompare(b.maBenhNhan));
+    console.log(sortList)
     res.json({success:true, patients:sortList});
     }
     catch(error){
@@ -279,6 +303,9 @@ const getPatientsBySearch = async (req, res) => {
     }
 }
 const getCTHSDTsBySearch = async (req, res) => {
+  const myCollection1 = collection(firestore, 'HoaDon');
+  const querySnapshot1 = await getDocs(myCollection1);
+  const HoaDon = querySnapshot1.docs.map(x=> {return x.data()})
   const { MaNhaSi, TenNhaSi, NgayDieuTri, HSDTid} = req.query;
   const myCollection = collection(firestore, 'ChiTietHSDT');
     try{
@@ -288,7 +315,12 @@ const getCTHSDTsBySearch = async (req, res) => {
         const data = doc.data();
         const docId = doc.id;
         if(data.IDhsdt==HSDTid){
-        list.push({ ...data, Id: docId });
+          const fil = HoaDon.filter((h)=>h.maCTHSDT==docId)
+          console.log(fil[0])
+          if(fil[0]!=undefined&&fil[0].tinhTrang=='Đã thanh toán'){
+            list.push({ ...data, Id: docId,edit:true });
+          }
+          else list.push({ ...data, Id: docId,edit:false });
         }
       });
     const searchResults = list.filter((cthsdt) => {
@@ -340,4 +372,4 @@ const deleteCTHSDT = async (req, res) => {
     res.status(500).json({ success: false, message: 'something went wrong when delete document' });
   }
 };
-module.exports={addPatient, getAllPatients, updatePatient, deletePatient, getPatientsBySearch, getHSDT, addchitietHSDT,updateCTHSDT, getListCTHSDT, getPatientData, deleteCTHSDT, getCTHSDTsBySearch}
+module.exports={addPatient, getAllPatients, updatePatient, deletePatient, getPatientsBySearch, getHSDT, addchitietHSDT,updateCTHSDT, getListCTHSDT, getPatientData, deleteCTHSDT, getCTHSDTsBySearch, checktinhtrang}
