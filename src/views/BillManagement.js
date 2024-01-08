@@ -52,6 +52,13 @@ const BillManagement = (props) => {
     window.scrollTo(0, 0);
   };
   const prevPage = () => {
+    // // alert("presv");
+    // if (!disableDiscount) {
+    //   // document.getElementById("maGiamGia").value = "";
+    //   // setSoTienGiam(0);
+    //   setRecentDiscount(null);
+    // }
+
     setPage(page - 1);
     window.scrollTo(0, 0);
   };
@@ -98,18 +105,18 @@ const BillManagement = (props) => {
     const Id = bills[id].Id;
     TongTienDT = 0;
     CTHSDT.DichVu.map((item, index) => {
-      if (!item.taiKham) TongTienDV += parseInt(item.DonGia);
+      if (!item.taiKham) TongTienDV += parseInt(item.DonGia * item.SL);
       if (item.coTraGop == "Có") {
         traGop1 = true;
       } else {
-        minimumTemp += item.DonGia;
+        minimumTemp += item.DonGia * item.SL;
       }
       return 0;
     });
     setTraGop(traGop1);
     CTHSDT.Thuoc.map((item, index) => {
-      TongTienThuoc += parseInt(item.DonGia);
-      minimumTemp += item.DonGia;
+      TongTienThuoc += parseInt(item.donGia * item.SL);
+      minimumTemp += item.donGia * item.SL;
       return 0;
     });
     TongTienDT = TongTienDV + TongTienThuoc;
@@ -123,6 +130,7 @@ const BillManagement = (props) => {
       } else {
         setNoSauThanhToan(pt.congNo + TongTienDV + TongTienThuoc);
       }
+      setSoTienGiam((TongTienDV * recentDiscount.phanTram) / 100);
       setDisaleDiscount(false);
     } else {
       let newBill = bills[id];
@@ -292,8 +300,10 @@ const BillManagement = (props) => {
           ((TongTienDV * recentDiscount.phanTram) / 100 || 0)
       );
       setConNo(patient.congNo);
-      if (traGop) setNoSauThanhToan(patient.congNo + ThanhTienSauGiamGia);
-      document.getElementById("soTienDaThanhToan").value = 0;
+      if (traGop) {
+        setNoSauThanhToan(patient.congNo + ThanhTienSauGiamGia);
+        document.getElementById("soTienDaThanhToan").value = 0;
+      }
     }
   }, [recentDiscount]);
 
@@ -505,7 +515,7 @@ const BillManagement = (props) => {
                 <tbody>
                   {CTHSDT !== null ? (
                     CTHSDT.DichVu.map((item, index) => {
-                      TongTienDV += parseInt(item.DonGia);
+                      TongTienDV += parseInt(item.DonGia * item.SL);
                       return (
                         <tr
                           key={item.Id}
@@ -548,7 +558,7 @@ const BillManagement = (props) => {
                 <tbody>
                   {CTHSDT !== null ? (
                     CTHSDT.Thuoc.map((item, index) => {
-                      TongTienThuoc += parseInt(item.DonGia);
+                      TongTienThuoc += parseInt(item.donGia * item.SL);
                       return (
                         <tr key={index}>
                           <td>
@@ -568,7 +578,7 @@ const BillManagement = (props) => {
                           </td>
                           <td>{item.SL} viên</td>
                           <td>
-                            {new Intl.NumberFormat("en-DE").format(item.DonGia)}
+                            {new Intl.NumberFormat("en-DE").format(item.donGia)}
                             /viên
                           </td>
                         </tr>
