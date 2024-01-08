@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import api from "../api/Api";
+import { AuthContext } from "../hook/AuthProvider";
+
 export const FormChiTietNhanVien = ({
   closeModal,
   onSubmit,
   defaultValue,
   staffs,
 }) => {
+  const { user } = useContext(AuthContext);
   const [formState, setFormState] = useState(
     defaultValue || {
       maNhanVien: "",
@@ -106,6 +109,22 @@ export const FormChiTietNhanVien = ({
     closeModal();
   };
 
+  const isNumberPress = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.keyCode === 86) {
+    } else {
+      const validKeyForPayment = ["-", "."];
+      if (validKeyForPayment.includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+  };
+  const isNumberCopy = (e) => {
+    let data = e.clipboardData.getData("text");
+    if (data.match(/[^\d]/)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div
       className="modal-container"
@@ -140,6 +159,8 @@ export const FormChiTietNhanVien = ({
               onChange={handleChange}
               type="number"
               value={formState.soDienThoai}
+              onKeyDown={isNumberPress}
+              onPaste={isNumberCopy}
             />
           </div>
           <div className="form-group">
@@ -191,22 +212,26 @@ export const FormChiTietNhanVien = ({
               name="luongCoBan"
               onChange={handleChange}
               value={formState.luongCoBan}
+              onKeyDown={isNumberPress}
+              onPaste={isNumberCopy}
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="chiNhanh">Chi nhánh làm việc</label>
-            <select
-              name="chiNhanh"
-              onChange={handleChange}
-              value={formState.chiNhanh}
-            >
-              {branches.map((item, index) => (
-                <option key={index} value={item.tenChiNhanh}>
-                  {item.tenChiNhanh}
-                </option>
-              ))}
-            </select>
-          </div>
+          {user?.Loai === "ChuHeThong" && (
+            <div className="form-group">
+              <label htmlFor="chiNhanh">Chi nhánh làm việc</label>
+              <select
+                name="chiNhanh"
+                onChange={handleChange}
+                value={formState.chiNhanh}
+              >
+                {branches.map((item, index) => (
+                  <option key={index} value={item.tenChiNhanh}>
+                    {item.tenChiNhanh}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           {errors && <div className="error">{errors}</div>}
           <button type="submit" className="btnSummit" onClick={handleSubmit}>
             Lưu

@@ -1,4 +1,4 @@
-import React, { useState,useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './mistyles.css'
 import {
   NavLink, useLocation, Switch, Route, Redirect
@@ -11,7 +11,7 @@ import SignUpSchedule from './SignUpSchedule';
 import { AuthContext } from '../hook/AuthProvider'
 const ScheduleManagement = (props) => {
   const { pathname } = useLocation();
-  const {scopeQLLH} = useContext(AuthContext);
+  const { scopeQLLH } = useContext(AuthContext);
   return (
     <div>
       <div className="container mt-3">
@@ -32,12 +32,12 @@ const ScheduleManagement = (props) => {
             <NavLink className="nav-link" to="/manager/schedule/signUpSchedule">Đăng ký lịch</NavLink>
           </li> */}
           {scopeQLLH?.map((val, idx) => {
-                return (
-                  <li className="nav-item">
-            <NavLink className="nav-link" to={val.path}>{val.name}</NavLink>
-          </li>
-                );
-              })}
+            return (
+              <li className="nav-item">
+                <NavLink className="nav-link" to={val.path}>{val.name}</NavLink>
+              </li>
+            );
+          })}
         </ul>
       </div>
       <div className="container mt-3">
@@ -59,38 +59,38 @@ const ScheduleManagement = (props) => {
               <BookingSchedule />
             </Route> */}
             {scopeQLLH.map((val, idx) => {
-              if(val.name ==='Xử lý lịch hẹn')
+              if (val.name === 'Xử lý lịch hẹn')
                 return (
                   <Route path={val.path}>
-                   <HandleSchedule />
-                </Route>
+                    <HandleSchedule />
+                  </Route>
                 );
-              if(val.name ==='Đặt lịch')
+              if (val.name === 'Đặt lịch')
                 return (
                   <Route path={val.path}>
-                  <BookingSchedule />
-                </Route>
+                    <BookingSchedule />
+                  </Route>
                 );
-              if(val.name ==='Danh sách lịch hẹn')
+              if (val.name === 'Danh sách lịch hẹn')
                 return (
                   <Route path={val.path}>
-                  <ScheduleList />
-                </Route>
+                    <ScheduleList />
+                  </Route>
                 );
-             if(val.name ==='Xem lịch biểu')
+              if (val.name === 'Xem lịch biểu')
                 return (
                   <Route path={val.path}>
-                  <ScheduleDetail />
-                </Route>
+                    <ScheduleDetail />
+                  </Route>
                 );
-             if(val.name ==='Đăng ký lịch')
+              if (val.name === 'Đăng ký lịch')
                 return (
                   <Route path={val.path}>
-                  <BookingSchedule />
-                </Route>
+                    <SignUpSchedule />
+                  </Route>
                 );
-              })}
-            {pathname === "/manager/schedule" ? <Redirect to="/manager/schedule/handleSchedule" /> : null}
+            })}
+            {pathname === "/manager/schedule" ? <Redirect to={scopeQLLH[0].path} /> : null}
             <Switch />
           </Switch>
         </Route>

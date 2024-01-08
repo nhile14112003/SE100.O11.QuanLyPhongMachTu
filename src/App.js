@@ -18,6 +18,7 @@ import ContactPage from './views/ContactPage';
 import ForgetPassword from './views/ForgetPassword';
 import Profile from './views/Profile';
 import XemHSDT from './views/XemHSDT';
+import BookingOnline from './views/BookingOnline';
 import { AuthProvider } from './hook/AuthProvider';
 
 function App() {
@@ -58,7 +59,7 @@ function App() {
           <XemHSDT />
         </Route>
         <Route path="/bookingOnline">
-           
+        <BookingOnline/>
         </Route>
 
         <Route path="/" exact>

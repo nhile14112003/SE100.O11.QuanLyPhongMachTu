@@ -5,25 +5,25 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Api from "../api/Api";
 import LuongThuong from "./QuanLyNhanVien-LuongThuong";
-import { AuthContext } from '../hook/AuthProvider'
+import { AuthContext } from "../hook/AuthProvider";
 
 const XemBangLuong = (props) => {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [table, setTable] = useState([]);
-  const [branches, setBranches] = useState(user?.chinhanh||[]);
+  const [branches, setBranches] = useState(user?.chinhanh || []);
   const [selectedMonth, setSelectedMonth] = useState(
     moment().format("YYYY-MM")
   );
-  const [targetBranch, setTargetBranch] = useState('Tất cả');
+  const [targetBranch, setTargetBranch] = useState("Tất cả");
   const CHAMCONG = useRef();
   useEffect(() => {
     getWorkTimes();
     getBranches();
   }, []);
   const getBranches = async () => {
-    if(user?.Loai==='ChuHeThong'){
-    const branches = await Api.getAllBranchs();
-    setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
+    if (user?.Loai === "ChuHeThong") {
+      const branches = await Api.getAllBranchs();
+      setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
     }
   };
 
@@ -46,7 +46,10 @@ const XemBangLuong = (props) => {
     if (currentWorkTimesTable) {
       const totalHoursPerEmployee = [];
       Object.keys(currentWorkTimesTable)
-        .filter((key) => key !== "Thang" && key !== "Nam" && key != "Id")
+        .filter(
+          (key) =>
+            key !== "Thang" && key !== "Nam" && key != "Id" && key != "ChiNhanh"
+        )
         .forEach((date) => {
           currentWorkTimesTable[date].forEach((employee) => {
             const { MaNV, TenNV, SoGioLam } = employee;
@@ -68,16 +71,14 @@ const XemBangLuong = (props) => {
         });
 
       const staffstemp = await Api.getAllStaffs();
-      let staffs = []
-      if(targetBranch=='Tất cả')
-      {
-        staffs = staffstemp
+      let staffs = [];
+      if (targetBranch == "Tất cả") {
+        staffs = staffstemp;
+      } else {
+        staffs = staffstemp.filter(
+          (item, idx) => item.chiNhanh === targetBranch
+        );
       }
-      else{
-        staffs = staffstemp.filter((item,idx)=>
-        item.chiNhanh === targetBranch
-      )
-    }
       const bonuses = await Api.getDocs("/StaffManagement/getAll/LuongThuong");
       bonuses.filter(
         (item) => item.Thang == selectedmonth && item.Nam == selectedyear
@@ -129,25 +130,25 @@ const XemBangLuong = (props) => {
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
         />
-         <text>Chi nhánh: </text>
+        <text>Chi nhánh: </text>
         <select
           className="customBox"
           id="type"
           name="chiNhanh"
           value={targetBranch}
-          onChange={(e)=>setTargetBranch(e.target.value)}
+          onChange={(e) => setTargetBranch(e.target.value)}
         >
-          {user?.Loai==='ChuHeThong'?branches.map((item, index) => (
-            <option key={index} value={item.tenChiNhanh}>
-              {item.tenChiNhanh}
-            </option>
-          )):
-          <option  value={user?.chinhanh}>
-              {user?.chinhanh}
-            </option>}
+          {user?.Loai === "ChuHeThong" ? (
+            branches.map((item, index) => (
+              <option key={index} value={item.tenChiNhanh}>
+                {item.tenChiNhanh}
+              </option>
+            ))
+          ) : (
+            <option value={user?.chinhanh}>{user?.chinhanh}</option>
+          )}
         </select>
       </div>
-    
 
       <button
         type="submit"
@@ -176,10 +177,10 @@ const XemBangLuong = (props) => {
             <tr key={index}>
               <td>{item.MaNV}</td>
               <td>{item.TenNV}</td>
-              <td>{new Intl.NumberFormat('en-DE').format(item.LuongGio)}</td>
+              <td>{new Intl.NumberFormat("en-DE").format(item.LuongGio)}</td>
               <td>{item.SoGioLam}</td>
-              <td>{new Intl.NumberFormat('en-DE').format(item.LuongThuong)}</td>
-              <td>{new Intl.NumberFormat('en-DE').format(item.TongLuong)}</td>
+              <td>{new Intl.NumberFormat("en-DE").format(item.LuongThuong)}</td>
+              <td>{new Intl.NumberFormat("en-DE").format(item.TongLuong)}</td>
             </tr>
           ))}
         </tbody>

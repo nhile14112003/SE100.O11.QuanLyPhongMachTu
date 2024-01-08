@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FormHandleSchedule } from "../components/FormHandleSchedule";
 import Api from "../api/Api";
-import { AuthContext } from '../hook/AuthProvider'
+import { AuthContext } from "../hook/AuthProvider";
 
 const IncompletedSchedule = () => {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [sentSchedules, setSentSchedule] = useState([]);
@@ -16,20 +16,27 @@ const IncompletedSchedule = () => {
   const getBookings = async () => {
     const endpoint = "/ScheduleManagement/getAll/DatLich";
     const bookings = await Api.getDocs(endpoint);
-    const list = bookings.filter((item) => item.TinhTrang == "Chưa xử lý"&&item.ChiNhanh===user?.chinhanh);
+    const list = bookings.filter(
+      (item) =>
+        item.TinhTrang == "Chưa xử lý" && item.ChiNhanh === user?.chinhanh
+    );
     setSentSchedule(list);
   };
 
   const handleSubmit = async (newItem) => {
     const endpoint = "/ScheduleManagement/update/DatLich/" + newItem.Id;
-    await Api.updateDoc(endpoint, newItem);
+    await Api.updateDoc(endpoint, {
+      ...newItem,
+      MaNVXuLy: user?.maNV,
+      TenNVXuLy: user?.ten,
+    });
 
     if (newItem.TinhTrang == "Đã xử lý") {
       setSentSchedule(sentSchedules.filter((item) => item.Id !== newItem.Id));
     } else {
       let updatedlist = sentSchedules.map((item, idx) => {
         if (item.Id !== newItem.Id) return item;
-        return newItem;
+        return { ...newItem, MaNVXuLy: user?.maNV, TenNVXuLy: user?.ten };
       });
       setSentSchedule(updatedlist);
     }
@@ -91,7 +98,7 @@ const IncompletedSchedule = () => {
                         overflow: "auto",
                       }}
                     >
-                      {item.MaNV}
+                      {item.maNVXuLy}
                     </div>
                     <div className="mb-2" style={{ color: "#FFF" }}>
                       Tên nhân viên xử lý
@@ -105,7 +112,7 @@ const IncompletedSchedule = () => {
                         overflow: "auto",
                       }}
                     >
-                      {item.TenNV}
+                      {item.tenNVXuLy}
                     </div>
                     <div className="mb-2" style={{ color: "#FFF" }}>
                       Ghi chú

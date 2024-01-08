@@ -1,7 +1,12 @@
-import React, { useState, useContext} from "react";
-import { AuthContext } from '../hook/AuthProvider'
-export const FormVatTuThietBi = ({ closeModal, onSubmit, defaultValue, branches}) => {
-  const {user} = useContext(AuthContext);
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../hook/AuthProvider";
+export const FormVatTuThietBi = ({
+  closeModal,
+  onSubmit,
+  defaultValue,
+  branches,
+}) => {
+  const { user } = useContext(AuthContext);
   const [formState, setFormState] = useState(
     defaultValue || {
       maVatTu: "",
@@ -10,39 +15,52 @@ export const FormVatTuThietBi = ({ closeModal, onSubmit, defaultValue, branches}
       soLuongTonKho: "",
       donGiaNhap: "",
       ngayNhap: "",
-      chiNhanh:"",
+      chiNhanh: "",
     }
   );
   const [errors, setErrors] = useState("");
 
   const validateForm = () => {
-    if(!defaultValue) formState.soLuongTonKho = formState.soLuongNhap;
-    if (formState.maVatTu!="" && formState.tenVatTu!="" && formState.soLuongNhap!="" && (defaultValue? formState.soLuongTonKho!="" : true) && formState.donGiaNhap!="" && formState.ngayNhap!="") {
-      if(parseInt(formState.soLuongNhap) < parseInt(formState.soLuongTonKho)){
+    if (!defaultValue) formState.soLuongTonKho = formState.soLuongNhap;
+    if (
+      formState.maVatTu != "" &&
+      formState.tenVatTu != "" &&
+      formState.soLuongNhap != "" &&
+      (defaultValue ? formState.soLuongTonKho != "" : true) &&
+      formState.donGiaNhap != "" &&
+      formState.ngayNhap != ""
+    ) {
+      if (parseInt(formState.soLuongNhap) < parseInt(formState.soLuongTonKho)) {
         setErrors("Số lượng tồn kho không được lớn hơn số lượng nhập!");
         return false;
       }
       setErrors("");
       return true;
-
     } else {
       let errorFields = [];
       for (const [key, value] of Object.entries(formState)) {
         if (value == "") {
-          switch (key){
-            case 'maVatTu': 
-              errorFields.push("Mã vật tư"); break;
-            case 'tenVatTu': 
-              errorFields.push("Tên vật tư"); break;
-            case 'soLuongNhap': 
-              errorFields.push("Số lượng nhập"); break;
-            case 'soLuongTonKho': 
-              errorFields.push("Số lượng tồn kho"); break; 
-            case 'donGiaNhap': 
-              errorFields.push("Đơn giá nhập"); break; 
-            case 'ngayNhap': 
-              errorFields.push("Ngày nhập"); break; 
-            default: break;         
+          switch (key) {
+            case "maVatTu":
+              errorFields.push("Mã vật tư");
+              break;
+            case "tenVatTu":
+              errorFields.push("Tên vật tư");
+              break;
+            case "soLuongNhap":
+              errorFields.push("Số lượng nhập");
+              break;
+            case "soLuongTonKho":
+              errorFields.push("Số lượng tồn kho");
+              break;
+            case "donGiaNhap":
+              errorFields.push("Đơn giá nhập");
+              break;
+            case "ngayNhap":
+              errorFields.push("Ngày nhập");
+              break;
+            default:
+              break;
           }
         }
       }
@@ -65,6 +83,22 @@ export const FormVatTuThietBi = ({ closeModal, onSubmit, defaultValue, branches}
     closeModal();
   };
 
+  const isNumberPress = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.keyCode === 86) {
+    } else {
+      const validKeyForPayment = ["-", "."];
+      if (validKeyForPayment.includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+  };
+  const isNumberCopy = (e) => {
+    let data = e.clipboardData.getData("text");
+    if (data.match(/[^\d]/)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div
       className="modal-container"
@@ -72,13 +106,18 @@ export const FormVatTuThietBi = ({ closeModal, onSubmit, defaultValue, branches}
         if (e.target.className === "modal-container") closeModal();
       }}
     >
-      <div className="col-sm-4 modal1">
+      <div
+        className="col-sm-4 modal1"
+        style={{ height: "80%", overflowY: "auto" }}
+      >
         <form>
           <div className="form-group">
             <label for="maVatTu">Mã vật tư</label>
-            <input name="maVatTu" 
-            onChange={handleChange} 
-            value={formState.maVatTu} />
+            <input
+              name="maVatTu"
+              onChange={handleChange}
+              value={formState.maVatTu}
+            />
           </div>
           <div className="form-group">
             <label for="tenVatTu">Tên vật tư</label>
@@ -96,19 +135,23 @@ export const FormVatTuThietBi = ({ closeModal, onSubmit, defaultValue, branches}
               onChange={handleChange}
               type="number"
               value={formState.soLuongNhap}
+              onKeyDown={isNumberPress}
+              onPaste={isNumberCopy}
             />
           </div>
-          {defaultValue &&
-          <div className="form-group">
-            <label for="soLuongTonKho">Số lương tồn kho</label>
-            <input
-              name="soLuongTonKho"
-              onChange={handleChange}
-              type="number"
-              value={formState.soLuongTonKho}
-            />
-          </div>
-          }
+          {defaultValue && (
+            <div className="form-group">
+              <label for="soLuongTonKho">Số lương tồn kho</label>
+              <input
+                name="soLuongTonKho"
+                onChange={handleChange}
+                type="number"
+                value={formState.soLuongTonKho}
+                onKeyDown={isNumberPress}
+                onPaste={isNumberCopy}
+              />
+            </div>
+          )}
           <div className="form-group">
             <label for="donGiaNhap">Đơn giá nhập</label>
             <input
@@ -116,6 +159,8 @@ export const FormVatTuThietBi = ({ closeModal, onSubmit, defaultValue, branches}
               onChange={handleChange}
               type="number"
               value={formState.donGiaNhap}
+              onKeyDown={isNumberPress}
+              onPaste={isNumberCopy}
             />
           </div>
           <div className="form-group">
@@ -127,8 +172,9 @@ export const FormVatTuThietBi = ({ closeModal, onSubmit, defaultValue, branches}
               value={formState.ngayNhap}
             />
           </div>
-          {user?.Loai==='ChuHeThong'&&<div className="form-group">
-          <label for="chiNhanh">Chi nhánh</label>
+          {user?.Loai === "ChuHeThong" && (
+            <div className="form-group">
+              <label for="chiNhanh">Chi nhánh</label>
               <select
                 className="form-select pb-2 pt-2 mb-2"
                 id="type"
@@ -137,17 +183,17 @@ export const FormVatTuThietBi = ({ closeModal, onSubmit, defaultValue, branches}
                 value={formState.chiNhanh}
               >
                 {branches.map((item, index) => {
-                  if(item.tenChiNhanh!=='Tất cả')
-                  return(
-                  <option key={index} value={item.tenChiNhanh}>
-                    {item.tenChiNhanh}
-                  </option>
-                  )
-                 })
-                }
+                  if (item.tenChiNhanh !== "Tất cả")
+                    return (
+                      <option key={index} value={item.tenChiNhanh}>
+                        {item.tenChiNhanh}
+                      </option>
+                    );
+                })}
               </select>
-            </div>}
-          
+            </div>
+          )}
+
           {errors && <div className="error">{errors}</div>}
           <button type="submit" className="btnSummit" onClick={handleSubmit}>
             Lưu

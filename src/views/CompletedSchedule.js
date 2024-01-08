@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FormHandleSchedule } from "../components/FormHandleSchedule";
 import Api from "../api/Api";
-import { AuthContext } from '../hook/AuthProvider'
+import { AuthContext } from "../hook/AuthProvider";
 
 const CompletedSchedule = () => {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [sentSchedules, setSentSchedule] = useState([]);
@@ -16,7 +16,9 @@ const CompletedSchedule = () => {
   const getBookings = async () => {
     const endpoint = "/ScheduleManagement/getAll/DatLich";
     const bookings = await Api.getDocs(endpoint);
-    const list = bookings.filter((item) => item.TinhTrang == "Đã xử lý"&&item.ChiNhanh===user?.chinhanh);
+    const list = bookings.filter(
+      (item) => item.TinhTrang == "Đã xử lý" && item.ChiNhanh === user?.chinhanh
+    );
     setSentSchedule(list);
   };
 
@@ -77,7 +79,7 @@ const CompletedSchedule = () => {
                         overflow: "auto",
                       }}
                     >
-                      {item.MaNV}
+                      {item.MaNVXuLy}
                     </div>
                     <div className="mb-2" style={{ color: "#FFF" }}>
                       Tên nhân viên xử lý
@@ -91,7 +93,7 @@ const CompletedSchedule = () => {
                         overflow: "auto",
                       }}
                     >
-                      {item.TenNV}
+                      {item.TenNVXuLy}
                     </div>
                     <div className="mb-2" style={{ color: "#FFF" }}>
                       Ghi chú

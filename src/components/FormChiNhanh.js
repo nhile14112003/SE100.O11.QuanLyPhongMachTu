@@ -80,6 +80,22 @@ export const FormChiNhanh = ({
     closeModal();
   };
 
+  const isNumberPress = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.keyCode === 86) {
+    } else {
+      const validKeyForPayment = ["-", "."];
+      if (validKeyForPayment.includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+  };
+  const isNumberCopy = (e) => {
+    let data = e.clipboardData.getData("text");
+    if (data.match(/[^\d]/)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div
       className="modal-container"
@@ -122,6 +138,8 @@ export const FormChiNhanh = ({
               onChange={handleChange}
               type="number"
               value={formState.soLuongPhong}
+              onKeyDown={isNumberPress}
+              onPaste={isNumberCopy}
             />
           </div>
 

@@ -1,7 +1,7 @@
-import { useState, useEffect,useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import Api from "../api/Api";
 import NotificationModal from "../components/NotificationModal";
-import { AuthContext } from '../hook/AuthProvider'
+import { AuthContext } from "../hook/AuthProvider";
 
 const table = [
   {
@@ -50,9 +50,9 @@ const table = [
 const SignUpSchedule = () => {
   // const doctorId = "NV023";
   // const doctorName = "Phan Nguyễn Cao Trí";
-  const {user} = useContext(AuthContext);
-  const [doctorId, setDoctorId]=useState(user?.maNV)
-  const [doctorName, setDoctorName]=useState(user?.ten)
+  const { user } = useContext(AuthContext);
+  const [doctorId, setDoctorId] = useState(user?.maNV);
+  const [doctorName, setDoctorName] = useState(user?.ten);
   const [scheduleSignedUp, setScheduleSignUp] = useState(table);
   const [currentSchedule, setCurrentSchedule] = useState(table);
   const [doctorSchedule, setDoctorSchedule] = useState(null);
@@ -67,6 +67,7 @@ const SignUpSchedule = () => {
   }, []);
 
   const getDoctorSchedule = async () => {
+    console.log(doctorId);
     const dataName = "LichBacSi";
     const fieldName = "maNS";
     const fieldValue = doctorId;
@@ -162,9 +163,9 @@ const SignUpSchedule = () => {
       scheduleSignedUp.map((item) =>
         item.Thu === Thu
           ? {
-            ...item,
-            [Buoi]: !GiaTri,
-          }
+              ...item,
+              [Buoi]: !GiaTri,
+            }
           : item
       )
     );

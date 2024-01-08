@@ -12,10 +12,10 @@ import {
   sendPasswordResetEmail,
   deleteUser,
 } from "firebase/auth";
-import { AuthContext } from '../hook/AuthProvider'
+import { AuthContext } from "../hook/AuthProvider";
 
 const XemThongTinNhanVien = (props) => {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [staffs, setStaffs] = useState([]);
   const [rowToEdit, setRowToEdit] = useState(null);
@@ -28,7 +28,7 @@ const XemThongTinNhanVien = (props) => {
     luongCuoi: "",
   });
 
-  const [branches, setBranches] = useState(user?.chinhanh||[]);
+  const [branches, setBranches] = useState(user?.chinhanh || []);
   const [positions, setPositions] = useState([
     "Tất cả",
     "Nha sĩ",
@@ -44,19 +44,18 @@ const XemThongTinNhanVien = (props) => {
 
   const getStaffs = async () => {
     const staffs = await api.getAllStaffs();
-    if(user?.Loai!=='ChuHeThong'){
-     const fil = staffs.filter((item, idx)=>item.chiNhanh===user.chinhanh)
-     setStaffs(fil)
-    }
-    else{
+    if (user?.Loai !== "ChuHeThong") {
+      const fil = staffs.filter((item, idx) => item.chiNhanh === user.chinhanh);
+      setStaffs(fil);
+    } else {
       setStaffs(staffs);
     }
   };
 
   const getBranches = async () => {
-    if(user?.Loai==='ChuHeThong'){
-    const branches = await api.getAllBranchs();
-    setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
+    if (user?.Loai === "ChuHeThong") {
+      const branches = await api.getAllBranchs();
+      setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
     }
   };
 
@@ -67,10 +66,10 @@ const XemThongTinNhanVien = (props) => {
     if (shouldDelete) {
       setStaffs(staffs.filter((_, idx) => idx !== targetIndex));
       api.deleteStaff(staffs[targetIndex].Id);
-      const id = await api.findAccountofStaff(staffs[targetIndex].maNhanVien)
-      console.log('id'+id)
-      if(id){
-       api.deleteUserAccount(id)
+      const id = await api.findAccountofStaff(staffs[targetIndex].maNhanVien);
+      console.log("id" + id);
+      if (id) {
+        api.deleteUserAccount(id);
       }
     }
   };
@@ -83,43 +82,48 @@ const XemThongTinNhanVien = (props) => {
   const handleSubmit = async (newRow) => {
     console.log(newRow);
     if (rowToEdit == null) {
-      const id = await api.addStaff(newRow);
-      newRow.Id = id;
-      setStaffs([...staffs, newRow]);
+      if (user?.Loai === "ChuHeThong") {
+        const id = await api.addStaff(newRow);
+        newRow.Id = id;
+        setStaffs([...staffs, newRow]);
+      } else {
+        const id = await api.addStaff({ ...newRow, chiNhanh: user?.chinhanh });
+        newRow.Id = id;
+        setStaffs([...staffs, { ...newRow, chiNhanh: user?.chinhanh }]);
+      }
       createUserWithEmailAndPassword(auth, newRow.email, newRow.soDienThoai)
-      .then((userCredential) => {
-        sendPasswordResetEmail(auth,auth.currentUser.email)
-        .then(() => {
-            // Thành công, có thể thông báo cho người dùng về việc gửi email đặt lại mật khẩu, mật khẩu mặc định là số đt
-            console.log("Đã gửi email đặt lại mật khẩu.");
-          })
-          .catch((error) => {
-            // Xử lý lỗi nếu có
-            console.error("Lỗi khi gửi email đặt lại mật khẩu: ", error);
-          });
-        // Signed up
-        const user = userCredential.user;
-        console.log(user)
-        const userData = {
+        .then((userCredential) => {
+          sendPasswordResetEmail(auth, auth.currentUser.email)
+            .then(() => {
+              // Thành công, có thể thông báo cho người dùng về việc gửi email đặt lại mật khẩu, mật khẩu mặc định là số đt
+              console.log("Đã gửi email đặt lại mật khẩu.");
+            })
+            .catch((error) => {
+              // Xử lý lỗi nếu có
+              console.error("Lỗi khi gửi email đặt lại mật khẩu: ", error);
+            });
+          // Signed up
+          const user = userCredential.user;
+          console.log(user);
+          const userData = {
             id: auth.currentUser.uid,
             ten: newRow.tenNhanVien,
             email: auth.currentUser.email,
-            maNV:newRow.maNhanVien,
-            chinhanh:newRow.chiNhanh,
-            tuoi:'',
-            diachi:'',
-            CCCD:'',
-            SDT:newRow.soDienThoai,
-            Loai:newRow.chucVu
-          }
-          api.setUserInfo(userData)
-          .catch(error => console.error(error));
-        // ...
-      })
-      .catch((error) => {
-        console.log("Error sign up", error);
-        // ..
-      });
+            maNV: newRow.maNhanVien,
+            chinhanh: newRow.chiNhanh,
+            tuoi: "",
+            diachi: "",
+            CCCD: "",
+            SDT: newRow.soDienThoai,
+            Loai: newRow.chucVu,
+          };
+          api.setUserInfo(userData).catch((error) => console.error(error));
+          // ...
+        })
+        .catch((error) => {
+          console.log("Error sign up", error);
+          // ..
+        });
     } else {
       api.updateStaff(newRow, newRow.Id);
       let updatedStaffs = staffs.map((currRow, idx) => {
@@ -127,14 +131,14 @@ const XemThongTinNhanVien = (props) => {
         return newRow;
       });
       setStaffs(updatedStaffs);
-      const id = await api.findAccountofStaff(newRow.maNhanVien)
+      const id = await api.findAccountofStaff(newRow.maNhanVien);
       api.updateUser({
-        id:id,
-        ten:newRow.tenNhanVien,
-        chinhanh:newRow.chiNhanh,
-        SDT:newRow.soDienThoai,
-        Loai:newRow.chucVu
-      })
+        id: id,
+        ten: newRow.tenNhanVien,
+        chinhanh: newRow.chiNhanh,
+        SDT: newRow.soDienThoai,
+        Loai: newRow.chucVu,
+      });
     }
   };
 
@@ -188,14 +192,15 @@ const XemThongTinNhanVien = (props) => {
           name="chiNhanh"
           onChange={handleChange}
         >
-           {user?.Loai==='ChuHeThong'?branches.map((item, index) => (
-            <option key={index} value={item.tenChiNhanh}>
-              {item.tenChiNhanh}
-            </option>
-          )):
-          <option  value={user?.chinhanh}>
-              {user?.chinhanh}
-            </option>}
+          {user?.Loai === "ChuHeThong" ? (
+            branches.map((item, index) => (
+              <option key={index} value={item.tenChiNhanh}>
+                {item.tenChiNhanh}
+              </option>
+            ))
+          ) : (
+            <option value={user?.chinhanh}>{user?.chinhanh}</option>
+          )}
         </select>
         <div>
           <text>Lương cơ bản: Từ </text>

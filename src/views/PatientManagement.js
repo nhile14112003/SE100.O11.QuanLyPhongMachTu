@@ -11,134 +11,21 @@ import axios from 'axios';
 import Select from 'react-select';
 import { AuthContext } from '../hook/AuthProvider'
 
+
 const PatientManagement = (props) => {
-    //fake data
-    // const {customers,setCustomers} = useState( [
-    //     {
-    //         MaBN: "BN001",
-    //         TenBN: "Lê Văn Dần",
-    //         CCCD: "066303007350",
-    //         GioiTinh: "Nam",
-    //         NgaySinh: "2023-11-14",
-    //         SDT: "0843593598",
-    //         DiaChi: "502 Hoàng Diệu, TP BMT"
-    //     },
-    //     {
-    //         MaBN: "BN003",
-    //         TenBN: "Lê Trần Long",
-    //         CCCD: "066303007350",
-    //         GioiTinh: "Nam",
-    //         NgaySinh: "2023-11-14",
-    //         SDT: "0843593598",
-    //         DiaChi: "149/3 Ama Khê, TP BMT"
-    //     },
-    //     {
-    //         MaBN: "BN004",
-    //         TenBN: "Lê Trần Long",
-    //         CCCD: "066303007350",
-    //         GioiTinh: "Nam",
-    //         NgaySinh: "2023-11-14",
-    //         SDT: "0843593598",
-    //         DiaChi: "252 Tạ Quang Bửu, quận 9, HCM"
-    //     }
-    // ])
+
     const [customers,setCustomers] = useState( [])
     const [imageFile1, setImageFile1] = useState(null);
     const {user} = useContext(AuthContext);
-    const CTHSDT = [
-        {
-            MaCTHSDT: "CTHS002",
-            MaHSDT: "HS001",
-            maDichVu: "DV798",
-            tenDichVu: "Chỉnh hình răng",
-            MaNS: "NS003",
-            TenNS: "Nguyễn Văn Thái",
-            DonGia: "1500000",
-            SL: "1",
-            Ngay: "2023-10-11",
-        }
-        ,
-        {
-            MaCTHSDT: "CTHS003",
-            MaHSDT: "HS001",
-            maDichVu: "DV007",
-            tenDichVu: "Chữa răng",
-            MaNS: "NS003",
-            TenNS: "Nguyễn Văn Thái",
-            DonGia: "1500000",
-            SL: "1",
-            Ngay: "2023-10-11",
-        }
-    ]
-    const CTTOATHUOC = [
-        {
-            MaCTHSDT: "CTHS003",
-            MaTT: "TT001",
-            maThuoc: "T023",
-            tenThuoc: "Paracetamol",
-            SL: "10",
-            DonGia: "50000",
-            Ngay: "2023-10-11",
-            GhiChu: "Ngày uống 2 lần, mỗi lần 1 viên(sáng chiều - sau ăn)"
-        },
-        {
-            MaTT: "TT001",
-            MaCTHSDT: "TT001",
-            maThuoc: "T012",
-            tenThuoc: "Amoxillin",
-            Ngay: "2023-10-11",
-            SL: "5",
-            DonGia: "50",
-            GhiChu: "Ngày uống 1 lần, mỗi lần 1 viên(sáng - sau ăn)"
-        }
-    ]
-    // const medicines = [
-    //     {
-    //         maThuoc: "T012",
-    //         tenThuoc: "Amoxillin",
-    //         soLuongNhap: "100",
-    //         donGiaNhap: "100",
-    //         donGia: "10000",
-    //         hanSuDung: "2024-10-23",
-    //         ngayNhap: "2023-10-27",
-    //         soLuongTonKho: "100",
-    //     },
-    //     {
-    //         maThuoc: "T023",
-    //         tenThuoc: "Paracetamol",
-    //         soLuongNhap: "300",
-    //         donGiaNhap: "14000",
-    //         donGia: "18000",
-    //         hanSuDung: "2026-06-18",
-    //         ngayNhap: "2023-12-06",
-    //         soLuongTonKho: "300",
-    //     }
-    // ]
+    const [errors, setErrors] = useState("");
     const [medicines, setMedicines] = useState(null)
-    // const services = [
-    //     {
-    //         maDichVu: "DV007",
-    //         tenDichVu: "Chữa răng",
-    //         loaiDichVu: "Răng",
-    //         giaDichVu: "300000",
-    //         baoHanh: "Không",
-    //         coTraGop: "Có",
-    //     },
-    //     {
-    //         maDichVu: "DV798",
-    //         tenDichVu: "Chỉnh hình răng",
-    //         loaiDichVu: "Móc cài kim loại",
-    //         giaDichVu: "30000000",
-    //         baoHanh: "Có",
-    //         coTraGop: "Có",
-    //     },
-    // ]
+
     const [services,setServices] = useState(null);
     const getService = async()=>{
         const services = await api.getAllServices();
         setServices(services);
     }
-
+ 
     const [searchCriteria, setSearchCriteria] = useState({
         maBenhNhan: "",
         tenBenhNhan: "",
@@ -185,10 +72,10 @@ const PatientManagement = (props) => {
     const [medicineRowToEdit, setMedicineRowToEdit] = useState(null);
     const [recordRowToEdit, setRecordRowToEdit] = useState(null);
     const [khoiphucSL, setKhoiPhucSL] = useState(null);
-    const [nhasi, setNhaSi] = useState(null);
+    const [nhasi, setNhaSi] = useState(user?.Loai==='Phụ tá'?[]:user?.ten);
     const [hsdt, setHSDT] = useState(null);
     const [cthsdt,setCTHSDT] = useState({
-        MaNhaSi:'',
+        MaNhaSi:user?.Loai==='Phụ tá'?'':user?.maNV,
         ChuanDoan:'',
         GhiChu:'',
         DichVu:[],
@@ -203,12 +90,14 @@ const PatientManagement = (props) => {
     const getNhaSi = async()=>{
         // const response = await api.getStaffsBySeacrh({chucVu:'Nha sĩ',maNhanVien:'', tenNhanVien:'', chiNhanh:'', luongDau:'', luongCuoi:''})
         // console.log(response)
+        if(user?.Loai==='Phụ tá'){
         const response = await api.getAllStaffs();
         var nhasi1 = response.filter( (ns)=> {
           return ns.chucVu === 'Nha sĩ';
         });
         const fil = nhasi1.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
         setNhaSi(fil)
+    }
     }
     useEffect(() => {
         getPatients();
@@ -234,7 +123,7 @@ const PatientManagement = (props) => {
         setPage(page - 1);
         window.scrollTo(0, 0);
     }
-    const handleEditRecordRow = (item,index) => {
+    const handleEditRecordRow =async (item,index) => {
         let list = []
         for (let i = 0 ; i < item.Thuoc.length; i++){
             const result = medicines.filter((item1, idx) => item1.maThuoc === item.Thuoc[i].maThuoc)
@@ -243,10 +132,12 @@ const PatientManagement = (props) => {
             list.push({...result[0],soLuongTonKho:lamlai.toString()})
             }
           }
+          const res = await api.Checkpayment(item.Id)
+          
           setKhoiPhucSL(list)
-        setSelectedRecord(item);
+        setSelectedRecord({...item,edit:res});
         setRecordRowToEdit(index)
-        setCTHSDT(item)
+        setCTHSDT({...item,edit:res})
         setPage(3);
         setState("edit");
     }
@@ -271,8 +162,8 @@ const PatientManagement = (props) => {
     
         const searchResults = await api.getPatientsBySeacrh(searchCriteria);
         console.log(searchResults);
-        const fil = searchResults.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
-        setCustomers(fil);
+        // const fil = searchResults.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+        setCustomers(searchResults);
         // setSearchCriteria({
         //     maBenhNhan: "",
         //     tenBenhNhan: "",
@@ -313,7 +204,7 @@ const PatientManagement = (props) => {
 
         setPage(3);
         setCTHSDT({
-        MaNhaSi:'',
+        MaNhaSi:user?.Loai==='Phụ tá'?'':user?.maNV,
         ChuanDoan:'',
         GhiChu:'',
         DichVu:[],
@@ -327,13 +218,18 @@ const PatientManagement = (props) => {
         setPatientRowToEdit(index);
         setPatientModalOpen(true);
     }
-    const handleDeletePatientRow = (targetIndex) => {
+    const handleDeletePatientRow = async (targetIndex) => {
+        const res = await api.getListCTHSDT(customers[targetIndex].IDhsdt)
+        console.log('xóa'+res.length+customers[targetIndex].IDhsdt)
+        if(res.length>0) window.confirm('Bệnh nhân này không thể xóa!');
+        else if (res.length==0){
         const shouldDelete = window.confirm('Bạn có chắc muốn xóa bệnh nhân này không?');
         if (shouldDelete) {
-          api.deletePatient(customers[targetIndex].Id);
+          api.deletePatient(customers[targetIndex].Id,customers[targetIndex].IDhsdt);
           setCustomers(customers.filter((_, idx) => idx !== targetIndex));
           setListCTHSDT(null)
         }
+    }
     }
     const handleEditMedicineRow = (index) => {
         setMedicineRowToEdit(index);
@@ -366,16 +262,42 @@ const PatientManagement = (props) => {
             tien = tien + parseInt(cthsdt.DichVu[i].DonGia)*parseInt(cthsdt.DichVu[i].SL)
         }
         for(let i = 0; i < cthsdt.Thuoc.length; i++){
-            tien = tien + parseInt(cthsdt.Thuoc[i].DonGia)*parseInt(cthsdt.Thuoc[i].SL)
+            tien = tien + parseInt(cthsdt.Thuoc[i].donGia)*parseInt(cthsdt.Thuoc[i].SL)
         }
         return tien
     }
     const handlechangeformCTHSDT = (e)=>{
-        if(cthsdt.edit===false||state==='create'){
+        if(cthsdt.edit!==true||state==='create'){
         setCTHSDT({ ...cthsdt, [e.target.name]: e.target.value })
         }
     }
+    const validateForm = () => {
+        if(cthsdt.MaNhaSi!=''&&cthsdt.ChuanDoan!=''&&cthsdt.Thuoc.length>0&&cthsdt.DichVu.length>0){
+            return true
+        }
+        else{
+            let errorFields = [];
+          for (const [key, value] of Object.entries(cthsdt)) {
+            if (value == ""||value==[]) {
+              switch (key){
+                case 'MaNhaSi': 
+                  errorFields.push("Nha sĩ"); break;
+                case 'ChuanDoan': 
+                  errorFields.push("Chuẩn đoán"); break;
+                case 'DichVu': 
+                  errorFields.push("Dịch vụ"); break;
+                case 'Thuoc': 
+                  errorFields.push("Thuốc"); break;
+                default: break;         
+              }
+            }
+          }
+          setErrors("Vui lòng nhập: " + errorFields.join(", "));
+          return false;
+        }
+    }
     const saveCTHSDT = async () => {
+        if(!validateForm()) return;
         const maNS = cthsdt.MaNhaSi;
         const response = await api.getAllStaffs();
         var nhasi = response.find(function (ns) {
@@ -519,7 +441,7 @@ const PatientManagement = (props) => {
                                 <button type="submit" className="btn pb-2 pt-2 mt-2" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={onSearch}>
                                     Tìm kiếm
                                 </button>
-                                <button type="submit" className="btn pb-2 pt-2 mt-2 ms-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={() => setPatientModalOpen(true)}>
+                                <button type="submit" className="btn pb-2 pt-2 mt-2 ms-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={() => {setErrors("");setPatientModalOpen(true)}}>
                                     Thêm bệnh nhân
                                 </button>
                             </div>
@@ -562,7 +484,7 @@ const PatientManagement = (props) => {
                                             />
                                             <BsFillTrashFill
                                                 className="delete-btn"
-                                                onClick={() => handleDeletePatientRow(index)}
+                                                onClick={() => {handleDeletePatientRow(index)}}
                                             />
 
                                         </span>
@@ -657,10 +579,10 @@ const PatientManagement = (props) => {
                         <div><span style={{ fontWeight: "600" }}>Số điện thoại: </span>{selectedPatient?.soDienThoai}</div>
                         <div className='col-lg-4 col-md-6'>
                             <div className='mb-2' style={{ fontWeight: "600" }}>Nha sĩ điều trị:</div>
-                            {/* <div className='col-md-auto'>
-                                <input type="text" className="form-control signature" id="MaNV" name="MaNhaSi" placeholder='Nhập mã nha sĩ' onChange={handlechangeformCTHSDT} value={cthsdt?.MaNhaSi}/>
-                            </div> */}
-                             <Select className="mb-2"
+                           {user?.Loai==='Nha sĩ'&& <div className='col-md-auto'>
+                                <input type="text" className="form-control signature" id="MaNV" name="MaNhaSi" value={state==='create'?user?.ten:cthsdt.TenNhaSi}/>
+                            </div>}
+                             {user?.Loai==='Phụ tá'&&<Select className="mb-2"
                         value={nhasi.find(item => item.maNhanVien === cthsdt.MaNhaSi) || ''}
                         onChange={(value) => value !== null ? setCTHSDT({ ...cthsdt, MaNhaSi:value.maNhanVien }) : setCTHSDT({ ...cthsdt, MaNhaSi:''})}
                         options={nhasi}
@@ -668,7 +590,7 @@ const PatientManagement = (props) => {
                         getOptionLabel={(item) => item.tenNhanVien}
                         getOptionValue={(item) => item}
                         placeholder=""
-                    />
+                    />}
                         </div>
                         <div className='row'>
                             <div className='col-md-auto mt-auto mb-auto' style={{ fontWeight: "600" }}>Chuẩn đoán:</div>
@@ -691,7 +613,7 @@ const PatientManagement = (props) => {
                                 objectFit: "cover"
                             }} id="imagePreview"/>
                             <input type="file" hidden accept="image/*" name="HinhAnhSauDieuTri" id="HinhAnhSauDieuTri" onChange={handleImageChange} />
-                            {(cthsdt.edit===false||state==='create')&&<div className="mt-3" align="center">
+                            {(cthsdt.edit!==true||state==='create')&&<div className="mt-3" align="center">
                                 <label for="HinhAnhSauDieuTri" className='btn d-flex btn-primary' style={{ width: "fit-content" }}>
                                     <div><i className="fa-solid fa-cloud-arrow-up me-2" style={{ color: "#FFF", fontSize: "35px" }}></i></div>
                                     <div className='m-auto'>Đăng ảnh</div>
@@ -699,7 +621,7 @@ const PatientManagement = (props) => {
                                 </label>
                             </div>}
                         </div>
-                        {(cthsdt?.edit===false||state=="create")&&<div className="text-end">
+                        {(cthsdt?.edit!==true||state=="create")&&<div className="text-end">
                             <button type="submit" className="btn pb-2 pt-2 ps-3 mt-2 pe-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={() => setServiceModalOpen(true)}>
                                 Thêm dịch vụ
                             </button>
@@ -749,7 +671,7 @@ const PatientManagement = (props) => {
                                             </div>
                                         </td>
                                         <td>{item.SL} viên</td>
-                                        <td>{item.DonGia}/viên</td>
+                                        <td>{item.donGia}/viên</td>
                                         <td className="fit">
                                             {cthsdt?.edit!=true&&<span className="actions">
                                                 <BsFillTrashFill
@@ -767,7 +689,8 @@ const PatientManagement = (props) => {
                             </tbody>
                         </table>
                         <div className='text-end'><b>Thành tiền: {ThanhTien()}</b></div>
-                        {(cthsdt.edit===false||state=="create")&&<div className="text-end">
+                        {errors && <div className="error">{errors}</div>}
+                        {(cthsdt.edit!=true||state=="create")&&<div className="text-end">
                             <button type="submit" className="btn pb-2 pt-2 mt-3 mb-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={saveCTHSDT}>
                                 Lưu
                             </button>
