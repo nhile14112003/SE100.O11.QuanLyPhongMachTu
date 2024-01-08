@@ -1,59 +1,203 @@
-import React from 'react'
-import './mistyles.css'
+import React, { useState, useEffect, useRef } from "react";
+import "./mistyles.css";
+import Api from "../api/Api";
+import moment from "moment";
 
 const XemBaoCaoCPPKTheoThang = (props) => {
-  const doanhthu = [
-    {
-      tenChiPhi: '2015',
-      soLuongCaThucHien: '66',
-      soLuongBenhNhan: '23',
-      tongDoanhThu: '4000000',
-    },
-    {
-      tenChiPhi: '2016',
-      soLuongCaThucHien: '66',
-      soLuongBenhNhan: '23',
-      tongDoanhThu: '4000000',
-    },
-    {
-      tenChiPhi: '2017',
-      soLuongCaThucHien: '66',
-      soLuongBenhNhan: '23',
-      tongDoanhThu: '4000000',
-    },
-  ];
+  const [table, setTable] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(
+    moment().format("YYYY-MM")
+  );
+  const drugs = useRef();
+  const materials = useRef();
+  const [totalExpenses, setTotalExpenses] = useState();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        drugs.current = await Api.getAllDrugs();
+        materials.current = await Api.getAllMaterials();
+        CHAMCONG.current = await Api.getDocs(
+          "/StaffManagement/getAll/ChamCong"
+        );
+        updateTable();
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const updateTable = async () => {
+    const salaries = await calSalary();
+    const totalSalaryExpense = salaries.reduce((sum, salary) => {
+      return sum + parseInt(salary.TongLuong);
+    }, 0);
+
+    const totalDrugExpense = drugs.current.reduce((sum, drug) => {
+      if (drug.ngayNhap.startsWith(selectedMonth)) {
+        return sum + parseInt(drug.donGiaNhap) * parseInt(drug.soLuongNhap);
+      }
+      return sum;
+    }, 0);
+    const totalMaterialExpense = materials.current.reduce((sum, material) => {
+      if (material.ngayNhap.startsWith(selectedMonth)) {
+        return (
+          sum + parseInt(material.donGiaNhap) * parseInt(material.soLuongNhap)
+        );
+      }
+      return sum;
+    }, 0);
+
+    const totalExpenses =
+      totalDrugExpense + totalMaterialExpense + totalSalaryExpense;
+    const expenseTable = [
+      {
+        tenChiPhi: "Tiền vật tư thiết bị",
+        soTien: totalMaterialExpense,
+        tyLe: parseFloat(
+          ((totalMaterialExpense * 100) / totalExpenses).toFixed(1)
+        ),
+      },
+      {
+        tenChiPhi: "Tiền thuốc",
+        soTien: totalDrugExpense,
+        tyLe: parseFloat(((totalDrugExpense * 100) / totalExpenses).toFixed(1)),
+      },
+      {
+        tenChiPhi: "Tiền lương nhân viên",
+        soTien: totalSalaryExpense,
+        tyLe: parseFloat(
+          ((totalSalaryExpense * 100) / totalExpenses).toFixed(1)
+        ),
+      },
+    ];
+    setTable(expenseTable);
+    setTotalExpenses(totalExpenses);
+  };
+
+  const CHAMCONG = useRef();
+  const calSalary = async () => {
+    const parsedDate = moment(selectedMonth, "YYYY-MM");
+    const selectedyear = parsedDate.format("YYYY");
+    const selectedmonth = parsedDate.format("M");
+
+    const currentWorkTimesTable = CHAMCONG.current.find(
+      (item) => item.Thang == selectedmonth && item.Nam == selectedyear
+    );
+    //console.log(currentWorkTimesTable);
+    if (currentWorkTimesTable) {
+      const totalHoursPerEmployee = [];
+      Object.keys(currentWorkTimesTable)
+        .filter((key) => key !== "Thang" && key !== "Nam" && key != "Id")
+        .forEach((date) => {
+          currentWorkTimesTable[date].forEach((employee) => {
+            const { MaNV, TenNV, SoGioLam } = employee;
+
+            const existingEmployee = totalHoursPerEmployee.find(
+              (item) => item.MaNV === MaNV
+            );
+
+            if (!existingEmployee) {
+              totalHoursPerEmployee.push({
+                MaNV,
+                TenNV,
+                SoGioLam: parseInt(SoGioLam),
+              });
+            } else {
+              existingEmployee.SoGioLam += parseInt(SoGioLam);
+            }
+          });
+        });
+
+      const staffs = await Api.getAllStaffs();
+      const bonuses = await Api.getDocs("/StaffManagement/getAll/LuongThuong");
+      bonuses.filter(
+        (item) => item.Thang == selectedmonth && item.Nam == selectedyear
+      );
+      const result = totalHoursPerEmployee
+        .map((employee) => {
+          const { MaNV, TenNV, SoGioLam } = employee;
+          const employeeInfo = staffs.find((e) => e.maNhanVien === MaNV);
+
+          if (employeeInfo) {
+            const bonus = bonuses.filter(
+              (item) =>
+                item.LoaiNhanVien === "Tất cả" ||
+                item.LoaiNhanVien === employeeInfo.chucVu ||
+                item.MaNV === MaNV
+            );
+            const totalBonus = bonus.reduce(
+              (sum, bonus) => sum + parseInt(bonus.Tien),
+              0
+            );
+            return {
+              ...employee,
+              LuongGio: employeeInfo.luongCoBan,
+              LuongThuong: totalBonus,
+              TongLuong:
+                parseInt(employeeInfo.luongCoBan) * parseInt(SoGioLam) +
+                parseInt(totalBonus),
+            };
+          }
+          return null;
+        })
+        .filter(Boolean);
+      return result;
+    } else return [];
+  };
+
   return (
     <div>
+      <div class="mb-3 mt-3">
+        <label for="month">
+          <b>Chọn tháng, năm:</b>
+        </label>{" "}
+        <br />
+        <input
+          class="customBox"
+          type="month"
+          id="month"
+          placeholder="Chọn tháng năm"
+          name="month"
+          max={moment().format("YYYY-MM")}
+          value={selectedMonth}
+          onChange={(e) => setSelectedMonth(e.target.value)}
+        />
+      </div>
 
-        <div class="mb-3 mt-3">
-          <label for="month"><b>Chọn tháng, năm:</b></label> <br />
-          <input class="customBox" type="month" id="month" placeholder="Chọn tháng năm" name="month" />
-        </div>
-
-        <button type="submit" class="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">Xem</button>
+      <button
+        type="submit"
+        class="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+        onClick={updateTable}
+      >
+        Xem
+      </button>
       <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
-      <table class="table" >
+      <table class="table">
         <thead>
           <tr class="table-secondary">
             <th>Tên chi phí</th>
-            <th>Số lượng ca thực hiện</th>
-            <th>Số lượng bệnh nhân</th>
-            <th>Tổng doanh thu</th>
+            <th>Số tiền đã chi trả</th>
+            <th>Tỷ lệ (%)</th>
           </tr>
         </thead>
         <tbody>
-          {doanhthu.map((item, index) => (
+          {table.map((item, index) => (
             <tr key={index}>
               <td>{item.tenChiPhi}</td>
-              <td>{item.soLuongCaThucHien}</td>
-              <td>{item.soLuongBenhNhan}</td>
-              <td>{item.tongDoanhThu}</td>
+              <td>{item.soTien}</td>
+              <td>{item.tyLe}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      <h1 class="noteVND" style={{ fontWeight: "bold" }}>
+        Tổng chi phí: {totalExpenses}
+      </h1>
     </div>
   );
-}
+};
 
 export default XemBaoCaoCPPKTheoThang;
