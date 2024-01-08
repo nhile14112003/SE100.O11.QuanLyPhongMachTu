@@ -198,4 +198,11 @@ router.post("/MaterialUsed/add", addMaterialUsed);
 router.put("/MaterialUsed/update/:Id", updateMaterialUsed);
 router.delete("/MaterialUsed/delete/:Id", deleteMaterialUsed);
 
+//StatisticalReport
+router.get("/StatisticalReport/getAll/:dataName", getAllDocuments);
+router.get("/StatisticalReport/get/:dataName/:id", getDocument);
+router.get(
+  "/StatisticalReport/getByField/:dataName/:fieldName",
+  getDocumentByField
+);
 module.exports = router;
