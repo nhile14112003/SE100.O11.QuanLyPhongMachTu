@@ -251,11 +251,11 @@ const TopNav = () => {
                   </li>
                 </ul>
               </div>}
-              <div className="nav-item col-auto">
+              {user === null &&<div className="nav-item col-auto">
                 <NavLink className="nav-link" to="/sign_up">
                   Đăng ký
                 </NavLink>
-              </div>
+              </div>}
             </div>
           </ul>
         </div>

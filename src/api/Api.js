@@ -551,9 +551,9 @@ const addPatient = async (data) => {
     console.log("error: ", error.message);
   }
 };
-const deletePatient = async (id) => {
+const deletePatient = async (id, HSId) => {
   try {
-    await client.delete("/PatientManagement/delete/" + id);
+    await client.delete("/PatientManagement/delete/" + id+'/'+HSId);
   } catch (error) {
     console.log("error: ", error.message);
   }
@@ -790,6 +790,18 @@ const deleteUserAccount = async (id) => {
     console.log("error: ", error.message);
   }
 };
+const Checkpayment= async (Id) => {
+  try {
+    const response = await client.get("/PatientManagement/Checkpayment/"+Id);
+    if (response.data.success) {
+      return response.data.edit;
+    } else {
+      console.log("not check payment");
+    }
+  } catch (error) {
+    console.log("error: ", error.message);
+  }
+};
 export default {
   getAllServices,
   addService,
@@ -860,4 +872,5 @@ export default {
   getMaterialUsedBySearch,
   findAccountofStaff,
   deleteUserAccount,
+  Checkpayment
 };

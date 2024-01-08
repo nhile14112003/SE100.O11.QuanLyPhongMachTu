@@ -39,12 +39,12 @@ export const FormPatient = ({ closeModal, onSubmit, defaultValue, customers }) =
         setErrors("Mã bệnh nhân này đã tồn tại! Vui lòng nhập một mã bệnh nhân khác.");
         return false;
       }
-      else if(!formState.maBenhNhan.startWith('BN')){
+      else if(!formState.maBenhNhan.startsWith('BN')){
         setErrors("Mã bệnh nhân phải bắt đầu bằng 'BN'.");
         return false
       }
       else if(namS > Year - 3){
-        setErrors("Năm sinh phải nhỏ hơn năm hiện tại "+Year-3+" năm");
+        setErrors("Năm sinh phải nhỏ hơn năm hiện tại ít nhất "+Year-3+" năm");
         return false
       }
       else if(isIdExists1 == true){

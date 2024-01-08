@@ -43,6 +43,18 @@ const MaterialUsed = () => {
     
     }
     const handleDeleteRow = async (item,id) => {
+        const S = item.NgaySuDung.split('-')
+        const namS = parseInt(S[0])
+        const thangS = parseInt(S[1])
+        const ngayS = parseInt(S[2])
+        const currentDate = new Date();
+        const Day = currentDate.getDate(); 
+        const Month = currentDate.getMonth() + 1; 
+        const Year = currentDate.getFullYear();
+        if(namS<Year||thangS<Month||ngayS<Day){
+            window.confirm('Vật tư đã sử dụng này đã hết thời hạn có thể điều chỉnh');
+            return;
+        }
         
             const shouldDelete = window.confirm('Bạn có chắc muốn xóa không?');
             if (shouldDelete) {
@@ -60,6 +72,18 @@ const MaterialUsed = () => {
             }
     }
     const handleEditRow = (index) => {
+        const S = materialsUsed[index].NgaySuDung.split('-')
+        const namS = parseInt(S[0])
+        const thangS = parseInt(S[1])
+        const ngayS = parseInt(S[2])
+        const currentDate = new Date();
+        const Day = currentDate.getDate(); 
+        const Month = currentDate.getMonth() + 1; 
+        const Year = currentDate.getFullYear();
+        if(namS<Year||thangS<Month||ngayS<Day){
+            window.confirm('Vật tư đã sử dụng này đã hết thời hạn có thể điều chỉnh');
+            return;
+        }
         setRowToEdit(index);
             const result = materials.filter((item1, idx) => item1.maVatTu === materialsUsed[index].maVatTu)
             let lamlai = parseInt(result[0].soLuongTonKho) + parseInt(materialsUsed[index].SL)
@@ -71,7 +95,7 @@ const MaterialUsed = () => {
         if (rowToEdit == null) {
             const id = await api.addMaterialUsed({...newRow,chiNhanh:user.chinhanh});
             newRow.Id = id.docId;
-            setMaterialUsed([...materialsUsed, newRow]);
+            setMaterialUsed([newRow,...materialsUsed]);
                 const result = materials.filter((item1, idx) => item1.maVatTu === newRow.maVatTu)
                 let x = parseInt(result[0].soLuongTonKho) - parseInt(newRow.SL)
                 let updated2 = materials.map((item, idx) => {

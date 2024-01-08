@@ -9,6 +9,7 @@ import api from '../api/Api';
 import upload from '../api/upload';
 import axios from 'axios';
 import { AuthContext } from '../hook/AuthProvider'
+import TopNav from "../components/TopNav";
 
 const XemHSDT = (props) => {
     const {user} = useContext(AuthContext);
@@ -120,7 +121,7 @@ const XemHSDT = (props) => {
             tien = tien + parseInt(cthsdt.DichVu[i].DonGia)*parseInt(cthsdt.DichVu[i].SL)
         }
         for(let i = 0; i < cthsdt.Thuoc.length; i++){
-            tien = tien + parseInt(cthsdt.Thuoc[i].DonGia)*parseInt(cthsdt.Thuoc[i].SL)
+            tien = tien + parseInt(cthsdt.Thuoc[i].donGia)*parseInt(cthsdt.Thuoc[i].SL)
         }
         return tien
     }
@@ -128,6 +129,7 @@ const XemHSDT = (props) => {
 
     return (
         <div>
+            <TopNav/>
             <div style={{ minHeight: "630px" }}>
                 {(page === 2 && selectedPatient !== null) ?
                     <div className='pe-2 ps-2'>
@@ -260,7 +262,7 @@ const XemHSDT = (props) => {
                                             </div>
                                         </td>
                                         <td>{item.SL} viên</td>
-                                        <td>{item.DonGia}/viên</td>
+                                        <td>{item.donGia}/viên</td>
                                     </tr>
                                 ))}
                             </tbody>
