@@ -43,6 +43,12 @@ const XemBaoCaoTheoDichVuTheoThang = (props) => {
         `/StatisticalReport/getByField/HoaDon/tenChiNhanh?fieldValue=${selectedBranch}`
       );
   };
+
+  const getBranches = async () => {
+    const branches = await Api.getAllBranchs();
+    setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
+  };
+
   const getTreatmentRecordDetails = async () => {
     tcDetails.current = await Api.getDocs(
       "/StatisticalReport/getAll/ChiTietHSDT"
@@ -53,11 +59,6 @@ const XemBaoCaoTheoDichVuTheoThang = (props) => {
     treatmentRecords.current = await Api.getDocs(
       "/StatisticalReport/getAll/HoSoDieuTri"
     );
-  };
-
-  const getBranches = async () => {
-    const branches = await Api.getAllBranchs();
-    setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
   };
 
   const updateTable = async () => {
@@ -78,20 +79,37 @@ const XemBaoCaoTheoDichVuTheoThang = (props) => {
             );
 
             let tienThuoc =
-              tcDetails.current.Thuoc?.reduce(
+              CTHSDT.Thuoc?.reduce(
                 (total, thuoc) =>
                   total + parseInt(thuoc.donGia) * parseInt(thuoc.SL),
                 0
               ) || 0;
+
             if (Array.isArray(CTHSDT.DichVu))
               CTHSDT.DichVu.forEach((dv) => {
+                let tienDVKhac = CTHSDT.DichVu.reduce((total, dvk) => {
+                  if (dvk.maDichVu !== dv.maDichVu) {
+                    return (
+                      total +
+                      parseInt(dvk.giaDichVu) *
+                        parseInt(dvk.SL) *
+                        (1 - bill.phanTram / 100)
+                    );
+                  }
+                  return total;
+                }, 0);
+
                 revenueTable.push({
                   dichVu: dv.tenDichVu + " - " + dv.loaiDichVu,
                   soLuongDaBan: index === 0 && !dv.taiKham ? 1 : 0,
                   maBN: index === 0 ? HSDT.IDBenhNhan : null,
                   tienTT:
                     index === 0
-                      ? parseInt(item.tienThanhToan) - tienThuoc
+                      ? dv.coTraGop === "Có"
+                        ? parseInt(item.tienThanhToan) - tienThuoc - tienDVKhac
+                        : parseInt(dv.giaDichVu) *
+                          parseInt(dv.SL) *
+                          (1 - bill.phanTram / 100)
                       : parseInt(item.tienThanhToan),
                 });
               });
