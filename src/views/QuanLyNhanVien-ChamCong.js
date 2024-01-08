@@ -89,6 +89,7 @@ const ChamCong = () => {
           MaNV: item.maNhanVien,
           TenNV: item.tenNhanVien,
           SoGioLam: 0,
+          ChiNhanh: user?.chinhanh,
         }));
       }
       const id = await Api.addDoc(

@@ -1,18 +1,26 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import "./mistyles.css";
 import Api from "../api/Api";
 import moment from "moment";
+import { AuthContext } from "../hook/AuthProvider";
 
 const XemBaoCaoCPPKTheoThang = (props) => {
+  const { user } = useContext(AuthContext);
   const [table, setTable] = useState([]);
   const [selectedYear, setSelectedYear] = useState("2024");
   const drugs = useRef();
   const materials = useRef();
   const [totalExpenses, setTotalExpenses] = useState();
 
+  const [branches, setBranches] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState(
+    user?.Loai === "ChuHeThong" ? "Tất cả" : user?.chinhanh
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (user?.Loai === "ChuHeThong") await getBranches();
         drugs.current = await Api.getAllDrugs();
         materials.current = await Api.getAllMaterials();
         CHAMCONG.current = await Api.getDocs(
@@ -27,7 +35,21 @@ const XemBaoCaoCPPKTheoThang = (props) => {
     fetchData();
   }, []);
 
+  const getBranches = async () => {
+    const branches = await Api.getAllBranchs();
+    setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
+  };
+
   const updateTable = async () => {
+    if (user?.Loai !== "ChuHeThong" || selectedBranch !== "Tất cả") {
+      drugs.current = drugs.current.filter(
+        (item) => item.chiNhanh === selectedBranch
+      );
+      materials.current = materials.current.filter(
+        (item) => item.chiNhanh === selectedBranch
+      );
+    }
+
     let totalSalaryExpense = 0;
     for (let i = 1; i <= 12; i++) {
       const salaries = await calSalary(i, selectedYear);
@@ -79,15 +101,25 @@ const XemBaoCaoCPPKTheoThang = (props) => {
   };
 
   const CHAMCONG = useRef();
+
   const calSalary = async (selectedmonth, selectedyear) => {
+    const isFilterBranch =
+      user?.Loai === "ChuHeThong" && selectedBranch === "Tất cả";
+
     const currentWorkTimesTable = CHAMCONG.current.find(
-      (item) => item.Thang == selectedmonth && item.Nam == selectedyear
+      (item) =>
+        item.Thang == selectedmonth &&
+        item.Nam == selectedyear &&
+        (!isFilterBranch ? item.ChiNhanh === selectedBranch : 1)
     );
     //console.log(currentWorkTimesTable);
     if (currentWorkTimesTable) {
       const totalHoursPerEmployee = [];
       Object.keys(currentWorkTimesTable)
-        .filter((key) => key !== "Thang" && key !== "Nam" && key != "Id")
+        .filter(
+          (key) =>
+            key !== "Thang" && key !== "Nam" && key != "Id" && key != "ChiNhanh"
+        )
         .forEach((date) => {
           currentWorkTimesTable[date].forEach((employee) => {
             const { MaNV, TenNV, SoGioLam } = employee;
@@ -146,6 +178,28 @@ const XemBaoCaoCPPKTheoThang = (props) => {
   };
   return (
     <div>
+      <div class="mb-3 mt-3">
+        <label for="month">
+          <b>Chi nhánh:</b>
+        </label>
+        <br />
+        <select
+          className="customBox"
+          id="type"
+          name="chiNhanh"
+          onChange={(e) => setSelectedBranch(e.target.value)}
+        >
+          {user?.Loai === "ChuHeThong" ? (
+            branches.map((item, index) => (
+              <option key={index} value={item.tenChiNhanh}>
+                {item.tenChiNhanh}
+              </option>
+            ))
+          ) : (
+            <option value={user?.chinhanh}>{user?.chinhanh}</option>
+          )}
+        </select>
+      </div>
       <div class="mb-3 mt-3">
         <label for="month">
           <b>Chọn năm:</b>

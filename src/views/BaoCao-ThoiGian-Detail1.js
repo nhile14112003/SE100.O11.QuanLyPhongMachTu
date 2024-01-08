@@ -15,10 +15,15 @@ const XemBaoCaoTheoThang = (props) => {
   const tcDetails = useRef();
   const treatmentRecords = useRef();
   const [totalRevenue, setTotalRevenue] = useState();
+  const [branches, setBranches] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState(
+    user?.Loai === "ChuHeThong" ? "Tất cả" : user?.chinhanh
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (user?.Loai === "ChuHeThong") await getBranches();
         await getBills();
         await getTreatmentRecordDetails();
         await getTreatmentRecords();
@@ -32,9 +37,12 @@ const XemBaoCaoTheoThang = (props) => {
   }, []);
 
   const getBills = async () => {
-    bills.current = await Api.getDocs(
-      `/StatisticalReport/getByField/HoaDon/tenChiNhanh?fieldValue=${user?.chinhanh}`
-    );
+    if (user?.Loai === "ChuHeThong" && selectedBranch === "Tất cả")
+      bills.current = await Api.getDocs(`/StatisticalReport/getAll/HoaDon`);
+    else
+      bills.current = await Api.getDocs(
+        `/StatisticalReport/getByField/HoaDon/tenChiNhanh?fieldValue=${selectedBranch}`
+      );
   };
   const getTreatmentRecordDetails = async () => {
     tcDetails.current = await Api.getDocs(
@@ -48,7 +56,13 @@ const XemBaoCaoTheoThang = (props) => {
     );
   };
 
+  const getBranches = async () => {
+    const branches = await Api.getAllBranchs();
+    setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
+  };
+
   const updateTable = async () => {
+    if (user?.Loai === "ChuHeThong") await getBills();
     const revenueTable = [];
 
     bills.current.forEach(async (bill) => {
@@ -124,8 +138,31 @@ const XemBaoCaoTheoThang = (props) => {
     <div>
       <div class="mb-3 mt-3">
         <label for="month">
+          <b>Chi nhánh:</b>
+        </label>
+        <br />
+        <select
+          className="customBox"
+          id="type"
+          name="chiNhanh"
+          onChange={(e) => setSelectedBranch(e.target.value)}
+        >
+          {user?.Loai === "ChuHeThong" ? (
+            branches.map((item, index) => (
+              <option key={index} value={item.tenChiNhanh}>
+                {item.tenChiNhanh}
+              </option>
+            ))
+          ) : (
+            <option value={user?.chinhanh}>{user?.chinhanh}</option>
+          )}
+        </select>
+      </div>
+
+      <div class="mb-3 mt-3">
+        <label for="month">
           <b>Chọn tháng, năm:</b>
-        </label>{" "}
+        </label>
         <br />
         <input
           class="customBox"

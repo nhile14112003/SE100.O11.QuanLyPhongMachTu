@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import "./mistyles.css";
 import Api from "../api/Api";
 import moment from "moment";
+import { AuthContext } from "../hook/AuthProvider";
 
 const XemBaoCaoBacSiTheoNam = (props) => {
+  const { user } = useContext(AuthContext);
   const [table, setTable] = useState([]);
   const [selectedYear, setSelectedYear] = useState("2024");
 
@@ -12,9 +14,15 @@ const XemBaoCaoBacSiTheoNam = (props) => {
 
   const [totalCases, setTotalCases] = useState();
 
+  const [branches, setBranches] = useState([]);
+  const [selectedBranch, setSelectedBranch] = useState(
+    user?.Loai === "ChuHeThong" ? "Tất cả" : user?.chinhanh
+  );
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        if (user?.Loai === "ChuHeThong") await getBranches();
         await getTreatmentRecordDetails();
         await getTreatmentRecords();
         updateTable();
@@ -27,9 +35,14 @@ const XemBaoCaoBacSiTheoNam = (props) => {
   }, []);
 
   const getTreatmentRecordDetails = async () => {
-    tcDetails.current = await Api.getDocs(
-      "/StatisticalReport/getAll/ChiTietHSDT"
-    );
+    if (user?.Loai === "ChuHeThong" && selectedBranch === "Tất cả")
+      tcDetails.current = await Api.getDocs(
+        "/StatisticalReport/getAll/ChiTietHSDT"
+      );
+    else
+      tcDetails.current = await Api.getDocs(
+        `/StatisticalReport/getByField/ChiTietHSDT/tenChiNhanh?fieldValue=${selectedBranch}`
+      );
   };
 
   const getTreatmentRecords = async () => {
@@ -38,7 +51,14 @@ const XemBaoCaoBacSiTheoNam = (props) => {
     );
   };
 
+  const getBranches = async () => {
+    const branches = await Api.getAllBranchs();
+    setBranches([{ tenChiNhanh: "Tất cả" }, ...branches]);
+  };
+
   const updateTable = async () => {
+    if (user?.Loai === "ChuHeThong") await getTreatmentRecordDetails();
+
     const doctorTable = [];
 
     tcDetails.current.forEach(async (CTHSDT) => {
@@ -92,6 +112,28 @@ const XemBaoCaoBacSiTheoNam = (props) => {
 
   return (
     <div>
+      <div class="mb-3 mt-3">
+        <label for="month">
+          <b>Chi nhánh:</b>
+        </label>
+        <br />
+        <select
+          className="customBox"
+          id="type"
+          name="chiNhanh"
+          onChange={(e) => setSelectedBranch(e.target.value)}
+        >
+          {user?.Loai === "ChuHeThong" ? (
+            branches.map((item, index) => (
+              <option key={index} value={item.tenChiNhanh}>
+                {item.tenChiNhanh}
+              </option>
+            ))
+          ) : (
+            <option value={user?.chinhanh}>{user?.chinhanh}</option>
+          )}
+        </select>
+      </div>
       <div class="mb-3 mt-3">
         <label for="year1">
           <b>Chọn năm:</b>
