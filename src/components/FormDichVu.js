@@ -82,6 +82,22 @@ export const FormDichVu = ({
     closeModal();
   };
 
+  const isNumberPress = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.keyCode === 86) {
+    } else {
+      const validKeyForPayment = ["-", "."];
+      if (validKeyForPayment.includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+  };
+  const isNumberCopy = (e) => {
+    let data = e.clipboardData.getData("text");
+    if (data.match(/[^\d]/)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div
       className="modal-container"
@@ -124,6 +140,8 @@ export const FormDichVu = ({
               onChange={handleChange}
               type="number"
               value={formState.giaDichVu}
+              onKeyDown={isNumberPress}
+              onPaste={isNumberCopy}
             />
           </div>
           <div className="form-group">

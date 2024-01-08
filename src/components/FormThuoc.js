@@ -1,7 +1,7 @@
-import React, { useState,useContext } from "react";
-import { AuthContext } from '../hook/AuthProvider'
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../hook/AuthProvider";
 export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [formState, setFormState] = useState(
     defaultValue || {
       maThuoc: "",
@@ -12,15 +12,23 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
       hanSuDung: "",
       ngayNhap: "",
       soLuongTonKho: "",
-      chiNhanh:"",
+      chiNhanh: "",
     }
   );
   const [errors, setErrors] = useState("");
 
   const validateForm = () => {
     if (!defaultValue) formState.soLuongTonKho = formState.soLuongNhap;
-    if (formState.maThuoc != "" && formState.tenThuoc != "" && formState.soLuongNhap != "" && formState.donGia != "" && formState.donGiaNhap != ""
-      && formState.hanSuDung != "" && formState.ngayNhap != "" && (defaultValue ? formState.soLuongTonKho != "" : true)) {
+    if (
+      formState.maThuoc != "" &&
+      formState.tenThuoc != "" &&
+      formState.soLuongNhap != "" &&
+      formState.donGia != "" &&
+      formState.donGiaNhap != "" &&
+      formState.hanSuDung != "" &&
+      formState.ngayNhap != "" &&
+      (defaultValue ? formState.soLuongTonKho != "" : true)
+    ) {
       if (parseInt(formState.soLuongNhap) < parseInt(formState.soLuongTonKho)) {
         setErrors("Số lượng tồn kho không được lớn hơn số lượng nhập!");
         return false;
@@ -32,23 +40,32 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
       for (const [key, value] of Object.entries(formState)) {
         if (value == "") {
           switch (key) {
-            case 'maThuoc':
-              errorFields.push("Mã thuốc"); break;
-            case 'tenThuoc':
-              errorFields.push("Tên thuốc"); break;
-            case 'soLuongNhap':
-              errorFields.push("Số lượng nhập"); break;
-            case 'soLuongTonKho':
-              errorFields.push("Số lượng tồn kho"); break;
-            case 'donGiaNhap':
-              errorFields.push("Đơn giá nhập"); break;
-            case 'donGia':
-              errorFields.push("Đơn giá"); break;
-            case 'hanSuDung':
-              errorFields.push("Hạn sử dụng"); break;
-            case 'ngayNhap':
-              errorFields.push("Ngày nhập"); break;
-            default: break;
+            case "maThuoc":
+              errorFields.push("Mã thuốc");
+              break;
+            case "tenThuoc":
+              errorFields.push("Tên thuốc");
+              break;
+            case "soLuongNhap":
+              errorFields.push("Số lượng nhập");
+              break;
+            case "soLuongTonKho":
+              errorFields.push("Số lượng tồn kho");
+              break;
+            case "donGiaNhap":
+              errorFields.push("Đơn giá nhập");
+              break;
+            case "donGia":
+              errorFields.push("Đơn giá");
+              break;
+            case "hanSuDung":
+              errorFields.push("Hạn sử dụng");
+              break;
+            case "ngayNhap":
+              errorFields.push("Ngày nhập");
+              break;
+            default:
+              break;
           }
         }
       }
@@ -71,6 +88,22 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
     closeModal();
   };
 
+  const isNumberPress = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.keyCode === 86) {
+    } else {
+      const validKeyForPayment = ["-", "."];
+      if (validKeyForPayment.includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+  };
+  const isNumberCopy = (e) => {
+    let data = e.clipboardData.getData("text");
+    if (data.match(/[^\d]/)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div
       className="modal-container"
@@ -78,13 +111,18 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
         if (e.target.className === "modal-container") closeModal();
       }}
     >
-      <div className="col-sm-4 modal1">
+      <div
+        className="col-sm-4 modal1"
+        style={{ height: "80%", overflowY: "auto" }}
+      >
         <form>
           <div className="form-group">
             <label for="maThuoc">Mã thuốc</label>
-            <input name="maThuoc"
+            <input
+              name="maThuoc"
               onChange={handleChange}
-              value={formState.maThuoc} />
+              value={formState.maThuoc}
+            />
           </div>
           <div className="form-group">
             <label for="tenThuoc">Tên thuốc</label>
@@ -102,8 +140,23 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
               onChange={handleChange}
               type="number"
               value={formState.soLuongNhap}
+              onKeyDown={isNumberPress}
+              onPaste={isNumberCopy}
             />
           </div>
+          {defaultValue && (
+            <div className="form-group">
+              <label htmlFor="soLuongTonKho">Số lượng tồn kho</label>
+              <input
+                name="soLuongTonKho"
+                type="number"
+                onChange={handleChange}
+                value={formState.soLuongTonKho}
+                onKeyDown={isNumberPress}
+                onPaste={isNumberCopy}
+              />
+            </div>
+          )}
           <div className="form-group">
             <label htmlFor="donGiaNhap">Đơn giá nhập</label>
             <input
@@ -111,6 +164,8 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
               onChange={handleChange}
               type="number"
               value={formState.donGiaNhap}
+              onKeyDown={isNumberPress}
+              onPaste={isNumberCopy}
             />
           </div>
           <div className="form-group">
@@ -120,6 +175,8 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
               type="number"
               onChange={handleChange}
               value={formState.donGia}
+              onKeyDown={isNumberPress}
+              onPaste={isNumberCopy}
             />
           </div>
           <div className="form-group">
@@ -140,8 +197,9 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
               value={formState.ngayNhap}
             />
           </div>
-          {user?.Loai==='ChuHeThong'&&<div className="form-group">
-          <label for="chiNhanh">Chi nhánh</label>
+          {user?.Loai === "ChuHeThong" && (
+            <div className="form-group">
+              <label for="chiNhanh">Chi nhánh</label>
               <select
                 className="form-select pb-2 pt-2 mb-2"
                 id="type"
@@ -150,27 +208,16 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
                 value={formState.chiNhanh}
               >
                 {branches.map((item, index) => {
-                  if(item.tenChiNhanh!=='Tất cả')
-                  return(
-                  <option key={index} value={item.tenChiNhanh}>
-                    {item.tenChiNhanh}
-                  </option>
-                  )
-                 })
-                }
+                  if (item.tenChiNhanh !== "Tất cả")
+                    return (
+                      <option key={index} value={item.tenChiNhanh}>
+                        {item.tenChiNhanh}
+                      </option>
+                    );
+                })}
               </select>
-            </div>}
-          {defaultValue &&
-            <div className="form-group">
-              <label htmlFor="soLuongTonKho">Số lượng tồn kho</label>
-              <input
-                name="soLuongTonKho"
-                type="number"
-                onChange={handleChange}
-                value={formState.soLuongTonKho}
-              />
             </div>
-          }
+          )}
           {errors && <div className="error">{errors}</div>}
           <button type="submit" className="btnSummit" onClick={handleSubmit}>
             Submit

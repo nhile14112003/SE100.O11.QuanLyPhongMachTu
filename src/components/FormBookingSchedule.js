@@ -75,6 +75,22 @@ export const FormBookingSchedule = ({
     closeModal();
   };
 
+  const isNumberPress = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.keyCode === 86) {
+    } else {
+      const validKeyForPayment = ["-", "."];
+      if (validKeyForPayment.includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+  };
+  const isNumberCopy = (e) => {
+    let data = e.clipboardData.getData("text");
+    if (data.match(/[^\d]/)) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div
       className="modal-container"
@@ -125,6 +141,8 @@ export const FormBookingSchedule = ({
             name="SDT"
             onChange={handleChange}
             value={formState.SDT}
+            onKeyDown={isNumberPress}
+            onPaste={isNumberCopy}
           ></input>
           <div className="mb-2" style={{ fontWeight: "500" }}>
             Mã nha sĩ

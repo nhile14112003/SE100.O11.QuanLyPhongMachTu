@@ -4,7 +4,7 @@ import AppointmentToolTip from "../components/AppointmentToolTip";
 import { locale, loadMessages, formatMessage } from "devextreme/localization";
 import viMessages from "devextreme/localization/messages/vi.json";
 import Api from "../api/Api";
-import { AuthContext } from '../hook/AuthProvider'
+import { AuthContext } from "../hook/AuthProvider";
 
 const ScheduleDetail = () => {
   const { user } = useContext(AuthContext);
@@ -18,7 +18,9 @@ const ScheduleDetail = () => {
   //set appointment for scheduler
   const [appointments, setAppointments] = useState([]);
   const [nhaSi, setNhaSi] = useState([]);
-  const [doctorId, setDoctorId] = useState(user?.Loai === 'Nha sĩ' ? user.maNV : '')
+  const [doctorId, setDoctorId] = useState(
+    user?.Loai === "Nha sĩ" ? user.maNV : ""
+  );
 
   //set today button
   const schedulerRef = useRef();
@@ -27,31 +29,38 @@ const ScheduleDetail = () => {
 
   useEffect(() => {
     getNhasi();
-    getdoctorId()
+    getdoctorId();
     getAppointments();
   }, []);
   const getdoctorId = () => {
-    if (user?.Loai === 'Nha sĩ') {
+    if (user?.Loai === "Nha sĩ") {
       if (user) {
-        setDoctorId(user.maNV)
+        setDoctorId(user.maNV);
       }
     }
-  }
+  };
   const getNhasi = async () => {
-    if (user?.Loai !== 'Nha sĩ') {
-      const nhasi = await Api.getStaffsBySeacrh({ maNhanVien: '', tenNhanVien: '', chucVu: 'Nha sĩ', chiNhanh: user?.chinhanh, luongDau: '', luongCuoi: '' });
-      setNhaSi(nhasi)
-      setDoctorId(nhasi[0].maNhanVien)
+    if (user?.Loai !== "Nha sĩ") {
+      const nhasi = await Api.getStaffsBySeacrh({
+        maNhanVien: "",
+        tenNhanVien: "",
+        chucVu: "Nha sĩ",
+        chiNhanh: user?.chinhanh,
+        luongDau: "",
+        luongCuoi: "",
+      });
+      setNhaSi(nhasi);
+      setDoctorId(nhasi[0].maNhanVien);
     }
   };
   const onSearch = () => {
-    console.log('ma' + doctorId)
-    getAppointments()
-  }
+    console.log("ma" + doctorId);
+    getAppointments();
+  };
   const getAppointments = async () => {
     const endpoint = `/ScheduleManagement/getByField/LichHen/MaNS?fieldValue=${doctorId}`;
     const appointments = await Api.getDocByField(endpoint);
-    console.log(appointments)
+    console.log(appointments);
     setAppointments(
       appointments.map((item) => {
         const [startTime, endTime] = item.Gio.split("-");
@@ -93,29 +102,29 @@ const ScheduleDetail = () => {
           >
             Hôm nay
           </button>
-          {user?.Loai !== 'Nha sĩ' && <>
-            <text>Nha sĩ: </text>
-            <select
-              className="customBox"
-              id="type"
-              name="chiNhanh"
-              onChange={(e) => setDoctorId(e.target.value)}
-            >
-              {nhaSi.map((item, index) => (
-                <option key={index} value={item.maNhanVien}>
-                  {item.tenNhanVien}
-                </option>
-              ))
-              }
-            </select>
-            <button
-              className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
-              onClick={onSearch}
-            >
-              Xem
-            </button>
-          </>}
-
+          {user?.Loai !== "Nha sĩ" && (
+            <>
+              <text>Nha sĩ: </text>
+              <select
+                className="customBox"
+                id="type"
+                name="chiNhanh"
+                onChange={(e) => setDoctorId(e.target.value)}
+              >
+                {nhaSi.map((item, index) => (
+                  <option key={index} value={item.maNhanVien}>
+                    {item.tenNhanVien}
+                  </option>
+                ))}
+              </select>
+              <button
+                className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+                onClick={onSearch}
+              >
+                Xem
+              </button>
+            </>
+          )}
         </div>
       </div>
       <Scheduler
