@@ -156,7 +156,7 @@ const ScheduleList = () => {
               <td>{item.SDT}</td>
               <td>{item.MaNS}</td>
               <td>{item.TenNS}</td>
-              <td>{item.NgayHen}</td>
+              <td>{moment(new Date(item.NgayHen)).format("DD/MM/YYYY")}</td>
               <td>{item.Gio}</td>
               <td>{item.DichVu}</td>
               <td>{item.GhiChu}</td>

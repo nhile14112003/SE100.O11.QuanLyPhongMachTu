@@ -93,39 +93,49 @@ const ScheduleDetail = () => {
   return (
     <div>
       <div className="row sticky-top">
-        <div className="col-md-auto mb-2">
+        <div className="col-auto mb-2">
           <button
             type="button"
-            className="btn pb-2 pt-2 ps-3 pe-3 me-1"
+            className="btn pb-2 pt-2 ps-3 pe-3 me-4"
             style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
             onClick={() => moveToToday()}
           >
             Hôm nay
           </button>
-          {user?.Loai !== "Nha sĩ" && (
-            <>
-              <text>Nha sĩ: </text>
-              <select
-                className="customBox"
-                id="type"
-                name="chiNhanh"
-                onChange={(e) => setDoctorId(e.target.value)}
-              >
-                {nhaSi.map((item, index) => (
-                  <option key={index} value={item.maNhanVien}>
-                    {item.tenNhanVien}
-                  </option>
-                ))}
-              </select>
-              <button
-                className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
-                onClick={onSearch}
-              >
-                Xem
-              </button>
-            </>
-          )}
+
         </div>
+        {user?.Loai !== "Nha sĩ" && (
+          <>
+            <div className="col-auto row g-0">
+              <div className="col-auto mt-2 mb-2 ms-3"><b>Nha sĩ</b></div>
+              <div className="col-auto row">
+                <div className="col-auto" style={{ minWidth: "200px" }}>
+                  <select
+                    className="form-control pb-2 pt-2 mb-2"
+                    id="type"
+                    name="chiNhanh"
+                    onChange={(e) => setDoctorId(e.target.value)}
+                  >
+                    {nhaSi.map((item, index) => (
+                      <option key={index} value={item.maNhanVien}>
+                        {item.tenNhanVien}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-auto mb-2 me-auto">
+                  <button
+                    className="btn pb-2 pt-2 ps-3 pe-3 me-1"
+                    style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+                    onClick={onSearch}
+                  >
+                    Xem
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
       <Scheduler
         ref={schedulerRef}

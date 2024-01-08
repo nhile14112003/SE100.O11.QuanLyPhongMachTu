@@ -468,7 +468,7 @@ const PatientManagement = (props) => {
                                     <td>{item.tenBenhNhan}</td>
                                     <td>{item.CCCD}</td>
                                     <td>{item.GioiTinh}</td>
-                                    <td>{item.NgaySinh}</td>
+                                    <td>{moment(new Date(item.NgaySinh)).format("DD/MM/YYYY")}</td>
                                     <td>{item.soDienThoai}</td>
                                     <td>{item.DiaChi}</td>
                                     <td className="fit">
@@ -498,14 +498,24 @@ const PatientManagement = (props) => {
                 {(page === 2 && selectedPatient !== null) ?
                     <div className='pe-2 ps-2'>
                         <div align="center" style={{ fontSize: "25px", fontWeight: "bold" }}>HỒ SƠ ĐIỀU TRỊ</div>
-                        <div><span style={{ fontWeight: "600" }}>Mã hồ sơ điều trị: </span>{hsdt?.MaHSDT}</div>
-                        <div><span style={{ fontWeight: "600" }}>Mã BN: </span>{hsdt?.MaBenhNhan}</div>
-                        <div><span style={{ fontWeight: "600" }}>Tên BN: </span>{selectedPatient?.tenBenhNhan}</div>
-                        <div><span style={{ fontWeight: "600" }}>Địa chỉ: </span>{selectedPatient?.DiaChi}</div>
-                        <div><span style={{ fontWeight: "600" }}>Tuổi: </span>{getTuoi(selectedPatient?.NgaySinh)}</div>
-                        <div><span style={{ fontWeight: "600" }}>Giới tính: </span>{selectedPatient?.GioiTinh}</div>
-                        <div><span style={{ fontWeight: "600" }}>Số điện thoại: </span>{selectedPatient?.soDienThoai}</div>
-
+                        <div className='mt-3 row'>
+                            <div className='col-lg-4 col-md-auto mb-2'>
+                                <span style={{ fontWeight: "600" }}>Mã hồ sơ điều trị: </span>{hsdt?.MaHSDT}
+                            </div>
+                            <div className='col-lg-4 col-md-auto mb-2'>
+                                <span style={{ fontWeight: "600" }}>Mã bệnh nhân: </span>{hsdt?.MaBenhNhan}
+                            </div>
+                            <div className='col-lg-4 col-md-auto mb-2'>
+                                <span style={{ fontWeight: "600" }}>Tên bệnh nhân: </span>{selectedPatient?.tenBenhNhan}
+                            </div>
+                            <div className='mb-2'><span style={{ fontWeight: "600" }}>Địa chỉ: </span>{selectedPatient?.DiaChi}</div>
+                            <div className='col-lg-4 col-md-auto mb-2'><span style={{ fontWeight: "600" }}>Tuổi: </span>{getTuoi(selectedPatient?.NgaySinh)}
+                            </div>
+                            <div className='col-lg-4 col-md-auto mb-2'><span style={{ fontWeight: "600" }}>Giới tính: </span>{selectedPatient?.GioiTinh}
+                            </div>
+                            <div className='col-lg-4 col-md-auto mb-2'><span style={{ fontWeight: "600" }}>Số điện thoại: </span>{selectedPatient?.soDienThoai}
+                            </div>
+                        </div>
                         <div className="row mt-2">
                             <div className="row" style={{ fontWeight: "500" }}>
                                 <div className="col-lg-4 col-md-10">
@@ -545,7 +555,7 @@ const PatientManagement = (props) => {
                                     <tr key={index}>
                                         <td>{item.MaNhaSi}</td>
                                         <td>{item.TenNhaSi}</td>
-                                        <td>{item.NgayDieuTri}</td>
+                                        <td>{moment(new Date(item.NgayDieuTri)).format("DD/MM/YYYY")}</td>
                                         <td className="fit">
                                             <span className="actions">
                                                 <BsEye
@@ -575,13 +585,27 @@ const PatientManagement = (props) => {
                                 Ngày {new Date().getDate()} tháng {parseInt(new Date().getMonth()) + 1} năm {new Date().getFullYear()}
                             </div>}
                         </div>
-                        <div><span style={{ fontWeight: "600" }}>Mã hồ sơ điều trị: </span>{hsdt?.MaHSDT}</div>
-                        <div><span style={{ fontWeight: "600" }}>Mã BN: </span>{hsdt?.MaBenhNhan}</div>
-                        <div><span style={{ fontWeight: "600" }}>Tên BN: </span>{selectedPatient?.tenBenhNhan}</div>
-                        <div><span style={{ fontWeight: "600" }}>Địa chỉ: </span>{selectedPatient?.DiaChi}</div>
-                        <div><span style={{ fontWeight: "600" }}>Tuổi: </span>{getTuoi(selectedPatient?.NgaySinh)}</div>
-                        <div><span style={{ fontWeight: "600" }}>Giới tính: </span>{selectedPatient?.GioiTinh}</div>
-                        <div><span style={{ fontWeight: "600" }}>Số điện thoại: </span>{selectedPatient?.soDienThoai}</div>
+                        <div className='mt-3 row'>
+                            <div className='col-lg-4 col-md-auto mb-2'>
+                                <span style={{ fontWeight: "600" }}>Mã hồ sơ điều trị: </span>{hsdt?.MaHSDT}
+                            </div>
+                            <div className='col-lg-4 col-md-auto mb-2'>
+                                <span style={{ fontWeight: "600" }}>Mã bệnh nhân: </span>{hsdt?.MaBenhNhan}
+                            </div>
+                            <div className='col-lg-4 col-md-auto mb-2'>
+                                <span style={{ fontWeight: "600" }}>Tên bệnh nhân: </span>{selectedPatient?.tenBenhNhan}
+                            </div>
+                            <div className='mb-2'><span style={{ fontWeight: "600" }}>Địa chỉ: </span>{selectedPatient?.DiaChi}</div>
+                            <div className='col-lg-4 col-md-auto mb-2'>
+                                <span style={{ fontWeight: "600" }}>Tuổi: </span>{getTuoi(selectedPatient?.NgaySinh)}
+                            </div>
+                            <div className='col-lg-4 col-md-auto mb-2'>
+                                <span style={{ fontWeight: "600" }}>Giới tính: </span>{selectedPatient?.GioiTinh}
+                            </div>
+                            <div className='col-lg-4 col-md-auto mb-2'>
+                                <span style={{ fontWeight: "600" }}>Số điện thoại: </span>{selectedPatient?.soDienThoai}
+                            </div>
+                        </div>
                         <div className='col-lg-4 col-md-6'>
                             <div className='mb-2' style={{ fontWeight: "600" }}>Nha sĩ điều trị:</div>
                             {user?.Loai === 'Nha sĩ' && <div className='col-md-auto'>
@@ -693,7 +717,7 @@ const PatientManagement = (props) => {
                                 ))}
                             </tbody>
                         </table>
-                        <div className='text-end'><b>Thành tiền: {ThanhTien()}</b></div>
+                        <div className='text-end mb-2'><b>Thành tiền: {ThanhTien()}</b></div>
                         {errors && <div className="error">{errors}</div>}
                         {(cthsdt.edit != true || state == "create") && <div className="text-end">
                             <button type="submit" className="btn pb-2 pt-2 mt-3 mb-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={saveCTHSDT}>

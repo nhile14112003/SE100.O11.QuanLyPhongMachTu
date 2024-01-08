@@ -387,7 +387,7 @@ const BillManagement = (props) => {
             </div>
 
             <table className="table">
-              <thead>
+              <thead style={{ verticalAlign: "middle" }}>
                 <tr className="table-secondary">
                   <th>Mã hóa đơn</th>
                   <th>Mã bệnh nhân</th>
@@ -405,7 +405,7 @@ const BillManagement = (props) => {
                     <td>{item.maHoaDon}</td>
                     <td>{item.maBenhNhan}</td>
                     <td>{item.tenBenhNhan}</td>
-                    <td>{item.ngayLap}</td>
+                    <td>{moment(new Date(item.ngayLap)).format("DD/MM/YYYY")}</td>
                     <td
                       style={{
                         fontStyle: "italic",
@@ -455,6 +455,7 @@ const BillManagement = (props) => {
                 HÓA ĐƠN
               </div>
               <div
+
                 align="center"
                 style={{
                   fontStyle: "italic",
@@ -465,45 +466,47 @@ const BillManagement = (props) => {
                 Ngày {moment().date()} tháng {moment().month() + 1} năm{" "}
                 {moment().year()}
               </div>
-              <div>
-                <span style={{ fontWeight: "600" }}>Mã hóa đơn: </span>
-                {bills[selectedRow]?.maHoaDon}
-              </div>
-              <div>
-                <span style={{ fontWeight: "600" }}>Mã BN: </span>
-                {bills[selectedRow]?.maBenhNhan}
-              </div>
-              <div>
-                <span style={{ fontWeight: "600" }}>Tên BN: </span>
-                {bills[selectedRow]?.tenBenhNhan}
-              </div>
-              <div>
-                <span style={{ fontWeight: "600" }}>Tên NS: </span>
-                {CTHSDT !== null ? CTHSDT.TenNhaSi : ""}
-              </div>
-              <div>
-                <span style={{ fontWeight: "600" }}>Địa chỉ: </span>
-                {bills[selectedRow]?.DiaChi}
-              </div>
-              <div>
-                <span style={{ fontWeight: "600" }}>Tuổi: </span>
-                {Math.abs(
-                  new Date(
-                    Date.now() - new Date(patient?.NgaySinh).getTime()
-                  ).getUTCFullYear() - 1970
-                )}
-              </div>
-              <div>
-                <span style={{ fontWeight: "600" }}>Giới tính: </span>
-                {bills[selectedRow]?.GioiTinh}
-              </div>
-              <div>
-                <span style={{ fontWeight: "600" }}>Số điện thoại: </span>
-                {bills[selectedRow]?.soDienThoai}
+              <div className="mt-3 row">
+                <div className='col-lg-4 col-md-auto mb-2'>
+                  <span style={{ fontWeight: "600" }}>Mã hóa đơn: </span>
+                  {bills[selectedRow]?.maHoaDon}
+                </div>
+                <div className='col-lg-4 col-md-auto mb-2'>
+                  <span style={{ fontWeight: "600" }}>Mã BN: </span>
+                  {bills[selectedRow]?.maBenhNhan}
+                </div>
+                <div className='col-lg-4 col-md-auto mb-2'>
+                  <span style={{ fontWeight: "600" }}>Tên BN: </span>
+                  {bills[selectedRow]?.tenBenhNhan}
+                </div>
+                <div className='col-lg-4 col-md-auto mb-2'>
+                  <span style={{ fontWeight: "600" }}>Tên NS: </span>
+                  {CTHSDT !== null ? CTHSDT.TenNhaSi : ""}
+                </div>
+                <div className='mb-2'>
+                  <span style={{ fontWeight: "600" }}>Địa chỉ: </span>
+                  {bills[selectedRow]?.DiaChi}
+                </div>
+                <div className='col-lg-4 col-md-auto mb-2'>
+                  <span style={{ fontWeight: "600" }}>Tuổi: </span>
+                  {Math.abs(
+                    new Date(
+                      Date.now() - new Date(patient?.NgaySinh).getTime()
+                    ).getUTCFullYear() - 1970
+                  )}
+                </div>
+                <div className='col-lg-4 col-md-auto mb-2'>
+                  <span style={{ fontWeight: "600" }}>Giới tính: </span>
+                  {bills[selectedRow]?.GioiTinh}
+                </div>
+                <div className='col-lg-4 col-md-auto mb-2'>
+                  <span style={{ fontWeight: "600" }}>Số điện thoại: </span>
+                  {bills[selectedRow]?.soDienThoai}
+                </div>
               </div>
 
               <table className="table">
-                <thead>
+                <thead style={{ verticalAlign: "middle" }}>
                   <tr className="table-secondary">
                     <th>Dịch vụ</th>
                     <th>Đơn giá</th>
@@ -632,9 +635,9 @@ const BillManagement = (props) => {
                 </table>
               </div>
 
-              <div align="right" className="mt-3">
+              <div className="mt-3">
                 <table
-                  className="table table-borderless table-sm w-auto"
+                  className="table table-borderless table-sm"
                   style={{
                     fontSize: "18px",
                     borderSpacing: 0,
@@ -655,6 +658,7 @@ const BillManagement = (props) => {
                       <th>
                         {disableDiscount ? (
                           <Select
+                            styles={{ minWidth: "500px" }}
                             value={recentDiscount}
                             isDisabled
                             onChange={(value) =>
@@ -842,6 +846,11 @@ const BillManagement = (props) => {
                 </table>
               </div>
               <div className="text-end mt-4">
+                <div style={{ fontSize: "19px" }}><b>NHÂN VIÊN THỰC HIỆN</b></div>
+                <div style={{ height: "50px" }}></div>
+                <div className='mt-5 text-uppercase' style={{ fontSize: "19px" }}>
+                  <b>{user.ten}</b>
+                </div>
                 <button
                   type="submit"
                   onClick={handleSubmit}

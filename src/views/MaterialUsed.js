@@ -1,9 +1,10 @@
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
-import { useEffect, useState, useContext} from "react";
+import { useEffect, useState, useContext } from "react";
 import api from '../api/Api';
 import Select from 'react-select';
 import { FormMaterialUsed } from "../components/FormMaterialUsed";
 import { AuthContext } from '../hook/AuthProvider'
+import moment from "moment";
 const MaterialUsed = () => {
     // const materialsUsed = [
     //     {
@@ -26,50 +27,50 @@ const MaterialUsed = () => {
     const [rowToEdit, setRowToEdit] = useState(null);
     const [materialsUsed, setMaterialUsed] = useState(null)
     const [khoiphucSL, setKhoiPhucSL] = useState(null)
-    const {user} = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     useEffect(async () => {
         await getMaterials();
         getMatierialUsed()
     }, []);
     const getMaterials = async () => {
         const materials = await api.getAllMaterials()
-        const fil = materials.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+        const fil = materials.filter((item, idx) => item.chiNhanh === user?.chinhanh)
         setMaterials(fil);
     }
-    const getMatierialUsed = async()=>{
+    const getMatierialUsed = async () => {
         const res = await api.getMaterialsUsed()
-        const fil = res.filter((item, idx)=>item.chiNhanh===user?.chinhanh)
+        const fil = res.filter((item, idx) => item.chiNhanh === user?.chinhanh)
         setMaterialUsed(fil)
-    
+
     }
-    const handleDeleteRow = async (item,id) => {
+    const handleDeleteRow = async (item, id) => {
         const S = item.NgaySuDung.split('-')
         const namS = parseInt(S[0])
         const thangS = parseInt(S[1])
         const ngayS = parseInt(S[2])
         const currentDate = new Date();
-        const Day = currentDate.getDate(); 
-        const Month = currentDate.getMonth() + 1; 
+        const Day = currentDate.getDate();
+        const Month = currentDate.getMonth() + 1;
         const Year = currentDate.getFullYear();
-        if(namS<Year||thangS<Month||ngayS<Day){
+        if (namS < Year || thangS < Month || ngayS < Day) {
             window.confirm('Vật tư đã sử dụng này đã hết thời hạn có thể điều chỉnh');
             return;
         }
-        
-            const shouldDelete = window.confirm('Bạn có chắc muốn xóa không?');
-            if (shouldDelete) {
-              await  api.deleteMaterialUsed(item.Id)
-              setMaterialUsed(materialsUsed.filter((_, idx) => idx !== id));
-              const result = materials.filter((item1, idx) => item1.maVatTu === item.maVatTu)
-              let x = parseInt(result[0].soLuongTonKho) + parseInt(item.SL)
-              console.log('1:'+result[0].soLuongTonKho+'2:'+item.SL+'ll'+x)
-              let updated2 = materials.map((item1, idx) => {
+
+        const shouldDelete = window.confirm('Bạn có chắc muốn xóa không?');
+        if (shouldDelete) {
+            await api.deleteMaterialUsed(item.Id)
+            setMaterialUsed(materialsUsed.filter((_, idx) => idx !== id));
+            const result = materials.filter((item1, idx) => item1.maVatTu === item.maVatTu)
+            let x = parseInt(result[0].soLuongTonKho) + parseInt(item.SL)
+            console.log('1:' + result[0].soLuongTonKho + '2:' + item.SL + 'll' + x)
+            let updated2 = materials.map((item1, idx) => {
                 if (item1.maVatTu !== item.maVatTu) return item1;
-                return {...item1, soLuongTonKho:x};
-              })
-              setMaterials(updated2)
-              await api.updateMaterial({soLuongTonKho:x.toString()},result[0].Id)
-            }
+                return { ...item1, soLuongTonKho: x };
+            })
+            setMaterials(updated2)
+            await api.updateMaterial({ soLuongTonKho: x.toString() }, result[0].Id)
+        }
     }
     const handleEditRow = (index) => {
         const S = materialsUsed[index].NgaySuDung.split('-')
@@ -77,51 +78,51 @@ const MaterialUsed = () => {
         const thangS = parseInt(S[1])
         const ngayS = parseInt(S[2])
         const currentDate = new Date();
-        const Day = currentDate.getDate(); 
-        const Month = currentDate.getMonth() + 1; 
+        const Day = currentDate.getDate();
+        const Month = currentDate.getMonth() + 1;
         const Year = currentDate.getFullYear();
-        if(namS<Year||thangS<Month||ngayS<Day){
+        if (namS < Year || thangS < Month || ngayS < Day) {
             window.confirm('Vật tư đã sử dụng này đã hết thời hạn có thể điều chỉnh');
             return;
         }
         setRowToEdit(index);
-            const result = materials.filter((item1, idx) => item1.maVatTu === materialsUsed[index].maVatTu)
-            let lamlai = parseInt(result[0].soLuongTonKho) + parseInt(materialsUsed[index].SL)
-            console.log('1:'+result[0].soLuongTonKho+'2:'+materialsUsed[index].SL+'ll'+lamlai)
-          setKhoiPhucSL(lamlai)
-          setModalOpen(true);
+        const result = materials.filter((item1, idx) => item1.maVatTu === materialsUsed[index].maVatTu)
+        let lamlai = parseInt(result[0].soLuongTonKho) + parseInt(materialsUsed[index].SL)
+        console.log('1:' + result[0].soLuongTonKho + '2:' + materialsUsed[index].SL + 'll' + lamlai)
+        setKhoiPhucSL(lamlai)
+        setModalOpen(true);
     }
     const handleSubmit = async (newRow) => {
         if (rowToEdit == null) {
-            const id = await api.addMaterialUsed({...newRow,chiNhanh:user.chinhanh});
+            const id = await api.addMaterialUsed({ ...newRow, chiNhanh: user.chinhanh });
             newRow.Id = id.docId;
-            setMaterialUsed([newRow,...materialsUsed]);
-                const result = materials.filter((item1, idx) => item1.maVatTu === newRow.maVatTu)
-                let x = parseInt(result[0].soLuongTonKho) - parseInt(newRow.SL)
-                let updated2 = materials.map((item, idx) => {
-                    if (item.maVatTu !== newRow.maVatTu) return item;
-                    return {...item, soLuongTonKho:x};
-                  })
-                  setMaterials(updated2)
-                await api.updateMaterial({soLuongTonKho:x.toString()},result[0].Id)
-          }
-          else {
-            await api.updateMaterialUsed(newRow,newRow.Id);
+            setMaterialUsed([newRow, ...materialsUsed]);
+            const result = materials.filter((item1, idx) => item1.maVatTu === newRow.maVatTu)
+            let x = parseInt(result[0].soLuongTonKho) - parseInt(newRow.SL)
+            let updated2 = materials.map((item, idx) => {
+                if (item.maVatTu !== newRow.maVatTu) return item;
+                return { ...item, soLuongTonKho: x };
+            })
+            setMaterials(updated2)
+            await api.updateMaterial({ soLuongTonKho: x.toString() }, result[0].Id)
+        }
+        else {
+            await api.updateMaterialUsed(newRow, newRow.Id);
             let updated = materialsUsed.map((currRow, idx) => {
-              if (idx !== rowToEdit) return currRow;
-              return newRow;
+                if (idx !== rowToEdit) return currRow;
+                return newRow;
             })
             const result = materials.filter((item1, idx) => item1.maVatTu === newRow.maVatTu)
-                let x = parseInt(khoiphucSL) - parseInt(newRow.SL)
-                console.log('x'+x)
-                let updated2 = materials.map((item, idx) => {
-                    if (item.maVatTu !== newRow.maVatTu) return item;
-                    return {...item, soLuongTonKho:x};
-                  })
-                  setMaterials(updated2)
-                await api.updateMaterial({soLuongTonKho:x.toString()},result[0].Id)
+            let x = parseInt(khoiphucSL) - parseInt(newRow.SL)
+            console.log('x' + x)
+            let updated2 = materials.map((item, idx) => {
+                if (item.maVatTu !== newRow.maVatTu) return item;
+                return { ...item, soLuongTonKho: x };
+            })
+            setMaterials(updated2)
+            await api.updateMaterial({ soLuongTonKho: x.toString() }, result[0].Id)
             setMaterialUsed(updated)
-          }
+        }
     }
     const [searchCriteria, setSearchCriteria] = useState({
         maVatTu: "",
@@ -130,13 +131,13 @@ const MaterialUsed = () => {
         SL: ""
     })
     const onSearch = async () => {
-    
+
         const searchResults = await api.getMaterialUsedBySearch(searchCriteria);
         console.log(searchResults);
-        const fil = searchResults.filter((item, idx)=>item.chiNhanh===user.chinhanh)
+        const fil = searchResults.filter((item, idx) => item.chiNhanh === user.chinhanh)
         console.log(fil)
         setMaterialUsed(fil);
-      }
+    }
     return (
         <div>
             <div className="row">
@@ -178,7 +179,7 @@ const MaterialUsed = () => {
                 </div>
             </div>
             <table className="table" >
-                <thead>
+                <thead style={{ verticalAlign: "middle" }}>
                     <tr className="table-secondary">
                         <th>Mã vật tư thiết bị</th>
                         <th>Tên vật tư thiết bị</th>
@@ -194,13 +195,13 @@ const MaterialUsed = () => {
                             <td>{item.maVatTu}</td>
                             <td>{item.tenVatTu}</td>
                             <td>{item.SL}</td>
-                            <td>{item.donGiaNhap}</td>
-                            <td>{item.NgaySuDung}</td>
+                            <td> {new Intl.NumberFormat("en-DE").format(item.donGiaNhap)}</td>
+                            <td>{moment(new Date(item.NgaySuDung)).format("DD/MM/YYYY")}</td>
                             <td className="fit">
                                 <span className="actions">
                                     <BsFillTrashFill
                                         className="delete-btn"
-                                        onClick={() => handleDeleteRow(item,index)}
+                                        onClick={() => handleDeleteRow(item, index)}
                                     />
                                     <BsFillPencilFill
                                         className="edit-btn"

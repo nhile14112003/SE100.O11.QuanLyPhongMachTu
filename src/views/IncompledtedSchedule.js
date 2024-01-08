@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { FormHandleSchedule } from "../components/FormHandleSchedule";
 import Api from "../api/Api";
 import { AuthContext } from "../hook/AuthProvider";
+import moment from "moment";
 
 const IncompletedSchedule = () => {
   const { user } = useContext(AuthContext);
@@ -131,7 +132,7 @@ const IncompletedSchedule = () => {
                   <div className="form-control pb-2 pt-2">{item.SDT}</div>
 
                   <div className="mb-2 pt-2">Ngày sinh</div>
-                  <div className="form-control pb-2 pt-2">{item.NgaySinh}</div>
+                  <div className="form-control pb-2 pt-2">{moment(new Date(item.NgaySinh)).format("DD/MM/YYYY")}</div>
 
                   <div className="mb-2 pt-2">Lời nhắn</div>
                   <div
