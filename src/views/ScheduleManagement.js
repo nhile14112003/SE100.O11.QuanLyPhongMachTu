@@ -15,7 +15,7 @@ const ScheduleManagement = (props) => {
   return (
     <div>
       <div className="container mt-3">
-        <ul className="nav nav-tabs" id="schedule_tab">
+        <ul className="nav nav-tabs maintab">
           {/* <li className="nav-item">
             <NavLink className="nav-link" to="/manager/schedule/handleSchedule">Xử lý lịch hẹn</NavLink>
           </li>

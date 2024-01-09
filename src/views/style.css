@@ -233,25 +233,27 @@ input[type="date"]:not(.has-value):before {
     background-color: fuchsia;
 }
 
-#schedule_tab .nav-item>.active {
+.maintab .nav-item>.active {
     background-color: #0096FF !important;
     color: white !important;
+    font-size: 16px !important;
     font-weight: bold !important;
 }
 
-#schedule_tab .nav-item>.nav-link:hover {
+.maintab .nav-item>.nav-link:hover {
     background-color: #39adff !important;
     color: white !important;
+    font-size: 16px !important;
     font-weight: bold !important;
 }
 
-#typeschedule_tabs .nav-item>.active {
+.subtab .nav-item>.active {
     background-color: #0096FF !important;
     color: white !important;
     font-weight: bold !important;
 }
 
-#typeschedule_tabs .nav-item>.nav-link:hover {
+.subtab .nav-item>.nav-link:hover {
     background-color: #39adff !important;
     color: white !important;
     font-weight: bold !important;

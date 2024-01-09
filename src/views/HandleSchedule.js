@@ -7,7 +7,7 @@ const HandleSchedule = () => {
   const { pathname } = useLocation();
   return (
     <div>
-      <ul className="nav" id="typeschedule_tabs">
+      <ul className="nav subtab">
         <li className="nav-item">
           <NavLink
             className="nav-link "

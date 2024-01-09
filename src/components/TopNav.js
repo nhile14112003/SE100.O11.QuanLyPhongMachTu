@@ -35,7 +35,7 @@ const TopNav = () => {
             {scope?.map((val, idx) => {
               return (
                 <li className="nav-item col-lg-auto col-md-4 m-lg-auto">
-                  {(val.path === "/") ? <NavLink className="nav-link" to={val.path} exact>
+                  {(val.path !== "/manager") ? <NavLink className="nav-link" to={val.path} exact>
                     {val.name}
                   </NavLink> : <NavLink className="nav-link" to={val.path}>{val.name}</NavLink>}
                 </li>
@@ -103,7 +103,7 @@ const TopNav = () => {
                 >
                   <li>
                     <Link className="dropdown-item" to="/profile">
-                      Hồ sơ
+                      Hồ sơ cá nhân
                     </Link>
                   </li>
                   <hr className="dropdown-divider" />

@@ -1,12 +1,10 @@
 import React from "react";
 import "./mistyles.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { FormMaGiamGia } from "../components/FormMaGiamGia";
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
-import AddMaGiamGia from "../components/AddMaGiamGia";
 import api from "../api/Api";
+import moment from "moment";
 const QuanLyMaGiamGia = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [magiamgia, setRows] = useState([]);
@@ -14,7 +12,7 @@ const QuanLyMaGiamGia = (props) => {
   const [searchCriteria, setSearchCriteria] = useState({
     maGiamGia: "",
     TGBatDau: "",
-    TGKetThuc: "",
+    TGKetThuc: ""
   });
 
   const handleDeleteRow = (targetIndex) => {
@@ -127,9 +125,8 @@ const QuanLyMaGiamGia = (props) => {
               <tr key={row.Id}>
                 <td>{row.maGiamGia}</td>
                 <td>{row.phanTram}</td>
-                <td>{row.TGBatDau}</td>
-                <td>{row.TGKetThuc}</td>
-                {/* <td>{row.dichVuApDung}</td> */}
+                <td>{moment(new Date(row.TGBatDau)).format("DD/MM/YYYY")}</td>
+                <td>{moment(new Date(row.TGKetThuc)).format("DD/MM/YYYY")}</td>
                 <td className="fit">
                   <span className="actions">
                     <BsFillTrashFill

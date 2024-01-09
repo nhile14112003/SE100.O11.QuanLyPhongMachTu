@@ -1,10 +1,6 @@
 import React, { useContext } from "react";
 import "./mistyles.css";
-import {
-  Route,
-  Router,
-  Switch,
-} from "react-router-dom/cjs/react-router-dom.min";
+import { useLocation, Redirect, Route, Switch } from 'react-router';
 import XemBaoCaoTheoThoiGian from "./BaoCao-ThoiGian";
 import { NavLink } from "react-router-dom";
 import XemBaoCaoTheoDichVu from "./BaoCao-DichVu";
@@ -15,13 +11,14 @@ import { AuthContext } from "../hook/AuthProvider";
 
 const BaoCao = (props) => {
   const { user } = useContext(AuthContext);
+  const { pathname } = useLocation();
   return (
     <div>
       <div className="container mt-3">
         <p>
           <b>Xem báo cáo theo:</b>
         </p>
-        <ul className="nav nav-tabs">
+        <ul className="nav nav-tabs maintab">
           <li className="nav-item">
             <NavLink
               className="nav-link"
@@ -77,6 +74,9 @@ const BaoCao = (props) => {
           <Route path="/manager/baocao/baocaotheochiphiphongkham">
             <XemBaoCaoTheoCPPK />
           </Route>
+          {pathname === "/manager/baocao" ? (
+            <Redirect to="/manager/baocao/baocaotheothoigian" />
+          ) : null}
         </Switch>
       </div>
     </div>

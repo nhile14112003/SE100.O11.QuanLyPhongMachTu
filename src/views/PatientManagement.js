@@ -671,7 +671,9 @@ const PatientManagement = (props) => {
                                 {cthsdt?.DichVu?.map((item, index) => (
                                     <tr key={index}>
                                         <td>{item.tenDichVu}</td>
-                                        <td>{item.DonGia}</td>
+                                        <td>{new Intl.NumberFormat("en-DE").format(
+                                            item.DonGia
+                                        )}</td>
                                         <td>{item.SL}</td>
                                         <td className="fit">
                                             {cthsdt?.edit != true && <span className="actions">
@@ -700,7 +702,10 @@ const PatientManagement = (props) => {
                                             </div>
                                         </td>
                                         <td>{item.SL} viên</td>
-                                        <td>{item.donGia}/viên</td>
+                                        <td>{new Intl.NumberFormat("en-DE").format(
+                                            item.donGia
+                                        )}/viên
+                                        </td>
                                         <td className="fit">
                                             {cthsdt?.edit != true && <span className="actions">
                                                 <BsFillTrashFill

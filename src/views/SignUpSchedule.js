@@ -181,7 +181,7 @@ const SignUpSchedule = () => {
         </div>
         <div className="col-lg-4 col-md-6 mt-3 mb-3">
           <select
-            className="form-control pb-2 pt-2"
+            className="form-select pb-2 pt-2"
             name="thang"
             onChange={(e) => setSelectedMonth(e.target.value)}
             value={selectedMonth}

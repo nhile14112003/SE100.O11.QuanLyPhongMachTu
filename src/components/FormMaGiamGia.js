@@ -92,6 +92,21 @@ export const FormMaGiamGia = ({
 
     closeModal();
   };
+  const isNumberPress = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.keyCode === 86) {
+    } else {
+      const validKeyForPayment = ["-", "."];
+      if (validKeyForPayment.includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+  };
+  const isNumberCopy = (e) => {
+    let data = e.clipboardData.getData("text");
+    if (data.match(/[^\d]/)) {
+      e.preventDefault();
+    }
+  };
 
   return (
     <div
@@ -102,43 +117,45 @@ export const FormMaGiamGia = ({
     >
       <div className="col-sm-4 modal1">
         <form>
-          <div className="form-group">
-            <label for="maGiamGia">Id mã giảm giá</label>
-            <input
-              name="maGiamGia"
-              onChange={handleChange}
-              value={formState.maGiamGia}
-            />
+          <div className="mb-2">
+            <b>ID mã giảm giá</b>
           </div>
-          <div className="form-group">
-            <label for="phanTram">Phần trăm</label>
-            <input
-              name="phanTram"
-              onChange={handleChange}
-              type="number"
-              value={formState.phanTram}
-            />
+          <input
+            name="maGiamGia"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            value={formState.maGiamGia}
+          />
+          <div className="mb-2">
+            <b>Phần trăm</b>
           </div>
-          <div className="form-group">
-            <label for="TGBatDau">Thời gian bắt đầu</label>
-            <input
-              name="TGBatDau"
-              onChange={handleChange}
-              type="date"
-              min={moment().format("YYYY-MM-DD")}
-              value={formState.TGBatDau}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="TGKetThuc">Thời gian kết thúc</label>
-            <input
-              name="TGKetThuc"
-              onChange={handleChange}
-              type="date"
-              min={moment().add(1, "day").format("YYYY-MM-DD")}
-              value={formState.TGKetThuc}
-            />
-          </div>
+          <input
+            className="form-control pb-2 pt-2 mb-2"
+            name="phanTram"
+            onChange={handleChange}
+            type="number"
+            value={formState.phanTram}
+            onKeyDown={isNumberPress}
+            onPaste={isNumberCopy}
+          />
+          <div className="mb-2"><b>Thời gian bắt đầu</b></div>
+          <input
+            name="TGBatDau"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            type="date"
+            min={moment().format("YYYY-MM-DD")}
+            value={formState.TGBatDau}
+          />
+          <div className="mb-2"><b>Thời gian kết thúc</b></div>
+          <input
+            className="form-control pb-2 pt-2 mb-2"
+            name="TGKetThuc"
+            onChange={handleChange}
+            type="date"
+            min={moment().add(1, "day").format("YYYY-MM-DD")}
+            value={formState.TGKetThuc}
+          />
           {/* <div className="form-group">
             <label htmlFor="dichVuApDung">Dịch vụ áp dụng</label>
             <textarea
@@ -148,11 +165,13 @@ export const FormMaGiamGia = ({
             />
           </div> */}
           {errors && <div className="error">{`Please include: ${errors}`}</div>}
-          <button type="submit" className="btnSummit" onClick={handleSubmit}>
-            Lưu
-          </button>
+          <div className="text-end">
+            <button type="submit" className="btn pb-2 pt-2 ps-3 pe-3 mt-2" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={handleSubmit}>
+              Lưu
+            </button>
+          </div>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };

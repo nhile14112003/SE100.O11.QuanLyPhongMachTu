@@ -109,9 +109,9 @@ const ScheduleDetail = () => {
             <div className="col-auto row g-0">
               <div className="col-auto mt-2 mb-2 ms-3"><b>Nha sĩ</b></div>
               <div className="col-auto row">
-                <div className="col-auto" style={{ minWidth: "200px" }}>
+                <div className="col-auto" style={{ minWidth: "225px" }}>
                   <select
-                    className="form-control pb-2 pt-2 mb-2"
+                    className="form-select pb-2 pt-2 mb-2"
                     id="type"
                     name="chiNhanh"
                     onChange={(e) => setDoctorId(e.target.value)}

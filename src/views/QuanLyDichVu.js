@@ -1,8 +1,5 @@
 import React from 'react'
 import './mistyles.css'
-import AddDichVu from '../components/AddDichVu';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
 import { useEffect, useState, useContext } from 'react';
 import { FormDichVu } from '../components/FormDichVu';

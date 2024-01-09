@@ -111,51 +111,50 @@ export const FormVatTuThietBi = ({
         style={{ height: "80%", overflowY: "auto" }}
       >
         <form>
-          <div className="form-group">
-            <label for="maVatTu">Mã vật tư</label>
-            <input
-              name="maVatTu"
-              onChange={handleChange}
-              value={formState.maVatTu}
-            />
-          </div>
-          <div className="form-group">
-            <label for="tenVatTu">Tên vật tư</label>
-            <input
-              name="tenVatTu"
-              onChange={handleChange}
-              type="text"
-              value={formState.tenVatTu}
-            />
-          </div>
-          <div className="form-group">
-            <label for="soLuongNhap">Số lượng nhập</label>
-            <input
-              name="soLuongNhap"
-              onChange={handleChange}
-              type="number"
-              value={formState.soLuongNhap}
-              onKeyDown={isNumberPress}
-              onPaste={isNumberCopy}
-            />
-          </div>
+          <div className="mb-2"><b>Mã vật tư</b></div>
+          <input
+            name="maVatTu"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            value={formState.maVatTu}
+          />
+          <div className="mb-2"><b>Tên vật tư</b></div>
+          <input
+            name="tenVatTu"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            type="text"
+            value={formState.tenVatTu}
+          />
+          <div className="mb-2"><b>Số lượng nhập</b></div>
+          <input
+            name="soLuongNhap"
+            onChange={handleChange}
+            type="number"
+            value={formState.soLuongNhap}
+            onKeyDown={isNumberPress}
+            onPaste={isNumberCopy}
+            className="form-control pb-2 pt-2 mb-2"
+          />
           {defaultValue && (
-            <div className="form-group">
-              <label for="soLuongTonKho">Số lương tồn kho</label>
+            <div>
+              <div className="mb-2"><b>Số lượng tồn kho</b></div>
               <input
                 name="soLuongTonKho"
                 onChange={handleChange}
                 type="number"
+                className="form-control pb-2 pt-2 mb-2"
                 value={formState.soLuongTonKho}
                 onKeyDown={isNumberPress}
                 onPaste={isNumberCopy}
               />
             </div>
           )}
-          <div className="form-group">
-            <label for="donGiaNhap">Đơn giá nhập</label>
+          <div>
+            <div className="mb-2"><b>Đơn giá nhập</b></div>
             <input
               name="donGiaNhap"
+              className="form-control pb-2 pt-2 mb-2"
               onChange={handleChange}
               type="number"
               value={formState.donGiaNhap}
@@ -163,18 +162,19 @@ export const FormVatTuThietBi = ({
               onPaste={isNumberCopy}
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="ngayNhap">Ngày nhập</label>
+          <div>
+            <div className="mb-2"><b>Đơn giá nhập</b></div>
             <input
               name="ngayNhap"
               onChange={handleChange}
+              className="form-control pb-2 pt-2 mb-2"
               type="date"
               value={formState.ngayNhap}
             />
           </div>
           {user?.Loai === "ChuHeThong" && (
-            <div className="form-group">
-              <label for="chiNhanh">Chi nhánh</label>
+            <div>
+              <div className="mb-2"><b>Chi nhánh</b></div>
               <select
                 className="form-select pb-2 pt-2 mb-2"
                 id="type"
@@ -195,11 +195,13 @@ export const FormVatTuThietBi = ({
           )}
 
           {errors && <div className="error">{errors}</div>}
-          <button type="submit" className="btnSummit" onClick={handleSubmit}>
-            Lưu
-          </button>
+          <div className="text-end">
+            <button type="submit" className="btn pb-2 pt-2 ps-3 pe-3 mt-2" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={handleSubmit}>
+              Lưu
+            </button>
+          </div>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };

@@ -849,7 +849,7 @@ const BillManagement = (props) => {
                 <div style={{ fontSize: "19px" }}><b>NHÂN VIÊN THỰC HIỆN</b></div>
                 <div style={{ height: "50px" }}></div>
                 <div className='mt-5 text-uppercase' style={{ fontSize: "19px" }}>
-                  <b>{user.ten}</b>
+                  <b>{user?.ten}</b>
                 </div>
                 <button
                   type="submit"

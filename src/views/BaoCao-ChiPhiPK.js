@@ -1,13 +1,14 @@
 import React from 'react'
 import './mistyles.css'
 import { NavLink } from "react-router-dom";
-import { browserHistory, Router, Route, Switch } from 'react-router';
+import { useLocation, Redirect, Route, Switch } from 'react-router';
 import XemBaoCaoCPPKTheoThang from './BaoCao-ChiPhiPK-Detail1'
 import XemBaoCaoCPPKTheoNam from './BaoCao-ChiPhiPK-Detail2';
 const XemBaoCaoTheoCPPK = (props) => {
+  const { pathname } = useLocation();
   return (
     <div>
-      <ul className="nav">
+      <ul className="nav subtab">
         <li className="nav-item">
           <NavLink className="nav-link " to="/manager/baocao/baocaotheochiphiphongkham/xemtheothang">Xem theo tháng</NavLink>
         </li>
@@ -23,6 +24,9 @@ const XemBaoCaoTheoCPPK = (props) => {
           <Route path="/manager/baocao/baocaotheochiphiphongkham/xemtheonam">
             <XemBaoCaoCPPKTheoNam />
           </Route>
+          {pathname === "/manager/baocao/baocaotheochiphiphongkham" ? (
+            <Redirect to="/manager/baocao/baocaotheochiphiphongkham/xemtheothang" />
+          ) : null}
         </Switch>
       </div>
     </div>

@@ -2,13 +2,14 @@ import React from 'react'
 import './mistyles.css'
 import QuanLyThuoc from './QuanLyKho-QuanLyThuoc';
 import QuanLyTrangThietBi from './QuanLyKho-QuanLyTrangThietBi';
-import { Route, Router, Switch } from 'react-router-dom/cjs/react-router-dom.min';
+import { useLocation, Redirect, Route, Switch } from 'react-router';
 import { NavLink } from 'react-router-dom';
 const QuanLyKho = (props) => {
+  const { pathname } = useLocation();
   return (
     <div>
       <div className="container mt-3">
-        <ul className="nav nav-tabs">
+        <ul className="nav nav-tabs maintab">
           <li className="nav-item">
             <NavLink className="nav-link" to="/manager/quanlykho/trangthietbi">Quản lý trang thiết bị</NavLink>
           </li>
@@ -20,11 +21,14 @@ const QuanLyKho = (props) => {
       <div className="container mt-3">
         <Switch>
           <Route path="/manager/quanlykho/trangthietbi">
-            <QuanLyTrangThietBi/>
+            <QuanLyTrangThietBi />
           </Route>
           <Route path="/manager/quanlykho/thuoc">
-            <QuanLyThuoc/>
+            <QuanLyThuoc />
           </Route>
+          {pathname === "/manager/quanlykho" ? (
+            <Redirect to="/manager/quanlykho/trangthietbi" />
+          ) : null}
         </Switch>
       </div>
     </div>
