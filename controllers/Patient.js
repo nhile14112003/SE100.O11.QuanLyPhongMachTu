@@ -151,7 +151,7 @@ const addchitietHSDT =async(req,res)=>{
     console.log('haha'+docRef.id)
     await addHoaDon(req.body.HoaDon, docRef.id)
     console.log("Document CTHSDT successfully add!");
-    res.send({ success: true, message: 'CTHSDT added successfully', docId: docRef.id});
+    res.send({ success: true, message: 'CTHSDT added successfully', docId: docRef.id, image:data.AnhSauDieuTri});
   } catch (error) {
     console.error("Error adding document CTHSDT: ", error);
     res.status(500).json({ success: false, message: 'something went wrong when adding cthsdt'});
