@@ -163,52 +163,54 @@ const XemBaoCaoTheoDichVuTheoNam = (props) => {
 
   return (
     <div>
-      <div className="col-lg-4 col-md-6">
-        <div className="mb-2">
-          <b>Chi nhánh</b>
-        </div>
-        <select
-          className="form-select pb-2 pt-2 mb-3"
-          id="type"
-          name="chiNhanh"
-          onChange={(e) => setSelectedBranch(e.target.value)}
-        >
-          {user?.Loai === "ChuHeThong" ? (
-            branches.map((item, index) => (
-              <option key={index} value={item.tenChiNhanh}>
-                {item.tenChiNhanh}
-              </option>
-            ))
-          ) : (
-            <option value={user?.chinhanh}>{user?.chinhanh}</option>
-          )}
-        </select>
-      </div>
-      <div className="col-lg-4 col-md-6">
-        <div className="mb-2">
-          <b>Chọn năm</b>
-        </div>
-        <input
-          type="number"
-          min="2010"
-          max="2024"
-          step="1"
-          value={selectedYear}
-          id="year"
-          placeholder="Chọn năm bắt đầu"
-          name="year"
-          onChange={(e) => setSelectedYear(e.target.value)}
-          className="form-control pb-2 pt-2 mb-3"
-        />
-        <div className="text-end">
-          <button
-            type="submit"
-            className="btn pb-2 pt-2 mb-3"
-            style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
-            onClick={updateTable}
+      <div className="row">
+        <div className="col-lg-5 col-md-8">
+          <div className="mb-2">
+            <b>Chi nhánh</b>
+          </div>
+          <select
+            className="form-select pb-2 pt-2 mb-3"
+            id="type"
+            name="chiNhanh"
+            onChange={(e) => setSelectedBranch(e.target.value)}
           >
-            Xem
-          </button>
+            {user?.Loai === "ChuHeThong" ? (
+              branches.map((item, index) => (
+                <option key={index} value={item.tenChiNhanh}>
+                  {item.tenChiNhanh}
+                </option>
+              ))
+            ) : (
+              <option value={user?.chinhanh}>{user?.chinhanh}</option>
+            )}
+          </select>
+        </div>
+        <div className="col-md-4">
+          <div className="mb-2">
+            <b>Chọn năm</b>
+          </div>
+          <input
+            type="number"
+            min="2010"
+            max="2024"
+            step="1"
+            value={selectedYear}
+            id="year"
+            placeholder="Chọn năm bắt đầu"
+            name="year"
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className="form-control pb-2 pt-2 mb-3"
+          />
+          <div className="text-end">
+            <button
+              type="submit"
+              className="btn pb-2 pt-2 mb-3"
+              style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+              onClick={updateTable}
+            >
+              Xem
+            </button>
+          </div>
         </div>
       </div>
       <div className="text-end">

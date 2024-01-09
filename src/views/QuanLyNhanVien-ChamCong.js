@@ -106,9 +106,9 @@ const ChamCong = () => {
       table.map((item) =>
         item.MaNV === row.MaNV
           ? {
-              ...item,
-              SoGioLam: e.target.value,
-            }
+            ...item,
+            SoGioLam: e.target.value,
+          }
           : item
       )
     );
@@ -183,44 +183,49 @@ const ChamCong = () => {
   };
   return (
     <div>
-      <div className="col-lg-4 col-md-6 mt-2">
-        <input
-          type="date"
-          className="form-control pb-2 pt-2"
-          id="Ngay"
-          name="Ngay"
-          min={moment().startOf("month").format("YYYY-MM-DD")}
-          max={moment().format("YYYY-MM-DD")}
-          value={selectedDate}
-          onChange={(e) => setSelectedDate(e.target.value)}
-        />
-        <text>Chi nhánh: </text>
-        <select
-          className="customBox"
-          id="type"
-          name="chiNhanh"
-          value={targetBranch}
-          onChange={(e) => setTargetBranch(e.target.value)}
-        >
-          {user?.Loai === "ChuHeThong" ? (
-            branches.map((item, index) => (
-              <option key={index} value={item.tenChiNhanh}>
-                {item.tenChiNhanh}
-              </option>
-            ))
-          ) : (
-            <option value={user?.chinhanh}>{user?.chinhanh}</option>
-          )}
-        </select>
-        <div className="text-start">
-          <button
-            type="submit"
-            className="btn pb-2 pt-2 mt-2"
-            style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
-            onClick={onSee}
+      <div className="row">
+        <div className="col-md-4">
+          <div className="mb-2"><b>Ngày</b></div>
+          <input
+            type="date"
+            className="form-control pb-2 pt-2 mb-2"
+            id="Ngay"
+            name="Ngay"
+            min={moment().startOf("month").format("YYYY-MM-DD")}
+            max={moment().format("YYYY-MM-DD")}
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
+        </div>
+        <div className="col-lg-6 col-md-8">
+          <div className="mb-2"><b>Chi nhánh</b></div>
+          <select
+            className="form-select pb-2 pt-2"
+            id="type"
+            name="chiNhanh"
+            value={targetBranch}
+            onChange={(e) => setTargetBranch(e.target.value)}
           >
-            Xem
-          </button>
+            {user?.Loai === "ChuHeThong" ? (
+              branches.map((item, index) => (
+                <option key={index} value={item.tenChiNhanh}>
+                  {item.tenChiNhanh}
+                </option>
+              ))
+            ) : (
+              <option value={user?.chinhanh}>{user?.chinhanh}</option>
+            )}
+          </select>
+          <div className="text-end mt-3">
+            <button
+              type="submit"
+              className="btn pb-2 pt-2"
+              style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+              onClick={onSee}
+            >
+              Xem
+            </button>
+          </div>
         </div>
       </div>
       <table className="table">

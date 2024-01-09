@@ -118,49 +118,52 @@ const XemBangLuong = (props) => {
   return (
     <div>
       {/* <form name="xemBangLuong" action="/action_page.php"> */}
-      <div class="mb-3 mt-3">
-        <label for="nameNhanVien">
-          <b>Chọn tháng muốn xem</b>
-        </label>{" "}
-        <br />
-        <input
-          type="month"
-          class="customBox"
-          name="nameNhanVien"
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
-        />
-        <text>Chi nhánh: </text>
-        <select
-          className="customBox"
-          id="type"
-          name="chiNhanh"
-          value={targetBranch}
-          onChange={(e) => setTargetBranch(e.target.value)}
-        >
-          {user?.Loai === "ChuHeThong" ? (
-            branches.map((item, index) => (
-              <option key={index} value={item.tenChiNhanh}>
-                {item.tenChiNhanh}
-              </option>
-            ))
-          ) : (
-            <option value={user?.chinhanh}>{user?.chinhanh}</option>
-          )}
-        </select>
+      <div class="row">
+        <div className="col-lg-4 col-md-4">
+          <div className="mb-2"><b>Chọn tháng, năm</b></div>
+          <input
+            type="month"
+            className="form-control pb-2 pt-2 mb-2"
+            name="nameNhanVien"
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+          />
+        </div>
+        <div className="col-lg-6 col-md-8">
+          <div className="mb-2"><b>Chi nhánh</b></div>
+          <select
+            className="form-select pb-2 pt-2"
+            id="type"
+            name="chiNhanh"
+            value={targetBranch}
+            onChange={(e) => setTargetBranch(e.target.value)}
+          >
+            {user?.Loai === "ChuHeThong" ? (
+              branches.map((item, index) => (
+                <option key={index} value={item.tenChiNhanh}>
+                  {item.tenChiNhanh}
+                </option>
+              ))
+            ) : (
+              <option value={user?.chinhanh}>{user?.chinhanh}</option>
+            )}
+          </select>
+          <div className="text-end mb-3 mt-3">
+            <button
+              type="submit"
+              className="btn pb-2 pt-2"
+              style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+              // class="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+              onClick={calSalary}
+            >
+              Xem
+            </button>
+          </div>
+        </div>
       </div>
-
-      <button
-        type="submit"
-        className="btn pb-2 pt-2 mt-2"
-        style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
-        // class="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
-        onClick={calSalary}
-      >
-        Xem
-      </button>
-      {/* </form> */}
-      <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+      <div className="text-end">
+        <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+      </div>
       <table class="table">
         <thead>
           <tr class="table-secondary">

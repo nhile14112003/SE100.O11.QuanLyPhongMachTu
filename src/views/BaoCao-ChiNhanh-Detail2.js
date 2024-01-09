@@ -116,7 +116,7 @@ const XemBaoCaoChiNhanhTheoNam = (props) => {
     <div>
       <div className="col-lg-4 col-md-6">
         <div className="mb-2">
-          <b>Chi nhánh</b>
+          <b>Chọn năm</b>
         </div>
         <input
           type="number"

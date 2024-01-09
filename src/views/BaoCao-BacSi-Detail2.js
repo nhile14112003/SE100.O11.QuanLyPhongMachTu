@@ -113,7 +113,7 @@ const XemBaoCaoBacSiTheoNam = (props) => {
   return (
     <div>
       <div className="row">
-        <div className="col-lg-4 col-md-6">
+        <div className="col-lg-5 col-md-8">
           <div className="mb-2">
             <b>Chi nhánh</b>
           </div>
@@ -134,7 +134,7 @@ const XemBaoCaoBacSiTheoNam = (props) => {
             )}
           </select>
         </div>
-        <div className="col-lg-4 col-md-6">
+        <div className="col-md-4">
           <div className="mb-2">
             <b>Chọn năm</b>
           </div>

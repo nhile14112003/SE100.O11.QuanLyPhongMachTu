@@ -223,18 +223,22 @@ const XemThongTinNhanVien = (props) => {
       </div>
       <button
         type="submit"
-        className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+        className="btn pb-2 pt-2 mb-3 me-3"
+        style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
         onClick={onSearch}
       >
         Tìm kiếm
       </button>
       <button
         onClick={() => setModalOpen(true)}
-        className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+        className="btn pb-2 pt-2 mb-3"
+        style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
       >
         Thêm
       </button>
-      <h1 className="noteVND">**Tính theo đơn vị VNĐ</h1>
+      <div className="text-end">
+        <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+      </div>
       <table className="table">
         <thead>
           <tr className="table-secondary">

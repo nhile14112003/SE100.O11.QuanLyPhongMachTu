@@ -90,50 +90,54 @@ const LuongThuong = () => {
 
   return (
     <div>
-      <div className="text-end">
-        <text style={{ marginLeft: 10 }}>Áp dụng: </text>
-        <select
-          className="customBox"
-          id="type"
-          name="chiNhanh"
-          onChange={async (e) => {
-            const endpoint = "/StaffManagement/getAll/LuongThuong";
-            const bonuses = await Api.getDocs(endpoint);
-            if (user?.Loai === "ChuHeThong") {
-              const fil = bonuses.filter(
-                (item, idx) => item.chiNhanh === e.target.value
-              );
-              setBonuses(fil);
-            } else {
-              const fil = bonuses.filter(
-                (item, idx) =>
-                  item.chiNhanh === e.target.value || item.chiNhanh === "Tất cả"
-              );
-              setBonuses(fil);
-            }
-          }}
-        >
-          {user?.Loai === "ChuHeThong" ? (
-            branches.map((item, index) => (
-              <option key={index} value={item.tenChiNhanh}>
-                {item.tenChiNhanh}
-              </option>
-            ))
-          ) : (
-            <option value={user?.chinhanh}>{user?.chinhanh}</option>
-          )}
-        </select>
-        <button
-          type="submit"
-          className="btn pb-2 pt-2 mt-2 ms-3"
-          style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
-          onClick={() => setModalOpen(true)}
-        >
-          Thêm
-        </button>
+      <div className="row align-items-center">
+        <div className="col-auto mb-3"><b>Áp dụng: </b></div>
+        <div className="col-lg-5 col-md-7 me-3 mb-3">
+          <select
+            className="form-select pb-2 pt-2"
+            id="type"
+            name="chiNhanh"
+            onChange={async (e) => {
+              const endpoint = "/StaffManagement/getAll/LuongThuong";
+              const bonuses = await Api.getDocs(endpoint);
+              if (user?.Loai === "ChuHeThong") {
+                const fil = bonuses.filter(
+                  (item, idx) => item.chiNhanh === e.target.value
+                );
+                setBonuses(fil);
+              } else {
+                const fil = bonuses.filter(
+                  (item, idx) =>
+                    item.chiNhanh === e.target.value || item.chiNhanh === "Tất cả"
+                );
+                setBonuses(fil);
+              }
+            }}
+          >
+            {user?.Loai === "ChuHeThong" ? (
+              branches.map((item, index) => (
+                <option key={index} value={item.tenChiNhanh}>
+                  {item.tenChiNhanh}
+                </option>
+              ))
+            ) : (
+              <option value={user?.chinhanh}>{user?.chinhanh}</option>
+            )}
+          </select>
+        </div>
+        <div className="col-auto mb-3">
+          <button
+            type="submit"
+            className="btn pb-2 pt-2"
+            style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+            onClick={() => setModalOpen(true)}
+          >
+            Thêm
+          </button>
+        </div>
       </div>
       <table className="table">
-        <thead>
+        <thead style={{ verticalAlign: "middle" }}>
           <tr className="table-secondary">
             <th>Loại lương thưởng</th>
             <th>Tiền</th>
