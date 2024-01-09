@@ -155,92 +155,113 @@ const XemThongTinNhanVien = (props) => {
   };
   return (
     <div>
-      <div className="mb-3 mt-3">
-        <input
-          className="block m-2 customBox"
-          type="text"
-          placeholder="Nhập mã nhân viên"
-          name="maNhanVien"
-          onChange={handleChange}
-        />
-        <input
-          className="block m-2 customBox"
-          type="text"
-          id="name"
-          placeholder="Nhập tên nhân viên"
-          name="tenNhanVien"
-          onChange={handleChange}
-        />
-
-        <text>Chức vụ: </text>
-        <select
-          className="customBox"
-          id="type"
-          name="chucVu"
-          onChange={handleChange}
-        >
-          {positions.map((item, index) => (
-            <option key={index} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
-        <text style={{ marginLeft: 10 }}>Chi nhánh: </text>
-        <select
-          className="customBox"
-          id="type"
-          name="chiNhanh"
-          onChange={handleChange}
-        >
-          {user?.Loai === "ChuHeThong" ? (
-            branches.map((item, index) => (
-              <option key={index} value={item.tenChiNhanh}>
-                {item.tenChiNhanh}
-              </option>
-            ))
-          ) : (
-            <option value={user?.chinhanh}>{user?.chinhanh}</option>
-          )}
-        </select>
-        <div>
-          <text>Lương cơ bản: Từ </text>
+      <div className="row">
+        <div className="col-lg-4 col-md-6">
+          <div className="mb-2"><b>Mã nhân viên</b></div>
           <input
-            className="block m-2 px-4 customBox"
-            type="number"
-            placeholder="0"
-            name="luongDau"
-            onChange={handleChange}
-          />
-          <text>đến</text>
-          <input
-            className="block m-2 px-4 customBox"
-            type="number"
-            placeholder="1000000000"
-            name="luongCuoi"
+            className="form-control pb-2 pt-2"
+            type="text"
+            name="maNhanVien"
             onChange={handleChange}
           />
         </div>
+        <div className="col-lg-4 col-md-6">
+          <div className="mb-2"><b>Tên nhân viên</b></div>
+          <input
+            className="form-control pb-2 pt-2"
+            type="text"
+            id="name"
+            name="tenNhanVien"
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-md-4 mt-2">
+          <div className="mb-2"><b>Chức vụ</b></div>
+          <select
+            className="form-select pb-2 pt-2"
+            id="type"
+            name="chucVu"
+            onChange={handleChange}
+          >
+            {positions.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="col-lg-5 col-md-8 mt-2">
+          <div className="mb-2"><b>Chi nhánh</b></div>
+          <select
+            className="form-select pb-2 pt-2"
+            id="type"
+            name="chiNhanh"
+            onChange={handleChange}
+          >
+            {user?.Loai === "ChuHeThong" ? (
+              branches.map((item, index) => (
+                <option key={index} value={item.tenChiNhanh}>
+                  {item.tenChiNhanh}
+                </option>
+              ))
+            ) : (
+              <option value={user?.chinhanh}>{user?.chinhanh}</option>
+            )}
+          </select>
+        </div>
+        <div className="col-auto mt-2">
+          <div><b>Lương cơ bản</b></div>
+          <div className='col-auto row'>
+            <div className='col-auto row align-items-center gs-1'>
+              <div className='col-auto mt-2 me-2' style={{ fontWeight: 600 }}>Từ</div>
+              <div className='col-auto'>
+                <input
+                  className="form-control pb-2 pt-2 mt-2"
+                  type="number"
+                  placeholder="0"
+                  name="luongDau"
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <div className='col-auto row align-items-center gs-1'>
+              <div className='col-auto mt-2' style={{ fontWeight: 600 }}>đến</div>
+              <div className='col-auto'>
+                <input
+                  className="form-control pb-2 pt-2 mt-2"
+                  type="number"
+                  placeholder="1000000000"
+                  name="luongCuoi"
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <button
-        type="submit"
-        className="btn pb-2 pt-2 mb-3 me-3"
-        style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
-        onClick={onSearch}
-      >
-        Tìm kiếm
-      </button>
-      <button
-        onClick={() => setModalOpen(true)}
-        className="btn pb-2 pt-2 mb-3"
-        style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
-      >
-        Thêm
-      </button>
+      <div className="text-end mt-3">
+        <button
+          type="submit"
+          className="btn pb-2 pt-2 mb-3 me-3"
+          style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+          onClick={onSearch}
+        >
+          Tìm kiếm
+        </button>
+        <button
+          onClick={() => setModalOpen(true)}
+          className="btn pb-2 pt-2 mb-3"
+          style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+        >
+          Thêm
+        </button>
+      </div>
+
       <div className="text-end">
         <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
       </div>
       <table className="table">
-        <thead>
+        <thead style={{ verticalAlign: "middle" }}>
           <tr className="table-secondary">
             <th>Mã nhân viên</th>
             <th>Họ và tên</th>

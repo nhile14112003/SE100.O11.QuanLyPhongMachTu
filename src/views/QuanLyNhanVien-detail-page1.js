@@ -165,7 +165,7 @@ const XemBangLuong = (props) => {
         <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
       </div>
       <table class="table">
-        <thead>
+        <thead style={{ verticalAlign: "middle" }}>
           <tr class="table-secondary">
             <th>Mã nhân viên</th>
             <th>Tên nhân viên</th>

@@ -144,7 +144,7 @@ const PatientManagement = (props) => {
     const handleSubmit = async (newRow) => {
         console.log(newRow);
         if (patientRowToEdit == null) {
-            const id = await api.addPatient(newRow);
+            const id = await api.addPatient({ ...newRow, congNo: 0 });
             newRow.Id = id.docId;
             newRow.IDhsdt = id.hsdtId
             setCustomers([...customers, newRow]);
@@ -272,7 +272,7 @@ const PatientManagement = (props) => {
         }
     }
     const validateForm = () => {
-        if (cthsdt.MaNhaSi != '' && cthsdt.ChuanDoan != '' && cthsdt.Thuoc.length > 0 && cthsdt.DichVu.length > 0) {
+        if (cthsdt.MaNhaSi != '' && cthsdt.ChuanDoan != '' && cthsdt.DichVu.length > 0) {
             return true
         }
         else {
@@ -286,8 +286,6 @@ const PatientManagement = (props) => {
                             errorFields.push("Chuẩn đoán"); break;
                         case 'DichVu':
                             errorFields.push("Dịch vụ"); break;
-                        case 'Thuoc':
-                            errorFields.push("Thuốc"); break;
                         default: break;
                     }
                 }
@@ -379,7 +377,8 @@ const PatientManagement = (props) => {
             }
             const res = await api.addCTHSDT(data);
             let newRow = data.chitietHSDT;
-            newRow.Id = res;
+            newRow.Id = res.id;
+            newRow.AnhSauDieuTri = res.image;
             setListCTHSDT([...listcthsdt, newRow]);
         }
         else {
@@ -623,13 +622,13 @@ const PatientManagement = (props) => {
                         </div>
                         <div className='row'>
                             <div className='col-md-auto mt-auto mb-auto' style={{ fontWeight: "600" }}>Chuẩn đoán:</div>
-                            <div className='col-md-auto'>
+                            <div className=''>
                                 <input type="text" className="form-control signature" id="MaNV" name="ChuanDoan" placeholder='Nhập chuẩn đoán' onChange={handlechangeformCTHSDT} value={cthsdt?.ChuanDoan} />
                             </div>
                         </div>
                         <div className='row'>
                             <div className='col-md-auto mt-auto mb-auto' style={{ fontWeight: "600" }}>Ghi chú:</div>
-                            <div className='col-md-auto'>
+                            <div className=''>
                                 <input type="text" className="form-control signature" id="MaNV" name="GhiChu" placeholder='Nhập ghi chú' onChange={handlechangeformCTHSDT} value={cthsdt?.GhiChu} />
                             </div>
                         </div>
@@ -722,7 +721,7 @@ const PatientManagement = (props) => {
                                 ))}
                             </tbody>
                         </table>
-                        <div className='text-end mb-2'><b>Thành tiền: {ThanhTien()}</b></div>
+                        <div className='text-end mb-2'><b>Thành tiền: {Intl.NumberFormat("en-DE").format(ThanhTien())}</b></div>
                         {errors && <div className="error">{errors}</div>}
                         {(cthsdt.edit != true || state == "create") && <div className="text-end">
                             <button type="submit" className="btn pb-2 pt-2 mt-3 mb-3" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={saveCTHSDT}>

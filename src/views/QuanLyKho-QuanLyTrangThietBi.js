@@ -1,7 +1,6 @@
 import React from 'react'
 import './mistyles.css'
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import moment from 'moment';
 import { BsFillTrashFill, BsFillPencilFill } from "react-icons/bs";
 import { FormVatTuThietBi } from '../components/FormVatTuThietBi';
 import { useEffect, useState, useContext } from 'react';
@@ -105,130 +104,193 @@ const QuanLyTrangThietBi = (props) => {
   }
   return (
     <div>
-      <div className="mb-3 mt-3">
-        <input
-          className="block m-2 px-4 customBox"
-          type="text"
-          id="maVatTu"
-          placeholder="Mã vật tư"
-          name="maVatTu"
-          onChange={handleChange}
-        />
-        <input
-          className="block m-2 px-4 customBox"
-          type="text"
-          id="tenVatTu"
-          placeholder="Tên vật tư"
-          name="tenVatTu"
-          onChange={handleChange}
-        />
-        <div>
-          <text>Số lượng nhập: Từ </text>
-          <input
-            className="block m-2 px-4 customBox"
-            type="number"
-            placeholder="0"
-            name="slnDau"
-            onChange={handleChange}
-          />
-          <text>đến</text>
-          <input
-            className="block m-2 px-4 customBox"
-            type="number"
-            placeholder="1000000000"
-            name="slnCuoi"
-            onChange={handleChange}
-          />
+      <div>
+        <div className='row'>
+          <div className='col-lg-4 col-md-6'>
+            <input
+              className="form-control pb-2 pt-2 mb-2"
+              type="text"
+              id="maVatTu"
+              placeholder="Mã vật tư"
+              name="maVatTu"
+              onChange={handleChange}
+            />
+          </div>
+          <div className='col-lg-4 col-md-6'>
+            <input
+              className="form-control pb-2 pt-2 mb-2"
+              type="text"
+              id="tenVatTu"
+              placeholder="Tên vật tư"
+              name="tenVatTu"
+              onChange={handleChange}
+            />
+          </div>
         </div>
-        <div>
-          <text>Số lượng tồn kho: Từ </text>
-          <input
-            className="block m-2 px-4 customBox"
-            type="number"
-            placeholder="0"
-            name="sltkDau"
-            onChange={handleChange}
-          />
-          <text>đến</text>
-          <input
-            className="block m-2 px-4 customBox"
-            type="number"
-            placeholder="1000000000"
-            name="sltkCuoi"
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <text>Giá nhập: Từ </text>
-          <input
-            className="block m-2 px-4 customBox"
-            type="number"
-            placeholder="0"
-            name="giaDau"
-            onChange={handleChange}
-          />
-          <text>đến</text>
-          <input
-            className="block m-2 px-4 customBox"
-            type="number"
-            placeholder="1000000000"
-            name="giaCuoi"
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <text>Ngày nhập: Từ </text>
-          <input
-            className="block m-2 px-4 customBox"
-            type="date"
-            name="ngayDau"
-            onChange={handleChange}
-          />
-          <text>đến</text>
-          <input
-            className="block m-2 px-4 customBox"
-            type="date"
-            name="ngayCuoi"
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <text>Chi nhánh: </text>
-          <select
-            className="customBox"
-            id="type"
-            name="chiNhanh"
-            onChange={handleChange}
-          >
-            {user?.Loai === 'ChuHeThong' ? branches.map((item, index) => (
-              <option key={index} value={item.tenChiNhanh}>
-                {item.tenChiNhanh}
-              </option>
-            )) :
-              <option value={user?.chinhanh}>
-                {user?.chinhanh}
-              </option>
-            }
-          </select>
-        </div>
+        <table className='container-fluid'>
+          <tr>
+            <td>
+              <b>Số lượng nhập</b>
+            </td>
+            <td>
+              <div div className='row'>
+                <div className='col-lg-4 col-md-6'>
+                  <text style={{ fontWeight: 600 }}>Từ</text>
+                  <input
+                    className="form-control pb-2 pt-2 mb-2"
+                    type="number"
+                    placeholder="0"
+                    name="slnDau"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className='col-lg-4 col-md-6'>
+                  <text style={{ fontWeight: 600 }}>Đến</text>
+                  <input
+                    className="form-control pb-2 pt-2 mb-2"
+                    type="number"
+                    placeholder="1000000000"
+                    name="slnCuoi"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b>Số lượng tồn kho: </b>
+            </td>
+            <td>
+              <div div className='row'>
+                <div className='col-lg-4 col-md-6'>
+                  <text style={{ fontWeight: 600 }}>Từ</text>
+                  <input
+                    className="form-control pb-2 pt-2 mb-2"
+                    type="number"
+                    placeholder="0"
+                    name="sltkDau"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className='col-lg-4 col-md-6'>
+                  <text style={{ fontWeight: 600 }}>Đến</text>
+                  <input
+                    className="form-control pb-2 pt-2 mb-2"
+                    type="number"
+                    placeholder="1000000000"
+                    name="sltkCuoi"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b>Giá nhập:</b>
+            </td>
+            <td>
+              <div className='row'>
+                <div className='col-lg-4 col-md-6'>
+                  <text style={{ fontWeight: 600 }}>Từ</text>
+                  <input
+                    className="form-control pb-2 pt-2 mb-2"
+                    type="number"
+                    placeholder="0"
+                    name="giaDau"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className='col-lg-4 col-md-6'>
+                  <text style={{ fontWeight: 600 }}>Đến</text>
+                  <input
+                    className="form-control pb-2 pt-2 mb-2"
+                    type="number"
+                    placeholder="1000000000"
+                    name="giaCuoi"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b>Ngày nhập:</b>
+            </td>
+            <td>
+              <div className='row'>
+                <div className='col-lg-4 col-md-6'>
+                  <text style={{ fontWeight: 600 }}>Từ</text>
+                  <input
+                    className="form-control pb-2 pt-2 mb-2"
+                    type="date"
+                    name="ngayDau"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className='col-lg-4 col-md-6'>
+                  <text style={{ fontWeight: 600 }}>Đến</text>
+                  <input
+                    className="form-control pb-2 pt-2 mb-2"
+                    type="date"
+                    name="ngayCuoi"
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <b>Chi nhánh: </b>
+            </td>
+            <td>
+              <div className='col-lg-5 col-md-8'>
+                <select
+                  className="form-select pb-2 pt-2 mt-2"
+                  id="type"
+                  name="chiNhanh"
+                  onChange={handleChange}
+                >
+                  {user?.Loai === 'ChuHeThong' ? branches.map((item, index) => (
+                    <option key={index} value={item.tenChiNhanh}>
+                      {item.tenChiNhanh}
+                    </option>
+                  )) :
+                    <option value={user?.chinhanh}>
+                      {user?.chinhanh}
+                    </option>
+                  }
+                </select>
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
       <button
         type="submit"
-        className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+        className="btn pb-2 pt-2 mb-3 me-3 mt-3"
+        style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
         onClick={onSearch}
       >
         Tìm kiếm
       </button>
       <button
         onClick={() => setModalOpen(true)}
-        className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+        className="btn pb-2 pt-2 mb-3 me-3 mt-3"
+        style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
       >
         Thêm
       </button>
 
-      <h1 className="noteVND">**Tính theo đơn vị VNĐ</h1>
+      <div className="text-end">
+        <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+      </div>
       <table className="table">
-        <thead>
+        <thead style={{ verticalAlign: "middle" }}>
           <tr className="table-secondary">
             <th>Mã vật tư thiết bị</th>
             <th>Tên vật tư thiết bị</th>
@@ -247,7 +309,7 @@ const QuanLyTrangThietBi = (props) => {
               <td>{row.soLuongNhap}</td>
               <td>{row.soLuongTonKho}</td>
               <td>{new Intl.NumberFormat("en-DE").format(row.donGiaNhap)}</td>
-              <td>{row.ngayNhap}</td>
+              <td>{moment(new Date(row.ngayNhap)).format("DD/MM/YYYY")}</td>
               <td className="fit">
                 <span className="actions">
                   <BsFillTrashFill
@@ -265,18 +327,20 @@ const QuanLyTrangThietBi = (props) => {
         })}
         <tbody></tbody>
       </table>
-      {modalOpen && (
-        <FormVatTuThietBi
-          closeModal={() => {
-            setModalOpen(false);
-            setRowToEdit(null);
-          }}
-          onSubmit={handleSubmit}
-          defaultValue={rowToEdit !== null && materials[rowToEdit]}
-          branches={branches}
-        />
-      )}
-    </div>
+      {
+        modalOpen && (
+          <FormVatTuThietBi
+            closeModal={() => {
+              setModalOpen(false);
+              setRowToEdit(null);
+            }}
+            onSubmit={handleSubmit}
+            defaultValue={rowToEdit !== null && materials[rowToEdit]}
+            branches={branches}
+          />
+        )
+      }
+    </div >
   );
 }
 export default QuanLyTrangThietBi;

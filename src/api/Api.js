@@ -553,7 +553,7 @@ const addPatient = async (data) => {
 };
 const deletePatient = async (id, HSId) => {
   try {
-    await client.delete("/PatientManagement/delete/" + id+'/'+HSId);
+    await client.delete("/PatientManagement/delete/" + id + '/' + HSId);
   } catch (error) {
     console.log("error: ", error.message);
   }
@@ -602,7 +602,7 @@ const addCTHSDT = async (data) => {
   const endpoint = "/PatientManagement/chitietHSDT/add";
   try {
     const response = await client.post(endpoint, data);
-    return response.data.docId;
+    return { id: response.data.docId, image: response.data.image };
   } catch (error) {
     console.log("error: ", error.message);
   }
@@ -790,9 +790,9 @@ const deleteUserAccount = async (id) => {
     console.log("error: ", error.message);
   }
 };
-const Checkpayment= async (Id) => {
+const Checkpayment = async (Id) => {
   try {
-    const response = await client.get("/PatientManagement/Checkpayment/"+Id);
+    const response = await client.get("/PatientManagement/Checkpayment/" + Id);
     if (response.data.success) {
       return response.data.edit;
     } else {
