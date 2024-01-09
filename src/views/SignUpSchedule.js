@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import Api from "../api/Api";
 import NotificationModal from "../components/NotificationModal";
 import { AuthContext } from "../hook/AuthProvider";
+import moment from "moment";
 
 const table = [
   {
@@ -179,7 +180,7 @@ const SignUpSchedule = () => {
           <h1 className="noteVND me-3 col-auto">**Chiều: 13h-17h </h1>
           <h1 className="noteVND me-3 col-auto">**Tối: 17h-20h </h1>
         </div>
-        <div className="col-lg-4 col-md-6 mt-3 mb-3">
+        <div className="col-lg-5 col-md-8 mt-3 mb-3">
           <select
             className="form-select pb-2 pt-2"
             name="thang"
@@ -187,7 +188,7 @@ const SignUpSchedule = () => {
             value={selectedMonth}
           >
             <option value="current">Lịch tháng này</option>
-            <option value="next">Đăng ký lịch tháng sau</option>
+            <option value="next">Đăng ký lịch tháng sau ({moment().add(1, "month").format('MM/YYYY')})</option>
           </select>
         </div>
       </div>

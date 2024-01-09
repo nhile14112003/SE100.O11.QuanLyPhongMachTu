@@ -137,57 +137,62 @@ const XemBaoCaoTheoNam = (props) => {
 
   return (
     <div>
-      <div class="mb-3 mt-3">
-        <label for="month">
-          <b>Chi nhánh:</b>
-        </label>
-        <br />
-        <select
-          className="customBox"
-          id="type"
-          name="chiNhanh"
-          onChange={(e) => setSelectedBranch(e.target.value)}
-        >
-          {user?.Loai === "ChuHeThong" ? (
-            branches.map((item, index) => (
-              <option key={index} value={item.tenChiNhanh}>
-                {item.tenChiNhanh}
-              </option>
-            ))
-          ) : (
-            <option value={user?.chinhanh}>{user?.chinhanh}</option>
-          )}
-        </select>
-      </div>
+      <div class="row">
+        <div className="col-lg-4 col-md-6">
+          <div className="mb-2">
+            <b>Chi nhánh</b>
+          </div>
+          <select
+            className="form-select pb-2 pt-2 mb-3"
+            id="type"
+            name="chiNhanh"
+            onChange={(e) => setSelectedBranch(e.target.value)}
+          >
+            {user?.Loai === "ChuHeThong" ? (
+              branches.map((item, index) => (
+                <option key={index} value={item.tenChiNhanh}>
+                  {item.tenChiNhanh}
+                </option>
+              ))
+            ) : (
+              <option value={user?.chinhanh}>{user?.chinhanh}</option>
+            )}
+          </select>
+        </div>
 
-      <div class="mb-3 mt-3">
-        <label for="year1">
-          <b>Chọn năm:</b>
-        </label>{" "}
-        <br />
-        <input
-          type="number"
-          min="2010"
-          max="2024"
-          step="1"
-          value={selectedYear}
-          id="year"
-          placeholder="Chọn năm bắt đầu"
-          name="year"
-          onChange={(e) => setSelectedYear(e.target.value)}
-        />
+        <div className="col-lg-4 col-md-6">
+          <div className="mb-2">
+            <b>Chọn năm</b>
+          </div>
+          <input
+            type="number"
+            min="2010"
+            max="2024"
+            step="1"
+            value={selectedYear}
+            id="year"
+            placeholder="Chọn năm bắt đầu"
+            name="year"
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className="form-control pb-2 pt-2 mb-3"
+          />
+          <div className="text-end">
+            <button
+              type="submit"
+              className="btn pb-2 pt-2 mb-3"
+              style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+              onClick={updateTable}
+            >
+              Xem
+            </button>
+          </div>
+        </div>
       </div>
-      <button
-        type="submit"
-        class="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
-        onClick={updateTable}
-      >
-        Xem
-      </button>
-
-      <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+      <div className="text-end">
+        <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+      </div>
       <table class="table">
-        <thead>
+        <thead style={{ verticalAlign: "middle" }}>
           <tr class="table-secondary">
             <th>Tháng</th>
             <th>Số ca thực hiện</th>
@@ -204,15 +209,21 @@ const XemBaoCaoTheoNam = (props) => {
               <td>{item.soLuongCaThucHien}</td>
               <td>{item.soDichVuThucHien}</td>
               <td>{item.soBenhNhan}</td>
-              <td>{item.doanhThu}</td>
-              <td>{item.tyLe}</td>
+              <td>{new Intl.NumberFormat("en-DE").format(
+                item.doanhThu
+              )}</td>
+              <td>{new Intl.NumberFormat("en-DE").format(
+                item.tyLe
+              )}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <h1 class="noteVND" style={{ fontWeight: "bold" }}>
-        Tổng doanh thu: {totalRevenue}
-      </h1>
+      <div className="text-end">
+        <h1 class="noteVND" style={{ fontWeight: "bold", fontSize: "17px" }}>
+          Tổng doanh thu: {totalRevenue ? new Intl.NumberFormat("en-DE").format(totalRevenue) : null}
+        </h1>
+      </div>
     </div>
   );
 };

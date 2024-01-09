@@ -114,11 +114,10 @@ const XemBaoCaoChiNhanhTheoNam = (props) => {
   };
   return (
     <div>
-      <div class="mb-3 mt-3">
-        <label for="year1">
-          <b>Chọn năm:</b>
-        </label>{" "}
-        <br />
+      <div className="col-lg-4 col-md-6">
+        <div className="mb-2">
+          <b>Chi nhánh</b>
+        </div>
         <input
           type="number"
           min="2010"
@@ -128,18 +127,24 @@ const XemBaoCaoChiNhanhTheoNam = (props) => {
           id="year"
           placeholder="Chọn năm bắt đầu"
           name="year"
+          className="form-control pb-2 pt-2 mb-3"
           onChange={(e) => setSelectedYear(e.target.value)}
         />
+        <div className="text-end">
+          <button
+            className="btn pb-2 pt-2 mb-3"
+            style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+            onClick={updateTable}
+          >
+            Xem
+          </button>
+        </div>
       </div>
-      <button
-        class="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
-        onClick={updateTable}
-      >
-        Xem
-      </button>
-      <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+      <div className="text-end">
+        <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+      </div>
       <table class="table">
-        <thead>
+        <thead style={{ verticalAlign: "middle" }}>
           <tr class="table-secondary">
             <th>Chi nhánh</th>
             <th>Số ca thực hiện</th>
@@ -156,15 +161,21 @@ const XemBaoCaoChiNhanhTheoNam = (props) => {
               <td>{item.soLuongCaThucHien}</td>
               <td>{item.soDichVuThucHien}</td>
               <td>{item.soBenhNhan}</td>
-              <td>{item.doanhThu}</td>
-              <td>{item.tyLe}</td>
+              <td>{new Intl.NumberFormat("en-DE").format(
+                item.doanhThu
+              )}</td>
+              <td>{new Intl.NumberFormat("en-DE").format(
+                item.tyLe
+              )}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <h1 class="noteVND" style={{ fontWeight: "bold" }}>
-        Tổng doanh thu: {totalRevenue}
-      </h1>
+      <div className="text-end">
+        <h1 class="noteVND" style={{ fontWeight: "bold", fontSize: "17px" }}>
+          Tổng doanh thu: {totalRevenue ? new Intl.NumberFormat("en-DE").format(totalRevenue) : null}
+        </h1>
+      </div>
     </div>
   );
 };

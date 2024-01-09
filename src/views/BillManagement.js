@@ -750,7 +750,7 @@ const BillManagement = (props) => {
                     <tr>
                       <th>Số tiền giảm:</th>
                       <th>
-                        {new Intl.NumberFormat("en-DE").format(SoTienGiam)}
+                        {SoTienGiam ? new Intl.NumberFormat("en-DE").format(SoTienGiam) : null}
                       </th>
                     </tr>
                     <tr>

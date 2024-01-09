@@ -112,55 +112,58 @@ const XemBaoCaoNhaSiTheoThang = (props) => {
 
   return (
     <div>
-      <div class="mb-3 mt-3">
-        <label for="month">
-          <b>Chi nhánh:</b>
-        </label>
-        <br />
-        <select
-          className="customBox"
-          id="type"
-          name="chiNhanh"
-          onChange={(e) => setSelectedBranch(e.target.value)}
-        >
-          {user?.Loai === "ChuHeThong" ? (
-            branches.map((item, index) => (
-              <option key={index} value={item.tenChiNhanh}>
-                {item.tenChiNhanh}
-              </option>
-            ))
-          ) : (
-            <option value={user?.chinhanh}>{user?.chinhanh}</option>
-          )}
-        </select>
+      <div className="row">
+        <div className="col-lg-4 col-md-6">
+          <div className="mb-2">
+            <b>Chi nhánh</b>
+          </div>
+          <select
+            className="form-select pb-2 pt-2 mb-3"
+            id="type"
+            name="chiNhanh"
+            onChange={(e) => setSelectedBranch(e.target.value)}
+          >
+            {user?.Loai === "ChuHeThong" ? (
+              branches.map((item, index) => (
+                <option key={index} value={item.tenChiNhanh}>
+                  {item.tenChiNhanh}
+                </option>
+              ))
+            ) : (
+              <option value={user?.chinhanh}>{user?.chinhanh}</option>
+            )}
+          </select>
+        </div>
+        <div className="col-lg-4 col-md-6">
+          <div className="mb-2">
+            <b>Chọn tháng, năm</b>
+          </div>
+          <input
+            className="form-control pb-2 pt-2 mb-3"
+            type="month"
+            id="month"
+            placeholder="Chọn tháng năm"
+            name="month"
+            max={moment().format("YYYY-MM")}
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+          />
+          <div className="text-end">
+            <button
+              className="btn pb-2 pt-2 mb-3"
+              style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+              onClick={updateTable}
+            >
+              Xem
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="mb-3 mt-3">
-        <label for="month">
-          <b>Chọn tháng, năm:</b>
-        </label>{" "}
-        <br />
-        <input
-          class="customBox"
-          type="month"
-          id="month"
-          placeholder="Chọn tháng năm"
-          name="month"
-          max={moment().format("YYYY-MM")}
-          value={selectedMonth}
-          onChange={(e) => setSelectedMonth(e.target.value)}
-        />
+      <div className="text-end">
+        <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
       </div>
-
-      <button
-        class="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
-        onClick={updateTable}
-      >
-        Xem
-      </button>
-
-      <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
       <table class="table">
-        <thead>
+        <thead style={{ verticalAlign: "middle" }}>
           <tr class="table-secondary">
             <th>Mã bác sĩ</th>
             <th>Tên bác sĩ</th>
@@ -176,14 +179,18 @@ const XemBaoCaoNhaSiTheoThang = (props) => {
               <td>{item.tenNhaSi}</td>
               <td>{item.soLuongCaThucHien}</td>
               <td>{item.soBenhNhan}</td>
-              <td>{item.tyLe}</td>
+              <td>{new Intl.NumberFormat("en-DE").format(
+                item.tyLe
+              )}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <h1 class="noteVND" style={{ fontWeight: "bold" }}>
-        Tổng số ca thực hiện: {totalCases}
-      </h1>
+      <div className="text-end">
+        <h1 class="noteVND" style={{ fontWeight: "bold", fontSize: "17px" }}>
+          Tổng số ca thực hiện: {totalCases}
+        </h1>
+      </div>
     </div>
   );
 };
