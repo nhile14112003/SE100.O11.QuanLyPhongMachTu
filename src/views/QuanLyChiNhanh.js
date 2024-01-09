@@ -72,29 +72,47 @@ const QuanLyChiNhanh = (props) => {
     }
     return (
         <div>
-
-            <div className="mb-3 mt-3">
-                <input className="block m-2 px-4 customBox" type="text" id="maChiNhanh" placeholder="Nhập mã chi nhánh" name="maChiNhanh"
-                    onChange={handleChange} />
-                <input className="block m-2 px-4 customBox" type="text" id="tenChiNhanh" placeholder="Nhập tên chi nhánh" name="tenChiNhanh"
-                    onChange={handleChange} />
-                <text>Số lượng phòng:  Từ </text>
-                <input className="block m-2 px-4 customBox" type="number" placeholder="0" name="slpDau" value={searchCriteria.slpDau} style={{ width: 100 }}
-                    onChange={handleChange} />
-                <text>đến</text>
-                <input className="block m-2 px-4 customBox" type="number" placeholder="100" name="slpCuoi" value={searchCriteria.slpCuoi} style={{ width: 100 }}
-                    onChange={handleChange} />
+            <div className='row'>
+                <div className='col-lg-4 col-md-6'>
+                    <input className="form-control pb-2 pt-2 mb-3" type="text" id="maChiNhanh" placeholder="Nhập mã chi nhánh" name="maChiNhanh"
+                        onChange={handleChange} />
+                </div>
+                <div className='col-lg-4 col-md-6'>
+                    <input className="form-control pb-2 pt-2" type="text" id="tenChiNhanh" placeholder="Nhập tên chi nhánh" name="tenChiNhanh"
+                        onChange={handleChange} />
+                </div>
             </div>
-            <button type="submit" className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+            <div className='col-auto row align-items-center'>
+                <div className='col-auto mt-2' style={{ fontWeight: "bold" }}>Số lượng phòng: </div>
+                <div className='col-auto row'>
+                    <div className='col-auto row align-items-center gs-1'>
+                        <div className='col-auto mt-2' style={{ fontWeight: 600 }}>Từ</div>
+                        <input className="form-control pb-2 pt-2 mt-2" type="number" placeholder="0" name="slpDau" value={searchCriteria.slpDau} style={{ width: 100 }}
+                            onChange={handleChange} />
+                    </div>
+                    <div className='col-auto row align-items-center gs-1'>
+                        <div className='col-auto mt-2' style={{ fontWeight: 600 }}>đến</div>
+                        <input className="form-control pb-2 pt-2" type="number" placeholder="100" name="slpCuoi" value={searchCriteria.slpCuoi} style={{ width: 100 }}
+                            onChange={handleChange} />
+                    </div>
+                </div>
+            </div>
+            <button type="submit"
+                className="btn pb-2 pt-2 me-3 mt-3 mb-3"
+                style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
                 onClick={onSearch}>
                 Tìm kiếm
             </button>
-            <button onClick={() => setModalOpen(true)} className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+            <button onClick={() => setModalOpen(true)}
+                className="btn pb-2 pt-2 me-3 mt-3 mb-3"
+                style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>
                 Thêm
             </button>
-            <h1 className="noteVND">**Tính theo đơn vị VNĐ</h1>
+            <div className="text-end">
+                <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+            </div>
             <table className="table" >
-                <thead>
+                <thead style={{ verticalAlign: "middle" }}>
                     <tr className="table-secondary">
                         <th>Mã chi nhánh</th>
                         <th>Tên chi nhánh</th>
@@ -128,18 +146,20 @@ const QuanLyChiNhanh = (props) => {
                 <tbody>
                 </tbody>
             </table>
-            {modalOpen && (
-                <FormChiNhanh
-                    closeModal={() => {
-                        setModalOpen(false);
-                        setRowToEdit(null);
-                    }}
-                    onSubmit={handleSubmit}
-                    defaultValue={rowToEdit !== null && branchs[rowToEdit]}
-                    branchs={branchs}
-                />
-            )}
-        </div>
+            {
+                modalOpen && (
+                    <FormChiNhanh
+                        closeModal={() => {
+                            setModalOpen(false);
+                            setRowToEdit(null);
+                        }}
+                        onSubmit={handleSubmit}
+                        defaultValue={rowToEdit !== null && branchs[rowToEdit]}
+                        branchs={branchs}
+                    />
+                )
+            }
+        </div >
     );
 }
 export default QuanLyChiNhanh;

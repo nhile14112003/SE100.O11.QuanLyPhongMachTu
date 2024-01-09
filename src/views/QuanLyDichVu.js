@@ -68,34 +68,56 @@ const QuanLyDichVu = (props) => {
     }
     return (
         <div>
-            <div className="mb-3 mt-3">
-                <input className="block m-2 px-4 customBox" type="text" id="maDichVu" placeholder="Nhập mã dịch vụ" name="maDichVu" value={searchCriteria.maDichVu}
-                    onChange={handleChange} />
-                <input className="block m-2 px-4 customBox" type="text" id="tenDichVu" placeholder="Nhập tên dịch vụ" name="tenDichVu" value={searchCriteria.tenDichVu}
-                    onChange={handleChange} />
-                <input className="block m-2 px-4 customBox" type="text" id="loaiDichVu" placeholder="Nhập loại dịch vụ" name="loaiDichVu" value={searchCriteria.loaiDichVu}
-                    onChange={handleChange} />
-                <div>
-                    <text>Đơn giá:  Từ </text>
-                    <input className="block m-2 px-4 customBox" type="number" placeholder="0" name="giaDau" value={searchCriteria.giaDau}
+            <div className="row">
+                <div className='col-lg-4 col-md-6'>
+                    <input className="form-control pb-2 pt-2 mb-3" type="text" id="maDichVu" placeholder="Nhập mã dịch vụ" name="maDichVu" value={searchCriteria.maDichVu}
                         onChange={handleChange} />
-                    <text>đến</text>
-                    <input className="block m-2 px-4 customBox" type="number" placeholder="1000000000" name="giaCuoi" value={searchCriteria.giaCuoi}
+                </div>
+                <div className='col-lg-4 col-md-6'>
+                    <input className="form-control pb-2 pt-2 mb-3" type="text" id="tenDichVu" placeholder="Nhập tên dịch vụ" name="tenDichVu" value={searchCriteria.tenDichVu}
                         onChange={handleChange} />
+                </div>
+                <div className='col-lg-4 col-md-6'>
+                    <input className="form-control pb-2 pt-2" type="text" id="loaiDichVu" placeholder="Nhập loại dịch vụ" name="loaiDichVu" value={searchCriteria.loaiDichVu}
+                        onChange={handleChange} />
+                </div>
+            </div>
+            <div className='row align-items-center'>
+                <div className='col-auto mt-2' style={{ fontWeight: "bold" }}>Đơn giá: </div>
+                <div className='col-auto row'>
+                    <div className='col-auto row align-items-center gs-1'>
+                        <div className='col-auto mt-2 me-2' style={{ fontWeight: 600 }}>Từ</div>
+                        <div className='col-auto'>
+                            <input className="form-control pb-2 pt-2 mt-2" type="number" placeholder="0" name="giaDau" value={searchCriteria.giaDau}
+                                onChange={handleChange} />
+                        </div>
+                    </div>
+                    <div className='col-auto row align-items-center gs-1'>
+                        <div className='col-auto mt-2' style={{ fontWeight: 600 }}>đến</div>
+                        <div className='col-auto mt-2'>
+                            <input className="form-control pb-2 pt-2" type="number" placeholder="1000000000" name="giaCuoi" value={searchCriteria.giaCuoi}
+                                onChange={handleChange} />
+                        </div>
+                    </div>
                 </div>
             </div>
             <button
                 onClick={onSearch}
-                className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
+                className="btn pb-2 pt-2 me-3 mt-3 mb-3"
+                style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
             >
                 Tìm kiếm
             </button>
-            <button onClick={() => setModalOpen(true)} className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
+            <button onClick={() => setModalOpen(true)}
+                className="btn pb-2 pt-2 mt-3 mb-3"
+                style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>
                 Thêm
             </button>
-            <h1 className="noteVND">**Tính theo đơn vị VNĐ</h1>
+            <div className="text-end">
+                <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+            </div>
             <table className="table" >
-                <thead>
+                <thead style={{ verticalAlign: "middle" }}>
                     <tr className="table-secondary">
                         <th>Mã dịch vụ</th>
                         <th>Tên dịch vụ</th>
@@ -139,18 +161,20 @@ const QuanLyDichVu = (props) => {
                 <tbody>
                 </tbody>
             </table>
-            {modalOpen && (
-                <FormDichVu
-                    closeModal={() => {
-                        setModalOpen(false);
-                        setRowToEdit(null);
-                    }}
-                    onSubmit={handleSubmit}
-                    defaultValue={rowToEdit !== null && services[rowToEdit]}
-                    services={services}
-                />
-            )}
-        </div>
+            {
+                modalOpen && (
+                    <FormDichVu
+                        closeModal={() => {
+                            setModalOpen(false);
+                            setRowToEdit(null);
+                        }}
+                        onSubmit={handleSubmit}
+                        defaultValue={rowToEdit !== null && services[rowToEdit]}
+                        services={services}
+                    />
+                )
+            }
+        </div >
     );
 }
 export default QuanLyDichVu;

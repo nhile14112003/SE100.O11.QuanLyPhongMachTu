@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './mistyles.css'
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import moment from 'moment';
 import api from '../api/Api';
 const QuanLyDanhGia = (props) => {
     const [feedbacks, setFeedbacks] = useState([]);
@@ -23,30 +22,26 @@ const QuanLyDanhGia = (props) => {
 
     return (
         <div >
-            <div className="mb-3 mt-3">
-                <label for="year2"><b>Sắp xếp:</b></label> <br />
-                <select className="customBox" id="type" placeholder="chọn phương thức" name="year2"
-                    value={sortOrder}
-                    onChange={handleSelectChange}>
-                    <option value="desc">Sắp xếp theo mới nhất</option>
-                    <option value="asc">Sắp xếp theo cũ nhất</option>
-                </select>
-            </div>
+            <select className="form-select pb-2 pt-2 mt-2 mb-2" id="type" placeholder="chọn phương thức" name="year2"
+                value={sortOrder}
+                style={{ width: "fit-content", fontWeight: "bold" }}
+                onChange={handleSelectChange}>
+                <option value="desc">Sắp xếp theo mới nhất</option>
+                <option value="asc">Sắp xếp theo cũ nhất</option>
+            </select>
 
-            <button type="submit" className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">Tìm kiếm</button>
-
-            <table className="table" >
-                <thead>
-                    <tr className="table-secondary">
-                        <th>Ngày</th>
-                        <th>Giờ</th>
+            <table className="table">
+                <thead style={{ verticalAlign: "middle" }} className="table-secondary">
+                    <tr>
+                        <th className='pe-3'>Ngày</th>
+                        <th className='pe-3'>Giờ</th>
                         <th>Nội dung</th>
                     </tr>
                 </thead>
                 {feedbacks.map((item, index) => (
                     <tr key={item.index}>
-                        <td>{item.ngay}</td>
-                        <td>{item.gio}</td>
+                        <td className='pe-3'>{moment(new Date(item.ngay)).format("DD/MM/YYYY")}</td>
+                        <td className='pe-3'>{item.gio}</td>
                         <td>{item.noidung}</td>
                     </tr>
                 ))}
@@ -55,7 +50,7 @@ const QuanLyDanhGia = (props) => {
                 </tbody>
             </table>
 
-        </div>
+        </div >
     );
 }
 export default QuanLyDanhGia;

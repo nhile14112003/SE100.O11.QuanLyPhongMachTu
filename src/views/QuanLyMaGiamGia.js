@@ -65,49 +65,56 @@ const QuanLyMaGiamGia = (props) => {
 
   return (
     <div>
-      <div className="mb-3 mt-3">
-        <input
-          className="block m-2 px-4 customBox"
-          type="text"
-          id="maGiamGia"
-          placeholder="Nhập id mã giảm giá"
-          name="maGiamGia"
-          onChange={handleChange}
-        />
-        <div>
-          <text>Ngày bắt đầu từ: </text>
+      <div className="row">
+        <div className="col-lg-4 col-md-6">
+          <div className="mb-2"><b>ID mã giảm giá</b></div>
           <input
-            className="block m-2 px-4 customBox"
+            className="form-control pb-2 pt-2 mb-2"
+            type="text"
+            id="maGiamGia"
+            placeholder="Nhập id mã giảm giá"
+            name="maGiamGia"
+            onChange={handleChange}
+          />
+        </div>
+        <div className="col-lg-4 col-md-6">
+          <div className="mb-2"><b>Thời gian bắt đầu</b></div>
+          <input
+            className="form-control pb-2 pt-2 mb-2"
             type="date"
             name="TGBatDau"
             id="TGBatDau"
             onChange={handleChange}
           />
         </div>
-        <div>
-          <text>đến ngày: </text>
+        <div className="col-lg-4 col-md-6">
+          <div className="mb-2"><b>Thời gian kết thúc</b></div>
           <input
-            className="block m-2 px-4 customBox"
+            className="form-control pb-2 pt-2 mb-2"
             type="date"
             name="TGKetThuc"
             id="TGKetThuc"
             onChange={handleChange}
           />
         </div>
+        <div className="text-end">
+          <button
+            onClick={onSearch}
+            className="btn pb-2 pt-2 mt-3 mb-3 me-3"
+            style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>
+            Tìm kiếm
+          </button>
+          <button
+            onClick={() => setModalOpen(true)}
+            className="btn pb-2 pt-2 mt-3 mb-3"
+            style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>
+            Thêm
+          </button>
+        </div>
       </div>
-      <button
-        onClick={onSearch}
-        className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Tìm kiếm
-      </button>
-      <button
-        onClick={() => setModalOpen(true)}
-        className="bluecolor block m-2 bg-0096FF hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Thêm
-      </button>
-      <h1 className="noteVND">**Tính theo đơn vị VNĐ</h1>
+      <div className="text-end">
+        <h1 class="noteVND">**Tính theo đơn vị VNĐ</h1>
+      </div>
       <table className="table">
         <thead>
           <tr className="table-secondary">
