@@ -61,7 +61,7 @@ const XemThongTinNhanVien = (props) => {
 
   const handleDeleteRow = async (targetIndex) => {
     const shouldDelete = window.confirm(
-      "Are you sure you want to delete this staff?"
+      'Bạn có chắc chắn muốn xóa nhân viên này không?'
     );
     if (shouldDelete) {
       setStaffs(staffs.filter((_, idx) => idx !== targetIndex));

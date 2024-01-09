@@ -132,72 +132,67 @@ export const FormChiTietNhanVien = ({
         if (e.target.className === "modal-container") closeModal();
       }}
     >
-      <div className="col-sm-4 modal1">
-        <form style={{ overflow: "auto", height: "480px" }}>
-          <div className="form-group">
-            <label for="maNhanVien">Mã nhân viên</label>
-            <input
-              name="maNhanVien"
-              type="text"
-              onChange={handleChange}
-              value={formState.maNhanVien}
-            />
-          </div>
-          <div className="form-group">
-            <label for="tenNhanVien">Họ và tên</label>
-            <input
-              name="tenNhanVien"
-              type="text"
-              onChange={handleChange}
-              value={formState.tenNhanVien}
-            />
-          </div>
-          <div className="form-group">
-            <label for="soDienThoai">Số điện thoại</label>
-            <input
-              name="soDienThoai"
-              onChange={handleChange}
-              type="number"
-              value={formState.soDienThoai}
-              onKeyDown={isNumberPress}
-              onPaste={isNumberCopy}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              name="email"
-              onChange={handleChange}
-              value={formState.email}
-            />
-          </div>
-          <div className="form-group">
-            <div className="form-group">
-              <label for="chucVu">Chức vụ</label>
-              <select
-                name="chucVu"
-                onChange={handleChange}
-                value={formState.chucVu}
-              >
-                {positions.map((item, index) => (
-                  <option key={index} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <div className="form-group">
-            <label htmlFor="bangCap">Bằng cấp</label>
-            <input
-              name="bangCap"
-              onChange={handleChange}
-              type="text"
-              value={formState.bangCap}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="kinhNghiem">Kinh nghiệm</label>
+      <div className="col-sm-4 modal1" style={{ overflow: "auto", height: "80%" }}>
+        <form>
+          <div className="mb-2"><b>Mã nhân viên</b></div>
+          <input
+            name="maNhanVien"
+            type="text"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            value={formState.maNhanVien}
+          />
+          <div className="mb-2"><b>Họ và tên</b></div>
+          <input
+            name="tenNhanVien"
+            type="text"
+            onChange={handleChange}
+            className="form-control pb-2 pt-2 mb-2"
+            value={formState.tenNhanVien}
+          />
+          <div className="mb-2"><b>Số điện thoại</b></div>
+          <input
+            name="soDienThoai"
+            onChange={handleChange}
+            type="number"
+            value={formState.soDienThoai}
+            className="form-control pb-2 pt-2 mb-2"
+            onKeyDown={isNumberPress}
+            onPaste={isNumberCopy}
+          />
+          <div className="mb-2"><b>Email</b></div>
+          <input
+            name="email"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            value={formState.email}
+          />
+          <div className="mb-2"><b>Chức vụ</b></div>
+          <select
+            name="chucVu"
+            className="form-select pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            value={formState.chucVu}
+          >
+            {positions.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+          <div className="mb-2"><b>Bằng cấp</b></div>
+          <input
+            name="bangCap"
+            onChange={handleChange}
+            className="form-control pb-2 pt-2 mb-2"
+            type="text"
+            value={formState.bangCap}
+          />
+          <div className="mb-2"><b>Kinh nghiệm</b></div>
+          <div
+            className="mb-2 send-area"
+            style={{ borderRadius: "5px", borderColor: "#D9D9D9" }}
+          >
             <textarea
               rows="3"
               name="kinhNghiem"
@@ -205,39 +200,43 @@ export const FormChiTietNhanVien = ({
               onChange={handleChange}
             ></textarea>
           </div>
-          <div className="form-group">
-            <label htmlFor="luongCoBan">Lương cơ bản/giờ</label>
-            <input
-              type="number"
-              name="luongCoBan"
-              onChange={handleChange}
-              value={formState.luongCoBan}
-              onKeyDown={isNumberPress}
-              onPaste={isNumberCopy}
-            />
-          </div>
-          {user?.Loai === "ChuHeThong" && (
-            <div className="form-group">
-              <label htmlFor="chiNhanh">Chi nhánh làm việc</label>
-              <select
-                name="chiNhanh"
-                onChange={handleChange}
-                value={formState.chiNhanh}
-              >
-                {branches.map((item, index) => (
-                  <option key={index} value={item.tenChiNhanh}>
-                    {item.tenChiNhanh}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
+          <div className="mb-2"><b>Lương cơ bản/giờ</b></div>
+          <input
+            type="number"
+            name="luongCoBan"
+            onChange={handleChange}
+            className="form-control pb-2 pt-2 mb-2"
+            value={formState.luongCoBan}
+            onKeyDown={isNumberPress}
+            onPaste={isNumberCopy}
+          />
+          {
+            user?.Loai === "ChuHeThong" && (
+              <div>
+                <div className="mb-2"><b>Chi nhánh làm việc</b></div>
+                <select
+                  className="form-select pb-2 pt-2 mb-2"
+                  name="chiNhanh"
+                  onChange={handleChange}
+                  value={formState.chiNhanh}
+                >
+                  {branches.map((item, index) => (
+                    <option key={index} value={item.tenChiNhanh}>
+                      {item.tenChiNhanh}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )
+          }
           {errors && <div className="error">{errors}</div>}
-          <button type="submit" className="btnSummit" onClick={handleSubmit}>
-            Lưu
-          </button>
-        </form>
-      </div>
-    </div>
+          <div className="text-end">
+            <button type="submit" className="btn pb-2 pt-2 ps-3 pe-3 mt-2" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={handleSubmit}>
+              Lưu
+            </button>
+          </div>
+        </form >
+      </div >
+    </div >
   );
 };

@@ -144,7 +144,7 @@ const SignUpPage = (props) => {
                 <div className="container">
                     <div className="row g-0">
                         <div className="col-md-6 pt-5 pb-5">
-                            <p style={{ fontSize: "36px" }}>Phòng khám ABC</p>
+                            <p style={{ fontSize: "36px" }}>Phòng khám LOGOIPSUM</p>
                             <p>Phòng khám nha khoa của chúng tôi đã được thành lập từ năm 2015 và đã phục vụ hàng trăm bệnh nhân trong suốt thời gian này. Chúng tôi tự hào mang lại cho khách hàng sự chăm sóc nha khoa chất lượng và đáng tin cậy</p>
                             <p>Với đội ngũ bác sĩ nha khoa giàu kinh nghiệm và chuyên môn, phòng khám của chúng tôi có thể đáp ứng mọi nhu cầu nha khoa của khách hàng. Chúng tôi cung cấp các dịch vụ từ những khám và tư vấn sức khỏe răng miệng đến điều trị và phục hình nha khoa.</p>
 

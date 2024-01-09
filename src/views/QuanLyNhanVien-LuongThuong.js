@@ -73,7 +73,7 @@ const LuongThuong = () => {
 
   const handleDeleteRow = async (targetIndex) => {
     const shouldDelete = window.confirm(
-      "Are you sure you want to delete this bonus?"
+      'Bạn có chắc chắn muốn xóa lương thưởng này không?'
     );
     if (shouldDelete) {
       const endpoint =

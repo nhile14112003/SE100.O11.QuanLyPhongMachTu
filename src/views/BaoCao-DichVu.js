@@ -8,11 +8,11 @@ const XemBaoCaoTheoDichVu = (props) => {
   const { pathname } = useLocation();
   return (
     <div>
-      <ul className="nav">
+      <ul className="nav subtab">
         <li className="nav-item">
           <NavLink className="nav-link action" to="/manager/baocao/baocaotheodichvu/xemtheothang">Xem theo tháng</NavLink>
         </li>
-        <li className="nav-item">
+        <li className="nav-item action">
           <NavLink className="nav-link " to="/manager/baocao/baocaotheodichvu/xemtheonam">Xem theo năm</NavLink>
         </li>
       </ul>

@@ -55,9 +55,8 @@ const BookingPage = (props) => {
 
     if (!validateForm()) return;
     const currentDate = new Date();
-    formState.ngay = `${currentDate.getFullYear()}-${
-      currentDate.getMonth() + 1
-    }-${currentDate.getDate()}`;
+    formState.ngay = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1
+      }-${currentDate.getDate()}`;
     formState.gio = `${currentDate.getHours()}:${currentDate
       .getMinutes()
       .toString()
@@ -211,7 +210,7 @@ const BookingPage = (props) => {
         <div className="container">
           <div className="row g-0">
             <div className="col-md-6 pt-5 pb-5">
-              <p style={{ fontSize: "36px" }}>Phòng khám ABC</p>
+              <p style={{ fontSize: "36px" }}>Phòng khám LOGOIPSUM</p>
               <p>
                 Phòng khám nha khoa của chúng tôi đã được thành lập từ năm 2015
                 và đã phục vụ hàng trăm bệnh nhân trong suốt thời gian này.

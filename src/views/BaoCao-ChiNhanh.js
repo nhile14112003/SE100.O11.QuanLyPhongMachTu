@@ -1,13 +1,14 @@
 import React from "react";
 import "./mistyles.css";
 import { NavLink } from "react-router-dom";
-import { browserHistory, Router, Route, Switch } from "react-router";
+import { useLocation, Redirect, Route, Switch } from 'react-router';
 import XemBaoCaoChiNhanhTheoThang from "./BaoCao-ChiNhanh-Detail1";
 import XemBaoCaoChiNhanhTheoNam from "./BaoCao-ChiNhanh-Detail2";
 const XemBaoCaoTheoChiNhanh = (props) => {
+  const { pathname } = useLocation();
   return (
     <div>
-      <ul className="nav">
+      <ul className="nav subtab">
         <li className="nav-item">
           <NavLink
             className="nav-link "
@@ -33,6 +34,9 @@ const XemBaoCaoTheoChiNhanh = (props) => {
           <Route path="/manager/baocao/baocaotheochinhanh/xemtheonam">
             <XemBaoCaoChiNhanhTheoNam />
           </Route>
+          {pathname === "/manager/baocao/baocaotheochinhanh" ? (
+            <Redirect to="/manager/baocao/baocaotheochinhanh/xemtheothang" />
+          ) : null}
         </Switch>
       </div>
     </div>

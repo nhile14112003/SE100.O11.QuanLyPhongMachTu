@@ -105,50 +105,48 @@ export const FormChiNhanh = ({
     >
       <div className="col-sm-4 modal1">
         <form>
-          <div className="form-group">
-            <label for="maChiNhanh">Mã chi nhánh</label>
-            <input
-              name="maChiNhanh"
-              onChange={handleChange}
-              value={formState.maChiNhanh}
-            />
-          </div>
-          <div className="form-group">
-            <label for="tenChiNhanh">Tên chi nhánh</label>
-            <input
-              name="tenChiNhanh"
-              onChange={handleChange}
-              type="text"
-              value={formState.tenChiNhanh}
-            />
-          </div>
-          <div className="form-group">
-            <label for="diaChi">Địa chỉ</label>
-            <input
-              name="diaChi"
-              onChange={handleChange}
-              type="text"
-              value={formState.diaChi}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="soLuongPhong">Số lượng phòng</label>
-            <input
-              name="soLuongPhong"
-              onChange={handleChange}
-              type="number"
-              value={formState.soLuongPhong}
-              onKeyDown={isNumberPress}
-              onPaste={isNumberCopy}
-            />
-          </div>
+          <div className="mb-2"><b>Mã chi nhánh</b></div>
+          <input
+            name="maChiNhanh"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            value={formState.maChiNhanh}
+          />
+          <div className="mb-2"><b>Tên chi nhánh</b></div>
+          <input
+            name="tenChiNhanh"
+            onChange={handleChange}
+            className="form-control pb-2 pt-2 mb-2"
+            type="text"
+            value={formState.tenChiNhanh}
+          />
+          <div className="mb-2"><b>Địa chỉ</b></div>
+          <input
+            name="diaChi"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            type="text"
+            value={formState.diaChi}
+          />
+          <div className="mb-2"><b>Số lượng phòng</b></div>
+          <input
+            name="soLuongPhong"
+            onChange={handleChange}
+            type="number"
+            value={formState.soLuongPhong}
+            className="form-control pb-2 pt-2 mb-2"
+            onKeyDown={isNumberPress}
+            onPaste={isNumberCopy}
+          />
 
           {errors && <div className="error">{errors}</div>}
-          <button type="submit" className="btnSummit" onClick={handleSubmit}>
-            Lưu
-          </button>
+          <div className="text-end">
+            <button type="submit" className="btn pb-2 pt-2 ps-3 pe-3 mt-2" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={handleSubmit}>
+              Lưu
+            </button>
+          </div>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };

@@ -26,7 +26,7 @@ const QuanLyDichVu = (props) => {
     }
 
     const handleDeleteRow = (targetIndex) => {
-        const shouldDelete = window.confirm('Are you sure you want to delete this service?');
+        const shouldDelete = window.confirm('Bạn có chắc chắn muốn xóa dịch vụ này không?');
         if (shouldDelete) {
             setServices(services.filter((_, idx) => idx !== targetIndex));
             api.deleteService(services[targetIndex].Id);

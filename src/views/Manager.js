@@ -147,10 +147,10 @@ const Manager = (props) => {
             <div className="col-lg-4 col-md-5">
               <img alt="" src="/images/logo2.png" />
               <p className="mt-3" style={{ fontSize: "20px" }}>Giới thiệu</p>
-              <p>Phòng khám ABC đã được thành lập hơn 7 năm. Với kinh nghiệm và đội ngũ nha sĩ chuyện nghiệp chúng tôi tự tin sẽ đem đến nhưng dịch vụ tốt nhất.</p>
+              <p>Phòng khám LOGOIPSUM đã được thành lập hơn 7 năm. Với kinh nghiệm và đội ngũ nha sĩ chuyện nghiệp chúng tôi tự tin sẽ đem đến nhưng dịch vụ tốt nhất.</p>
             </div>
-            <div className="col-1"></div>
-            <div className="col-lg-7 col-md-6 row mt-3">
+
+            <div className="col-lg-8 col-md-7 row mt-3">
               <div className="mt-lg-3 col-lg-4">
                 <span style={{ fontSize: "19px" }}>Giờ mở cửa toàn chi nhánh</span>
                 <br />
@@ -163,13 +163,14 @@ const Manager = (props) => {
               <div className="mt-lg-3 col-lg-4">
                 <span style={{ fontSize: "19px" }}>Địa chỉ</span>
                 <ul>
+                  <li>Thủ Đức, thành phố Hồ Chí Minh</li>
                   <li>Quận 7, thành phố Hồ Chí Minh</li>
                   <li>Quận 8, thành phố Hồ Chí Minh</li>
                   <li>Bình Thạnh, thành phố Hồ Chí Minh</li>
                 </ul>
               </div>
               <div className="mt-lg-3 col-lg-4" style={{ fontSize: "19px" }}>
-                Email: abc@gmail.com
+                Email: LOGOIPSUM@gmail.com
                 <br />
                 Phone: 0843593598
               </div>

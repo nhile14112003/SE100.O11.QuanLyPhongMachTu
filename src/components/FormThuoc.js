@@ -116,39 +116,37 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
         style={{ height: "80%", overflowY: "auto" }}
       >
         <form>
-          <div className="form-group">
-            <label for="maThuoc">Mã thuốc</label>
-            <input
-              name="maThuoc"
-              onChange={handleChange}
-              value={formState.maThuoc}
-            />
-          </div>
-          <div className="form-group">
-            <label for="tenThuoc">Tên thuốc</label>
-            <input
-              name="tenThuoc"
-              onChange={handleChange}
-              type="text"
-              value={formState.tenThuoc}
-            />
-          </div>
-          <div className="form-group">
-            <label for="soLuongNhap">Số lượng nhập</label>
-            <input
-              name="soLuongNhap"
-              onChange={handleChange}
-              type="number"
-              value={formState.soLuongNhap}
-              onKeyDown={isNumberPress}
-              onPaste={isNumberCopy}
-            />
-          </div>
+          <div className="mb-2"><b>Mã thuốc</b></div>
+          <input
+            name="maThuoc"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            value={formState.maThuoc}
+          />
+          <div className="mb-2"><b>Tên thuốc</b></div>
+          <input
+            name="tenThuoc"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            type="text"
+            value={formState.tenThuoc}
+          />
+          <div className="mb-2"><b>Số lượng nhập</b></div>
+          <input
+            name="soLuongNhap"
+            onChange={handleChange}
+            className="form-control pb-2 pt-2 mb-2"
+            type="number"
+            value={formState.soLuongNhap}
+            onKeyDown={isNumberPress}
+            onPaste={isNumberCopy}
+          />
           {defaultValue && (
-            <div className="form-group">
-              <label htmlFor="soLuongTonKho">Số lượng tồn kho</label>
+            <div>
+              <div className="mb-2"><b>Số lượng nhập</b></div>
               <input
                 name="soLuongTonKho"
+                className="form-control pb-2 pt-2 mb-2"
                 type="number"
                 onChange={handleChange}
                 value={formState.soLuongTonKho}
@@ -157,49 +155,45 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
               />
             </div>
           )}
-          <div className="form-group">
-            <label htmlFor="donGiaNhap">Đơn giá nhập</label>
-            <input
-              name="donGiaNhap"
-              onChange={handleChange}
-              type="number"
-              value={formState.donGiaNhap}
-              onKeyDown={isNumberPress}
-              onPaste={isNumberCopy}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="donGia">Đơn giá</label>
-            <input
-              name="donGia"
-              type="number"
-              onChange={handleChange}
-              value={formState.donGia}
-              onKeyDown={isNumberPress}
-              onPaste={isNumberCopy}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="hanSuDung">Hạn sử dụng</label>
-            <input
-              name="hanSuDung"
-              type="date"
-              onChange={handleChange}
-              value={formState.hanSuDung}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="ngayNhap">Ngày nhập</label>
-            <input
-              name="ngayNhap"
-              type="date"
-              onChange={handleChange}
-              value={formState.ngayNhap}
-            />
-          </div>
+          <div className="mb-2"><b>Đơn giá nhập</b></div>
+          <input
+            name="donGiaNhap"
+            onChange={handleChange}
+            className="form-control pb-2 pt-2 mb-2"
+            type="number"
+            value={formState.donGiaNhap}
+            onKeyDown={isNumberPress}
+            onPaste={isNumberCopy}
+          />
+          <div className="mb-2"><b>Đơn giá</b></div>
+          <input
+            name="donGia"
+            type="number"
+            className="form-control pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            value={formState.donGia}
+            onKeyDown={isNumberPress}
+            onPaste={isNumberCopy}
+          />
+          <div className="mb-2"><b>Hạn sử dụng</b></div>
+          <input
+            name="hanSuDung"
+            className="form-control pb-2 pt-2 mb-2"
+            type="date"
+            onChange={handleChange}
+            value={formState.hanSuDung}
+          />
+          <div className="mb-2"><b>Ngày nhập</b></div>
+          <input
+            name="ngayNhap"
+            className="form-control pb-2 pt-2 mb-2"
+            type="date"
+            onChange={handleChange}
+            value={formState.ngayNhap}
+          />
           {user?.Loai === "ChuHeThong" && (
-            <div className="form-group">
-              <label for="chiNhanh">Chi nhánh</label>
+            <div>
+              <div className="mb-2"><b>Chi nhánh</b></div>
               <select
                 className="form-select pb-2 pt-2 mb-2"
                 id="type"
@@ -219,11 +213,13 @@ export const FormThuoc = ({ closeModal, onSubmit, defaultValue, branches }) => {
             </div>
           )}
           {errors && <div className="error">{errors}</div>}
-          <button type="submit" className="btnSummit" onClick={handleSubmit}>
-            Submit
-          </button>
+          <div className="text-end">
+            <button type="submit" className="btn pb-2 pt-2 ps-3 pe-3 mt-2" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={handleSubmit}>
+              Lưu
+            </button>
+          </div>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };

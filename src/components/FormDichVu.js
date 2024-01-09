@@ -107,71 +107,67 @@ export const FormDichVu = ({
     >
       <div className="col-sm-4 modal1">
         <form>
-          <div className="form-group">
-            <label for="maDichVu">Mã dịch vụ</label>
-            <input
-              name="maDichVu"
-              onChange={handleChange}
-              value={formState.maDichVu}
-            />
-          </div>
-          <div className="form-group">
-            <label for="tenDichVu">Tên dịch vụ</label>
-            <input
-              name="tenDichVu"
-              onChange={handleChange}
-              type="text"
-              value={formState.tenDichVu}
-            />
-          </div>
-          <div className="form-group">
-            <label for="loaiDichVu">Loại dịch vụ</label>
-            <input
-              name="loaiDichVu"
-              onChange={handleChange}
-              type="text"
-              value={formState.loaiDichVu}
-            />
-          </div>
-          <div className="form-group">
-            <label for="giaDichVu">Giá dịch vụ</label>
-            <input
-              name="giaDichVu"
-              onChange={handleChange}
-              type="number"
-              value={formState.giaDichVu}
-              onKeyDown={isNumberPress}
-              onPaste={isNumberCopy}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="baoHanh">Bảo hành</label>
-            <select
-              name="baoHanh"
-              onChange={handleChange}
-              value={formState.baoHanh}
-            >
-              <option value="Không">Không</option>
-              <option value="Có">Có</option>
-            </select>
-          </div>
-          <div className="form-group">
-            <label htmlFor="coTraGop">Có trả góp</label>
-            <select
-              name="coTraGop"
-              onChange={handleChange}
-              value={formState.coTraGop}
-            >
-              <option value="Không">Không</option>
-              <option value="Có">Có</option>
-            </select>
-          </div>
+          <div className="mb-2"><b>Mã dịch vụ</b></div>
+          <input
+            name="maDichVu"
+            onChange={handleChange}
+            className="form-control pb-2 pt-2 mb-2"
+            value={formState.maDichVu}
+          />
+          <div className="mb-2"><b>Tên dịch vụ</b></div>
+          <input
+            name="tenDichVu"
+            onChange={handleChange}
+            className="form-control pb-2 pt-2 mb-2"
+            type="text"
+            value={formState.tenDichVu}
+          />
+          <div className="mb-2"><b>Loại dịch vụ</b></div>
+          <input
+            name="loaiDichVu"
+            onChange={handleChange}
+            className="form-control pb-2 pt-2 mb-2"
+            type="text"
+            value={formState.loaiDichVu}
+          />
+          <div className="mb-2"><b>Giá dịch vụ</b></div>
+          <input
+            name="giaDichVu"
+            onChange={handleChange}
+            type="number"
+            className="form-control pb-2 pt-2 mb-2"
+            value={formState.giaDichVu}
+            onKeyDown={isNumberPress}
+            onPaste={isNumberCopy}
+          />
+          <div className="mb-2"><b>Bảo hành</b></div>
+          <select
+            name="baoHanh"
+            onChange={handleChange}
+            className="form-select pb-2 pt-2 mb-2"
+            value={formState.baoHanh}
+          >
+            <option value="Không">Không</option>
+            <option value="Có">Có</option>
+          </select>
+          <div className="mb-2"><b>Có trả góp</b></div>
+          <select
+            name="coTraGop"
+            className="form-select pb-2 pt-2 mb-2"
+            onChange={handleChange}
+            value={formState.coTraGop}
+          >
+            <option value="Không">Không</option>
+            <option value="Có">Có</option>
+          </select>
           {errors && <div className="error">{errors}</div>}
-          <button type="submit" className="btnSummit" onClick={handleSubmit}>
-            Lưu
-          </button>
+          <div className="text-end">
+            <button type="submit" className="btn pb-2 pt-2 ps-3 pe-3 mt-2" style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }} onClick={handleSubmit}>
+              Lưu
+            </button>
+          </div>
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
