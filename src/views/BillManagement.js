@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import "./style.css";
-import moment, { min } from "moment";
+import moment from "moment";
+import ReactToPrint from 'react-to-print';
 import api from "../api/Api";
 import Select from "react-select";
 import { AuthContext } from "../hook/AuthProvider";
@@ -21,6 +22,10 @@ const BillManagement = (props) => {
   const [patient, setPatient] = useState();
   const [traGop, setTraGop] = useState(false);
   const [minimum, setMinimum] = useState(0);
+
+  //component to print
+  const componentToPrintRef = useRef();
+
   const [recentStaff, setRecentStaff] = useState({
     maNhanVien: "",
     tenNhanVien: "",
@@ -227,13 +232,7 @@ const BillManagement = (props) => {
         } else {
           newBill.daThanhToan = ThanhTienSauGiamGia;
           const thanhtoan = {
-            ngayThanhToan: new Date(
-              new Date().getFullYear(),
-              new Date().getMonth() + 1,
-              new Date().getDay()
-            )
-              .toISOString()
-              .slice(0, 10),
+            ngayThanhToan: moment().format("YYYY-MM-DD"),
             tienThanhToan: ThanhTienSauGiamGia,
           };
           let dsThanhToan = newBill.dsThanhToan;
@@ -309,6 +308,7 @@ const BillManagement = (props) => {
 
   return (
     <div>
+
       <div style={{ minHeight: "630px" }}>
         {page === 1 ? (
           <div>
@@ -389,6 +389,7 @@ const BillManagement = (props) => {
             <table className="table">
               <thead style={{ verticalAlign: "middle" }}>
                 <tr className="table-secondary">
+                  <th>STT</th>
                   <th>Mã hóa đơn</th>
                   <th>Mã bệnh nhân</th>
                   <th>Tên bệnh nhân</th>
@@ -402,6 +403,7 @@ const BillManagement = (props) => {
                     key={item.Id}
                     onClick={() => setSelectedRowById(index, item.maCTHSDT)}
                   >
+                    <td>{index + 1}</td>
                     <td>{item.maHoaDon}</td>
                     <td>{item.maBenhNhan}</td>
                     <td>{item.tenBenhNhan}</td>
@@ -447,184 +449,98 @@ const BillManagement = (props) => {
                 </div>
               </div>
             </div>
-            <div className="mt-2 pe-2 ps-2">
-              <div
-                align="center"
-                style={{ fontSize: "25px", fontWeight: "bold" }}
-              >
-                HÓA ĐƠN
-              </div>
-              <div
+            <div>
+              <div className="mt-2 pe-2 ps-2" ref={componentToPrintRef}>
+                <div
+                  align="center"
+                  style={{ fontSize: "25px", fontWeight: "bold" }}
+                >
+                  HÓA ĐƠN
+                </div>
+                <div
 
-                align="center"
-                style={{
-                  fontStyle: "italic",
-                  fontSize: "14px",
-                  color: "#6b6b6b",
-                }}
-              >
-                Ngày {moment().date()} tháng {moment().month() + 1} năm{" "}
-                {moment().year()}
-              </div>
-              <div className="mt-3 row">
-                <div className='col-lg-4 col-md-auto mb-2'>
-                  <span style={{ fontWeight: "600" }}>Mã hóa đơn: </span>
-                  {bills[selectedRow]?.maHoaDon}
+                  align="center"
+                  style={{
+                    fontStyle: "italic",
+                    fontSize: "14px",
+                    color: "#6b6b6b",
+                  }}
+                >
+                  Ngày {moment().date()} tháng {moment().month() + 1} năm{" "}
+                  {moment().year()}
                 </div>
-                <div className='col-lg-4 col-md-auto mb-2'>
-                  <span style={{ fontWeight: "600" }}>Mã BN: </span>
-                  {bills[selectedRow]?.maBenhNhan}
+                <div className="mt-3 row">
+                  <div className='col-lg-4 col-md-auto mb-2'>
+                    <span style={{ fontWeight: "600" }}>Mã hóa đơn: </span>
+                    {bills[selectedRow]?.maHoaDon}
+                  </div>
+                  <div className='col-lg-4 col-md-auto mb-2'>
+                    <span style={{ fontWeight: "600" }}>Mã BN: </span>
+                    {bills[selectedRow]?.maBenhNhan}
+                  </div>
+                  <div className='col-lg-4 col-md-auto mb-2'>
+                    <span style={{ fontWeight: "600" }}>Tên BN: </span>
+                    {bills[selectedRow]?.tenBenhNhan}
+                  </div>
+                  <div className='col-lg-4 col-md-auto mb-2'>
+                    <span style={{ fontWeight: "600" }}>Tên NS: </span>
+                    {CTHSDT !== null ? CTHSDT.TenNhaSi : ""}
+                  </div>
+                  <div className='mb-2'>
+                    <span style={{ fontWeight: "600" }}>Địa chỉ: </span>
+                    {bills[selectedRow]?.DiaChi}
+                  </div>
+                  <div className='col-lg-4 col-md-auto mb-2'>
+                    <span style={{ fontWeight: "600" }}>Tuổi: </span>
+                    {Math.abs(
+                      new Date(
+                        Date.now() - new Date(patient?.NgaySinh).getTime()
+                      ).getUTCFullYear() - 1970
+                    )}
+                  </div>
+                  <div className='col-lg-4 col-md-auto mb-2'>
+                    <span style={{ fontWeight: "600" }}>Giới tính: </span>
+                    {bills[selectedRow]?.GioiTinh}
+                  </div>
+                  <div className='col-lg-4 col-md-auto mb-2'>
+                    <span style={{ fontWeight: "600" }}>Số điện thoại: </span>
+                    {bills[selectedRow]?.soDienThoai}
+                  </div>
                 </div>
-                <div className='col-lg-4 col-md-auto mb-2'>
-                  <span style={{ fontWeight: "600" }}>Tên BN: </span>
-                  {bills[selectedRow]?.tenBenhNhan}
-                </div>
-                <div className='col-lg-4 col-md-auto mb-2'>
-                  <span style={{ fontWeight: "600" }}>Tên NS: </span>
-                  {CTHSDT !== null ? CTHSDT.TenNhaSi : ""}
-                </div>
-                <div className='mb-2'>
-                  <span style={{ fontWeight: "600" }}>Địa chỉ: </span>
-                  {bills[selectedRow]?.DiaChi}
-                </div>
-                <div className='col-lg-4 col-md-auto mb-2'>
-                  <span style={{ fontWeight: "600" }}>Tuổi: </span>
-                  {Math.abs(
-                    new Date(
-                      Date.now() - new Date(patient?.NgaySinh).getTime()
-                    ).getUTCFullYear() - 1970
-                  )}
-                </div>
-                <div className='col-lg-4 col-md-auto mb-2'>
-                  <span style={{ fontWeight: "600" }}>Giới tính: </span>
-                  {bills[selectedRow]?.GioiTinh}
-                </div>
-                <div className='col-lg-4 col-md-auto mb-2'>
-                  <span style={{ fontWeight: "600" }}>Số điện thoại: </span>
-                  {bills[selectedRow]?.soDienThoai}
-                </div>
-              </div>
 
-              <table className="table">
-                <thead style={{ verticalAlign: "middle" }}>
-                  <tr className="table-secondary">
-                    <th>Dịch vụ</th>
-                    <th>Đơn giá</th>
-                    <th>Số lượng</th>
-                    <th>Có trả góp hay không</th>
-                    <th>Tái khám</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {CTHSDT !== null ? (
-                    CTHSDT.DichVu.map((item, index) => {
-                      TongTienDV += parseInt(item.DonGia * item.SL);
-                      return (
-                        <tr
-                          key={item.Id}
-                        >
-                          <td>{item.tenDichVu}</td>
-                          {item.taiKham ? (
-                            <td>0</td>
-                          ) : (
-                            <td>
-                              {new Intl.NumberFormat("en-DE").format(
-                                item.DonGia
-                              )}
-                            </td>
-                          )}
-                          <td>{item.SL}</td>
-                          <td>{item.coTraGop}</td>
-                          {item.taiKham ? <td>Có</td> : <td>Không</td>}
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr></tr>
-                  )}
-                </tbody>
-              </table>
-              <div style={{ fontSize: "18px" }}>
-                <b>
-                  Tổng tiền điều trị:{" "}
-                  {new Intl.NumberFormat("en-DE").format(TongTienDV)}
-                </b>
-              </div>
-              <div
-                align="center"
-                style={{ fontWeight: "bold", fontSize: "18px" }}
-              >
-                ĐƠN THUỐC
-              </div>
-              <table className="table table-borderless">
-                <tbody>
-                  {CTHSDT !== null ? (
-                    CTHSDT.Thuoc.map((item, index) => {
-                      TongTienThuoc += parseInt(item.donGia * item.SL);
-                      return (
-                        <tr key={index}>
-                          <td>
-                            <div>
-                              <div>
-                                <b>
-                                  {index + 1}/ {item.tenThuoc}
-                                </b>
-                              </div>
-                              <div
-                                className="ms-3"
-                                style={{ fontStyle: "italic" }}
-                              >
-                                {item.GhiChu}
-                              </div>
-                            </div>
-                          </td>
-                          <td>{item.SL} viên</td>
-                          <td>
-                            {new Intl.NumberFormat("en-DE").format(item.donGia)}
-                            /viên
-                          </td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr></tr>
-                  )}
-                </tbody>
-              </table>
-              <div style={{ fontSize: "18px" }}>
-                <b>
-                  Tổng tiền thuốc:{" "}
-                  {new Intl.NumberFormat("en-DE").format(TongTienThuoc)}
-                </b>
-              </div>
-
-              <div>
-                <table className="table table-borderless">
+                <table className="table">
+                  <thead style={{ verticalAlign: "middle" }}>
+                    <tr className="table-secondary">
+                      <th>STT</th>
+                      <th>Dịch vụ</th>
+                      <th>Đơn giá</th>
+                      <th>Số lượng</th>
+                      <th>Có trả góp hay không</th>
+                      <th>Tái khám</th>
+                    </tr>
+                  </thead>
                   <tbody>
-                    {bills[selectedRow]?.dsThanhToan !== undefined ? (
-                      bills[selectedRow].dsThanhToan?.map((item, index) => {
+                    {CTHSDT !== null ? (
+                      CTHSDT.DichVu.map((item, index) => {
+                        TongTienDV += parseInt(item.DonGia * item.SL);
                         return (
-                          <tr key={index}>
-                            <td>
-                              <div>
-                                <div>
-                                  <b>
-                                    {index + 1}/{" "}
-                                    {"Thanh toán lần " + (index + 1)}
-                                  </b>
-                                </div>
-                                <div
-                                  className="ms-3"
-                                  style={{ fontStyle: "italic" }}
-                                ></div>
-                              </div>
-                            </td>
-                            <td>
-                              {new Intl.NumberFormat("en-DE").format(
-                                item.tienThanhToan
-                              )}
-                            </td>
-                            <td>{"Ngày thanh toán: " + item.ngayThanhToan}</td>
+                          <tr
+                            key={item.Id}
+                          >
+                            <td>{index + 1}</td>
+                            <td>{item.tenDichVu}</td>
+                            {item.taiKham ? (
+                              <td>0</td>
+                            ) : (
+                              <td>
+                                {new Intl.NumberFormat("en-DE").format(
+                                  item.DonGia
+                                )}
+                              </td>
+                            )}
+                            <td>{item.SL}</td>
+                            <td>{item.coTraGop}</td>
+                            {item.taiKham ? <td>Có</td> : <td>Không</td>}
                           </tr>
                         );
                       })
@@ -633,63 +549,130 @@ const BillManagement = (props) => {
                     )}
                   </tbody>
                 </table>
-              </div>
-
-              <div className="mt-3">
-                <table
-                  className="table table-borderless table-sm"
-                  style={{
-                    fontSize: "18px",
-                    borderSpacing: 0,
-                    borderCollapse: "separate",
-                  }}
+                <div style={{ fontSize: "18px" }}>
+                  <b>
+                    Tổng tiền điều trị:{" "}
+                    {new Intl.NumberFormat("en-DE").format(TongTienDV)}
+                  </b>
+                </div>
+                <div
+                  align="center"
+                  style={{ fontWeight: "bold", fontSize: "18px" }}
                 >
+                  ĐƠN THUỐC
+                </div>
+                <table className="table table-borderless">
                   <tbody>
-                    <tr>
-                      <th>Thành tiền:</th>
-                      <th>
-                        {new Intl.NumberFormat("en-DE").format(
-                          TongTienDV + TongTienThuoc
-                        )}
-                      </th>
-                    </tr>
-                    <tr>
-                      <th>Mã giảm giá:</th>
-                      <th>
-                        {disableDiscount ? (
-                          <Select
-                            styles={{ minWidth: "500px" }}
-                            value={recentDiscount}
-                            isDisabled
-                            onChange={(value) =>
-                              value !== null &&
-                                traGop &&
-                                bills[selectedRow].tinhTrang == "Chưa thanh toán"
-                                ? (setSoTienGiam(
-                                  (TongTienDV * value.phanTram) / 100
-                                ),
-                                  setTTSGG(
-                                    TongTienDV +
-                                    TongTienThuoc -
-                                    (TongTienDV * value.phanTram) / 100
-                                  ),
-                                  setConNo(
-                                    patient.congNo +
-                                    TongTienDV +
-                                    TongTienThuoc -
-                                    (TongTienDV * value.phanTram) / 100
-                                  ),
-                                  setNoSauThanhToan(
-                                    patient.congNo +
-                                    TongTienDV +
-                                    TongTienThuoc -
-                                    (TongTienDV * value.phanTram) / 100
-                                  ),
-                                  setRecentDiscount(value))
-                                : value !== null &&
+                    {CTHSDT !== null ? (
+                      CTHSDT.Thuoc.map((item, index) => {
+                        TongTienThuoc += parseInt(item.donGia * item.SL);
+                        return (
+                          <tr key={index}>
+                            <td>
+                              <div>
+                                <div>
+                                  <b>
+                                    {index + 1}/ {item.tenThuoc}
+                                  </b>
+                                </div>
+                                <div
+                                  className="ms-3"
+                                  style={{ fontStyle: "italic" }}
+                                >
+                                  {item.GhiChu}
+                                </div>
+                              </div>
+                            </td>
+                            <td>{item.SL} viên</td>
+                            <td>
+                              {new Intl.NumberFormat("en-DE").format(item.donGia)}
+                              /viên
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr></tr>
+                    )}
+                  </tbody>
+                </table>
+                <div style={{ fontSize: "18px" }}>
+                  <b>
+                    Tổng tiền thuốc:{" "}
+                    {new Intl.NumberFormat("en-DE").format(TongTienThuoc)}
+                  </b>
+                </div>
+
+                <div>
+                  <table className="table table-borderless">
+                    <tbody>
+                      {bills[selectedRow]?.dsThanhToan !== undefined ? (
+                        bills[selectedRow].dsThanhToan?.map((item, index) => {
+                          return (
+                            <tr key={index}>
+                              <td>
+                                <div>
+                                  <div>
+                                    <b>
+                                      {index + 1}/{" "}
+                                      {"Thanh toán lần " + (index + 1)}
+                                    </b>
+                                  </div>
+                                  <div
+                                    className="ms-3"
+                                    style={{ fontStyle: "italic" }}
+                                  ></div>
+                                </div>
+                              </td>
+                              <td>
+                                {new Intl.NumberFormat("en-DE").format(
+                                  item.tienThanhToan
+                                )}
+                              </td>
+                              <td>{"Ngày thanh toán: " + moment(new Date(item.ngayThanhToan)).format("DD/MM/YYYY")}</td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr></tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="mt-3">
+                  <table
+                    className="table table-borderless table-sm"
+                    style={{
+                      fontSize: "18px",
+                      borderSpacing: 0,
+                      borderCollapse: "separate",
+                    }}
+                  >
+                    <tbody>
+                      <tr>
+                        <th>Thành tiền:</th>
+                        <th>
+                          {new Intl.NumberFormat("en-DE").format(
+                            TongTienDV + TongTienThuoc
+                          )}
+                        </th>
+                      </tr>
+                      <tr>
+                        <th>Mã giảm giá:</th>
+                        <th>
+                          {disableDiscount ? (
+                            <Select
+                              styles={{ minWidth: "500px" }}
+                              value={maGiamGia.find(
+                                (item) =>
+                                  item === recentDiscount
+                              ) || ""}
+                              isDisabled
+                              onChange={(value) =>
+                                value !== null &&
                                   traGop &&
-                                  bills[selectedRow].tinhTrang ==
-                                  "Đã thanh toán"
+                                  bills[selectedRow].tinhTrang == "Chưa thanh toán"
                                   ? (setSoTienGiam(
                                     (TongTienDV * value.phanTram) / 100
                                   ),
@@ -698,10 +681,23 @@ const BillManagement = (props) => {
                                       TongTienThuoc -
                                       (TongTienDV * value.phanTram) / 100
                                     ),
-                                    setConNo(patient.congNo),
-                                    setNoSauThanhToan(patient.congNo),
+                                    setConNo(
+                                      patient.congNo +
+                                      TongTienDV +
+                                      TongTienThuoc -
+                                      (TongTienDV * value.phanTram) / 100
+                                    ),
+                                    setNoSauThanhToan(
+                                      patient.congNo +
+                                      TongTienDV +
+                                      TongTienThuoc -
+                                      (TongTienDV * value.phanTram) / 100
+                                    ),
                                     setRecentDiscount(value))
-                                  : value !== null && !traGop
+                                  : value !== null &&
+                                    traGop &&
+                                    bills[selectedRow].tinhTrang ==
+                                    "Đã thanh toán"
                                     ? (setSoTienGiam(
                                       (TongTienDV * value.phanTram) / 100
                                     ),
@@ -713,144 +709,172 @@ const BillManagement = (props) => {
                                       setConNo(patient.congNo),
                                       setNoSauThanhToan(patient.congNo),
                                       setRecentDiscount(value))
-                                    : setRecentDiscount("")
-                            }
-                            options={maGiamGia}
-                            id="maGiamGia"
-                            getOptionLabel={(item) => item.maGiamGia}
-                            getOptionValue={(item) => item}
-                            placeholder={bills[selectedRow]?.maGiamGia}
-                          />
-                        ) : (
-                          <Select
-                            value={recentDiscount}
-                            onChange={(value) =>
-                              value !== null
-                                ? (setSoTienGiam(
-                                  (TongTienDV * value.phanTram) / 100
-                                ),
-                                  setTTSGG(
-                                    TongTienDV +
-                                    TongTienThuoc -
+                                    : value !== null && !traGop
+                                      ? (setSoTienGiam(
+                                        (TongTienDV * value.phanTram) / 100
+                                      ),
+                                        setTTSGG(
+                                          TongTienDV +
+                                          TongTienThuoc -
+                                          (TongTienDV * value.phanTram) / 100
+                                        ),
+                                        setConNo(patient.congNo),
+                                        setNoSauThanhToan(patient.congNo),
+                                        setRecentDiscount(value))
+                                      : setRecentDiscount("")
+                              }
+                              options={maGiamGia}
+                              isClearable
+                              id="maGiamGia"
+                              getOptionLabel={(item) => item.maGiamGia}
+                              getOptionValue={(item) => item}
+                              placeholder={bills[selectedRow]?.maGiamGia}
+                            />
+                          ) : (
+                            <Select
+                              value={maGiamGia.find(
+                                (item) =>
+                                  item === recentDiscount
+                              ) || ""}
+                              onChange={(value) =>
+                                value !== null
+                                  ? (setSoTienGiam(
                                     (TongTienDV * value.phanTram) / 100
                                   ),
-                                  setConNo(patient.congNo),
-                                  setRecentDiscount(value))
-                                : setRecentDiscount("")
-                            }
-                            options={maGiamGia}
-                            id="maGiamGia"
-                            getOptionLabel={(item) => item.maGiamGia}
-                            getOptionValue={(item) => item}
-                            placeholder=""
-                          />
-                        )}
-                      </th>
-                    </tr>
-                    <tr>
-                      <th>Số tiền giảm:</th>
-                      <th>
-                        {SoTienGiam ? new Intl.NumberFormat("en-DE").format(SoTienGiam) : null}
-                      </th>
-                    </tr>
-                    <tr>
-                      <th>Thành tiền sau khi giảm:</th>
-                      <th>
-                        {new Intl.NumberFormat("en-DE").format(
-                          ThanhTienSauGiamGia
-                        )}
-                      </th>
-                    </tr>
-                    <tr>
-                      <th>Công nợ trước thanh toán:</th>
-                      <th>{new Intl.NumberFormat("en-DE").format(conNo)}</th>
-                    </tr>
-                    <tr>
-                      <th>Số tiền đã thanh toán:</th>
-                      <th>
-                        {traGop ? (
-                          <input
-                            type="number"
-                            className="signature"
-                            id="soTienDaThanhToan"
-                            name="soTienDaThanhToan"
-                            size={1}
-                            onChange={(value) => {
-                              if (traGop) {
-                                if (
-                                  bills[selectedRow]?.tinhTrang ==
-                                  "Chưa thanh toán" &&
-                                  document.getElementById("soTienDaThanhToan")
-                                    .value != ""
-                                ) {
-                                  setNoSauThanhToan(
-                                    patient.congNo +
-                                    ThanhTienSauGiamGia -
-                                    parseInt(
-                                      document.getElementById(
-                                        "soTienDaThanhToan"
-                                      ).value || 0,
-                                      0
-                                    )
-                                  );
-                                } else if (
-                                  bills[selectedRow]?.tinhTrang ==
-                                  "Chưa thanh toán"
-                                ) {
-                                  setNoSauThanhToan(
-                                    patient.congNo + ThanhTienSauGiamGia
-                                  );
-                                } else if (
-                                  document.getElementById("soTienDaThanhToan")
-                                    .value != ""
-                                ) {
-                                  setNoSauThanhToan(
-                                    patient.congNo -
-                                    parseInt(
-                                      document.getElementById(
-                                        "soTienDaThanhToan"
-                                      ).value,
-                                      0
-                                    )
-                                  );
-                                } else {
-                                  setNoSauThanhToan(patient.congNo);
-                                }
+                                    setTTSGG(
+                                      TongTienDV +
+                                      TongTienThuoc -
+                                      (TongTienDV * value.phanTram) / 100
+                                    ),
+                                    setConNo(patient.congNo),
+                                    setRecentDiscount(value))
+                                  : setRecentDiscount("")
                               }
-                            }}
-                            placeholder=""
-                            min={minimum}
-                            max={TongTienDT - SoTienGiam}
-                            style={{
-                              width: "100%",
-                              boxSizing: "border-box",
-                              fontWeight: "bold",
-                            }}
-                          />
-                        ) : (
-                          <label>
-                            {new Intl.NumberFormat("en-DE").format(
-                              ThanhTienSauGiamGia
-                            )}
-                          </label>
-                        )}
-                      </th>
-                    </tr>
-                    <tr>
-                      <th> Công nợ sau thanh toán:</th>
-                      <th>
-                        {new Intl.NumberFormat("en-DE").format(noSauThanhToan)}
-                      </th>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="text-end mt-4">
-                <div style={{ fontSize: "19px" }}><b>NHÂN VIÊN THỰC HIỆN</b></div>
-                <div style={{ height: "50px" }}></div>
-                <div className='mt-5 text-uppercase' style={{ fontSize: "19px" }}>
-                  <b>{user?.ten}</b>
+                              options={maGiamGia}
+                              id="maGiamGia"
+                              isClearable
+                              getOptionLabel={(item) => item.maGiamGia}
+                              getOptionValue={(item) => item}
+                              placeholder=""
+                            />
+                          )}
+                        </th>
+                      </tr>
+                      <tr>
+                        <th>Số tiền giảm:</th>
+                        <th>
+                          {SoTienGiam ? new Intl.NumberFormat("en-DE").format(SoTienGiam) : null}
+                        </th>
+                      </tr>
+                      <tr>
+                        <th>Thành tiền sau khi giảm:</th>
+                        <th>
+                          {new Intl.NumberFormat("en-DE").format(
+                            ThanhTienSauGiamGia
+                          )}
+                        </th>
+                      </tr>
+                      <tr>
+                        <th>Công nợ trước thanh toán:</th>
+                        <th>{new Intl.NumberFormat("en-DE").format(conNo)}</th>
+                      </tr>
+                      <tr>
+                        <th>Số tiền đã thanh toán:</th>
+                        <th>
+                          {traGop ? (
+                            <input
+                              type="number"
+                              className="signature"
+                              id="soTienDaThanhToan"
+                              name="soTienDaThanhToan"
+                              size={1}
+                              onChange={(value) => {
+                                if (traGop) {
+                                  if (
+                                    bills[selectedRow]?.tinhTrang ==
+                                    "Chưa thanh toán" &&
+                                    document.getElementById("soTienDaThanhToan")
+                                      .value != ""
+                                  ) {
+                                    setNoSauThanhToan(
+                                      patient.congNo +
+                                      ThanhTienSauGiamGia -
+                                      parseInt(
+                                        document.getElementById(
+                                          "soTienDaThanhToan"
+                                        ).value || 0,
+                                        0
+                                      )
+                                    );
+                                  } else if (
+                                    bills[selectedRow]?.tinhTrang ==
+                                    "Chưa thanh toán"
+                                  ) {
+                                    setNoSauThanhToan(
+                                      patient.congNo + ThanhTienSauGiamGia
+                                    );
+                                  } else if (
+                                    document.getElementById("soTienDaThanhToan")
+                                      .value != ""
+                                  ) {
+                                    setNoSauThanhToan(
+                                      patient.congNo -
+                                      parseInt(
+                                        document.getElementById(
+                                          "soTienDaThanhToan"
+                                        ).value,
+                                        0
+                                      )
+                                    );
+                                  } else {
+                                    setNoSauThanhToan(patient.congNo);
+                                  }
+                                }
+                              }}
+                              placeholder=""
+                              min={minimum}
+                              max={TongTienDT - SoTienGiam}
+                              style={{
+                                width: "100%",
+                                boxSizing: "border-box",
+                                fontWeight: "bold",
+                              }}
+                            />
+                          ) : (
+                            <label>
+                              {new Intl.NumberFormat("en-DE").format(
+                                ThanhTienSauGiamGia
+                              )}
+                            </label>
+                          )}
+                        </th>
+                      </tr>
+                      <tr>
+                        <th> Công nợ sau thanh toán:</th>
+                        <th>
+                          {new Intl.NumberFormat("en-DE").format(noSauThanhToan)}
+                        </th>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
+                <div className="text-end mt-4">
+                  <div style={{ fontSize: "19px" }}><b>NHÂN VIÊN THỰC HIỆN</b></div>
+                  <div style={{ height: "50px" }}></div>
+                  <div className='mt-5 text-uppercase' style={{ fontSize: "19px" }}>
+                    <b>{user?.ten}</b>
+                  </div>
+                </div>
+              </div>
+              <div className="text-end">
+                <ReactToPrint
+                  trigger={() =>
+                    <button className="btn pb-2 pt-2 mt-3 mb-3 me-3"
+                      style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
+                    >In hóa đơn
+                    </button>}
+                  content={() => componentToPrintRef.current}
+                />
                 <button
                   type="submit"
                   onClick={handleSubmit}

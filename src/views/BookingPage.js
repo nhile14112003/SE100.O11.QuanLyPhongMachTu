@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import TopNav from "../components/TopNav";
 import Footer from "../components/Footer";
+import moment from "moment";
 import Api from "../api/Api";
 
 const BookingPage = (props) => {
@@ -130,6 +131,7 @@ const BookingPage = (props) => {
                   className="form-control pb-3 pt-3"
                   id="NgaySinh"
                   name="NgaySinh"
+                  max={moment().add(-1, "years").format('YYYY-MM-DD')}
                   value={formState.NgaySinh}
                   placeholder="Ngày sinh: "
                   required

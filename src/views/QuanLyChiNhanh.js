@@ -114,6 +114,7 @@ const QuanLyChiNhanh = (props) => {
             <table className="table" >
                 <thead style={{ verticalAlign: "middle" }}>
                     <tr className="table-secondary">
+                        <th>STT</th>
                         <th>Mã chi nhánh</th>
                         <th>Tên chi nhánh</th>
                         <th>Địa chỉ</th>
@@ -124,6 +125,7 @@ const QuanLyChiNhanh = (props) => {
                 {branchs.map((row, idx) => {
                     return (
                         <tr key={row.Id}>
+                            <td>{idx + 1}</td>
                             <td>{row.maChiNhanh}</td>
                             <td>{row.tenChiNhanh}</td>
                             <td>{row.diaChi}</td>

@@ -138,6 +138,7 @@ const ScheduleList = () => {
       <table className="table">
         <thead>
           <tr className="table-secondary">
+            <th>STT</th>
             <th>Tên bệnh nhân</th>
             <th>Số điện thoại</th>
             <th>Mã nha sĩ</th>
@@ -152,6 +153,7 @@ const ScheduleList = () => {
         <tbody>
           {appointments.map((item, index) => (
             <tr key={index}>
+              <td>{index + 1}</td>
               <td>{item.TenBN}</td>
               <td>{item.SDT}</td>
               <td>{item.MaNS}</td>

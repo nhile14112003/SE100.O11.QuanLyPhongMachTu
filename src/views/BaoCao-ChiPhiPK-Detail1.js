@@ -3,6 +3,7 @@ import "./mistyles.css";
 import Api from "../api/Api";
 import moment from "moment";
 import { AuthContext } from "../hook/AuthProvider";
+import ExcelJS from "exceljs"
 
 const XemBaoCaoCPPKTheoThang = (props) => {
   const { user } = useContext(AuthContext);
@@ -194,6 +195,50 @@ const XemBaoCaoCPPKTheoThang = (props) => {
       return result;
     } else return [];
   };
+  const handleExport = () => {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Báo cáo");
+    sheet.columns = [
+      { header: "Tên chi phí", key: "tenChiPhi", width: 20 },
+      { header: "Số tiền đã chi trả", key: "soTien", width: 20 },
+      { header: "Tỷ lệ", key: "tyLe", width: 20, }
+    ];
+    sheet.getRow(1).font = { bold: true }
+    for (let i = 1; i <= 3; i++) {
+      if (i !== 2)
+        sheet.getColumn(i).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+    }
+    sheet.getColumn(2).numFmt = '#,##0'
+    sheet.getCell('B1').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+
+    const promise = Promise.all(table.map((item, index) => {
+      sheet.addRow({
+        tenChiPhi: item?.tenChiPhi,
+        soTien: item?.soTien,
+        tyLe: item?.tyLe,
+      })
+    })
+    );
+    promise.then(() => {
+      sheet.addRow({
+        tenChiPhi: "",
+        soTien: totalExpenses,
+        tyLe: "",
+      })
+      sheet.getCell('B' + (table.length + 2)).font = { bold: true }
+      workbook.xlsx.writeBuffer().then(function (data) {
+        const blob = new Blob([data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = "Báo cáo theo chi phí phòng khám " + moment(new Date(selectedMonth)).format("MM/YYYY") + " của " + (selectedBranch === "Tất cả" ? "tất cả chi nhánh" : selectedBranch) + ".xlsx";
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      });
+    })
+  }
 
   return (
     <div>
@@ -234,6 +279,12 @@ const XemBaoCaoCPPKTheoThang = (props) => {
             onChange={(e) => setSelectedMonth(e.target.value)}
           />
           <div className="text-end">
+            <button onClick={handleExport}
+              className="btn pb-2 pt-2 mb-3 me-3"
+              style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>
+              Xuất Excel
+              <i className="fa fa-download ms-2"></i>
+            </button>
             <button
               type="submit"
               className="btn pb-2 pt-2 mb-3"

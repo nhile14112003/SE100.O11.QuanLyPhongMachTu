@@ -119,6 +119,7 @@ const QuanLyDichVu = (props) => {
             <table className="table" >
                 <thead style={{ verticalAlign: "middle" }}>
                     <tr className="table-secondary">
+                        <td>STT</td>
                         <th>Mã dịch vụ</th>
                         <th>Tên dịch vụ</th>
                         <th>Loại dịch vụ</th>
@@ -132,6 +133,7 @@ const QuanLyDichVu = (props) => {
 
                     return (
                         <tr key={row.Id}>
+                            <td>{idx + 1}</td>
                             <td>{row.maDichVu}</td>
                             <td>{row.tenDichVu}</td>
                             <td>{row.loaiDichVu}</td>

@@ -138,16 +138,27 @@ const XemHSDT = (props) => {
                     {(page === 2 && selectedPatient !== null) ?
                         <div className='pe-2 ps-2'>
                             <div align="center" style={{ fontSize: "25px", fontWeight: "bold" }}>HỒ SƠ ĐIỀU TRỊ</div>
-                            <div><span style={{ fontWeight: "600" }}>Mã hồ sơ điều trị: </span>{hsdt?.MaHSDT}</div>
-                            <div><span style={{ fontWeight: "600" }}>Mã BN: </span>{hsdt?.MaBenhNhan}</div>
-                            <div><span style={{ fontWeight: "600" }}>Tên BN: </span>{selectedPatient?.tenBenhNhan}</div>
-                            <div><span style={{ fontWeight: "600" }}>Địa chỉ: </span>{selectedPatient?.DiaChi}</div>
-                            <div><span style={{ fontWeight: "600" }}>Tuổi: </span>{getTuoi(selectedPatient?.NgaySinh)}</div>
-                            <div><span style={{ fontWeight: "600" }}>Giới tính: </span>{selectedPatient?.GioiTinh}</div>
-                            <div><span style={{ fontWeight: "600" }}>Số điện thoại: </span>{selectedPatient?.soDienThoai}</div>
-
-                            <div className="row mt-2 g-0">
-                                <div className="row" style={{ fontWeight: "500" }}>
+                            <div className='mt-3 row'>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Mã hồ sơ điều trị: </span>{hsdt?.MaHSDT}
+                                </div>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Mã BN: </span>{hsdt?.MaBenhNhan}
+                                </div>
+                                <div className='col-lg-4 col-md-auto mb-2'><span style={{ fontWeight: "600" }}>Tên BN: </span>{selectedPatient?.tenBenhNhan}</div>
+                                <div className='mb-2'><span style={{ fontWeight: "600" }}>Địa chỉ: </span>{selectedPatient?.DiaChi}</div>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Tuổi: </span>{getTuoi(selectedPatient?.NgaySinh)}
+                                </div>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Giới tính: </span>{selectedPatient?.GioiTinh}
+                                </div>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Số điện thoại: </span>{selectedPatient?.soDienThoai}
+                                </div>
+                            </div>
+                            <div className="row mt-2">
+                                <div className="row" style={{ fontWeight: "600" }}>
                                     <div className="col-lg-4 col-md-10">
                                         <div className="mb-2 col-md-6">Mã nha sĩ</div>
                                         <input type="text" className="form-control pb-2 pt-2 mb-2" id="MaBN" name="MaNhaSi" onChange={handleChange1} />
@@ -171,6 +182,7 @@ const XemHSDT = (props) => {
                             <table className="table" >
                                 <thead>
                                     <tr className="table-secondary">
+                                        <th>STT</th>
                                         <th>Mã nha sĩ điều trị</th>
                                         <th>Tên nha sĩ điều trị</th>
                                         <th>Ngày điều trị</th>
@@ -180,6 +192,7 @@ const XemHSDT = (props) => {
                                 <tbody>
                                     {listcthsdt?.map((item, index) => (
                                         <tr key={index}>
+                                            <td>{index + 1}</td>
                                             <td>{item.MaNhaSi}</td>
                                             <td>{item.TenNhaSi}</td>
                                             <td>{item.NgayDieuTri}</td>
@@ -199,36 +212,52 @@ const XemHSDT = (props) => {
                         : null}
                     {(page === 3) ?
                         <div className='pe-2 ps-2'>
-                            <div align="center" style={{ fontSize: "25px", fontWeight: "bold" }}>HỒ SƠ ĐIỀU TRỊ</div>
-                            <div align="center" style={{ fontStyle: "italic", fontSize: "14px", color: "#6b6b6b" }}>{cthsdt?.NgayDieuTri}</div>
-                            <div><span style={{ fontWeight: "600" }}>Mã hồ sơ điều trị: </span>{hsdt?.MaHSDT}</div>
-                            <div><span style={{ fontWeight: "600" }}>Mã BN: </span>{hsdt?.MaBenhNhan}</div>
-                            <div><span style={{ fontWeight: "600" }}>Tên BN: </span>{selectedPatient?.tenBenhNhan}</div>
-                            <div><span style={{ fontWeight: "600" }}>Địa chỉ: </span>{selectedPatient?.DiaChi}</div>
-                            <div><span style={{ fontWeight: "600" }}>Tuổi: </span>{getTuoi(selectedPatient?.NgaySinh)}</div>
-                            <div><span style={{ fontWeight: "600" }}>Giới tính: </span>{selectedPatient?.GioiTinh}</div>
-                            <div><span style={{ fontWeight: "600" }}>Số điện thoại: </span>{selectedPatient?.soDienThoai}</div>
-                            <div className='row'>
+                            <div align="center" style={{ fontSize: "25px", fontWeight: "bold" }}>CHI TIẾT HỒ SƠ ĐIỀU TRỊ</div>
+                            <div align="center" style={{ fontStyle: "italic", fontSize: "14px", color: "#6b6b6b" }}>
+                                Ngày {cthsdt?.NgayDieuTri.split("-")[2]} tháng {cthsdt?.NgayDieuTri.split("-")[1]} năm {cthsdt?.NgayDieuTri.split("-")[0]}
+                            </div>
+                            <div className='mt-3 row'>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Mã hồ sơ điều trị: </span>{hsdt?.MaHSDT}
+                                </div>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Mã BN: </span>{hsdt?.MaBenhNhan}
+                                </div>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Tên BN: </span>{selectedPatient?.tenBenhNhan}
+                                </div>
+                                <div className='mb-2'><span style={{ fontWeight: "600" }}>Địa chỉ: </span>{selectedPatient?.DiaChi}</div>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Tuổi: </span>{getTuoi(selectedPatient?.NgaySinh)}
+                                </div>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Giới tính: </span>{selectedPatient?.GioiTinh}
+                                </div>
+                                <div className='col-lg-4 col-md-auto mb-2'>
+                                    <span style={{ fontWeight: "600" }}>Số điện thoại: </span>{selectedPatient?.soDienThoai}
+                                </div>
+                            </div>
+                            <div>
                                 <div className='col-md-auto mt-auto mb-auto' style={{ fontWeight: "600" }}>Nha sĩ điều trị:</div>
-                                <div className='col-md-auto'>
-                                    <input type="text" className="form-control signature" id="MaNV" name="MaNhaSi" placeholder='Nhập mã nha sĩ' value={cthsdt?.MaNhaSi} />
+                                <div>
+                                    <input type="text" className="form-control signature" id="MaNV" name="MaNhaSi" placeholder='Nhập mã nha sĩ' value={cthsdt?.TenNhaSi} />
                                 </div>
                             </div>
                             <div className='row'>
                                 <div className='col-md-auto mt-auto mb-auto' style={{ fontWeight: "600" }}>Chuẩn đoán:</div>
-                                <div className='col-md-auto'>
-                                    <input type="text" className="form-control signature" id="MaNV" name="ChuanDoan" placeholder='Nhập chuẩn đoán' value={cthsdt?.ChuanDoan} />
+                                <div>
+                                    <input type="text" className="form-control signature" id="MaNV" name="ChuanDoan" value={cthsdt?.ChuanDoan} />
                                 </div>
                             </div>
-                            <div className='row'>
+                            <div>
                                 <div className='col-md-auto mt-auto mb-auto' style={{ fontWeight: "600" }}>Ghi chú:</div>
-                                <div className='col-md-auto'>
-                                    <input type="text" className="form-control signature" id="MaNV" name="GhiChu" placeholder='Nhập ghi chú' value={cthsdt?.GhiChu} />
+                                <div>
+                                    <input type="text" className="form-control signature" id="MaNV" name="GhiChu" value={cthsdt?.GhiChu} />
                                 </div>
                             </div>
                             <div style={{ fontWeight: "600" }}>Ảnh sau khi điều trị:</div>
                             <div className='col-md-4 col-sm-6 m-auto'>
-                                <img src={cthsdt.AnhSauDieuTri != null ? cthsdt.AnhSauDieuTri : "/images/ava.png "} style={{
+                                <img src={cthsdt.AnhSauDieuTri != null ? cthsdt.AnhSauDieuTri : "/images/after_treatment.png"} style={{
                                     width: "100%",
                                     height: "100%",
                                     objectFit: "cover"
@@ -238,6 +267,7 @@ const XemHSDT = (props) => {
                             <table className="table" >
                                 <thead>
                                     <tr className="table-secondary">
+                                        <th>STT</th>
                                         <th>Dịch vụ</th>
                                         <th>Đơn giá</th>
                                         <th>Số lượng</th>
@@ -246,10 +276,10 @@ const XemHSDT = (props) => {
                                 <tbody>
                                     {cthsdt?.DichVu?.map((item, index) => (
                                         <tr key={index}>
+                                            <td>{index + 1}</td>
                                             <td>{item.tenDichVu}</td>
                                             <td>{item.DonGia}</td>
                                             <td>{item.SL}</td>
-
                                         </tr>
                                     ))}
                                 </tbody>

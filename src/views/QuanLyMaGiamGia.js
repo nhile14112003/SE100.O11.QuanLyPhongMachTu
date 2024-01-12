@@ -118,6 +118,7 @@ const QuanLyMaGiamGia = (props) => {
       <table className="table">
         <thead>
           <tr className="table-secondary">
+            <th>STT</th>
             <th>ID mã giảm giá</th>
             <th>Phần trăm giảm</th>
             <th>Thời gian bắt đầu</th>
@@ -130,6 +131,7 @@ const QuanLyMaGiamGia = (props) => {
           {magiamgia.map((row, idx) => {
             return (
               <tr key={row.Id}>
+                <td>{idx + 1}</td>
                 <td>{row.maGiamGia}</td>
                 <td>{row.phanTram}</td>
                 <td>{moment(new Date(row.TGBatDau)).format("DD/MM/YYYY")}</td>

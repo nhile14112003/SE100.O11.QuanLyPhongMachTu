@@ -167,6 +167,7 @@ const XemBangLuong = (props) => {
       <table class="table">
         <thead style={{ verticalAlign: "middle" }}>
           <tr class="table-secondary">
+            <th>STT</th>
             <th>Mã nhân viên</th>
             <th>Tên nhân viên</th>
             <th>Lương cơ bản/giờ</th>
@@ -178,6 +179,7 @@ const XemBangLuong = (props) => {
         <tbody>
           {table.map((item, index) => (
             <tr key={index}>
+              <td>{index + 1}</td>
               <td>{item.MaNV}</td>
               <td>{item.TenNV}</td>
               <td>{new Intl.NumberFormat("en-DE").format(item.LuongGio)}</td>

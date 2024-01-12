@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./mistyles.css";
 import Api from "../api/Api";
-import moment from "moment";
+import ExcelJS from "exceljs"
 
 const XemBaoCaoChiNhanhTheoNam = (props) => {
   const [table, setTable] = useState([]);
@@ -112,6 +112,63 @@ const XemBaoCaoChiNhanhTheoNam = (props) => {
       setTotalRevenue(tongDoanhThu);
     });
   };
+  const handleExport = () => {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Báo cáo");
+    sheet.columns = [
+      { header: "STT", key: "stt", width: 10 },
+      { header: "Chi nhánh", key: "chiNhanh", width: 30 },
+      { header: "Số ca thực hiện", key: "soLuongCaThucHien", width: 20, },
+      { header: "Số dịch vụ thực hiện", key: "soDichVuThucHien", width: 20 },
+      { header: "Số bệnh nhân", key: "soBenhNhan", width: 20 },
+      { header: "Doanh thu", key: "doanhThu", width: 20 },
+      { header: "Tỉ lệ(%)", key: "tyLe", width: 20 },
+    ];
+    sheet.getRow(1).font = { bold: true }
+    for (let i = 1; i <= 7; i++) {
+      if (i !== 6)
+        sheet.getColumn(i).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+    }
+    sheet.getColumn(6).numFmt = '#,##0'
+    sheet.getCell('F1').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+
+    const promise = Promise.all(table.map((item, index) => {
+      sheet.addRow({
+        stt: index + 1,
+        chiNhanh: item?.chiNhanh,
+        soLuongCaThucHien: item?.soLuongCaThucHien,
+        soDichVuThucHien: item?.soDichVuThucHien,
+        soBenhNhan: item?.soBenhNhan,
+        doanhThu: item?.doanhThu,
+        tyLe: item?.tyLe,
+      })
+    })
+    );
+    promise.then(() => {
+      sheet.addRow({
+        stt: "",
+        chiNhanh: "",
+        soLuongCaThucHien: "",
+        soDichVuThucHien: "",
+        soBenhNhan: "",
+        doanhThu: totalRevenue,
+        tyLe: "",
+      })
+      sheet.getCell('F' + (table.length + 2)).font = { bold: true }
+      workbook.xlsx.writeBuffer().then(function (data) {
+        const blob = new Blob([data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = "Báo cáo theo chi nhánh năm " + selectedYear + ".xlsx";
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      });
+    })
+  }
+
   return (
     <div>
       <div className="col-lg-4 col-md-6">
@@ -131,6 +188,12 @@ const XemBaoCaoChiNhanhTheoNam = (props) => {
           onChange={(e) => setSelectedYear(e.target.value)}
         />
         <div className="text-end">
+          <button onClick={handleExport}
+            className="btn pb-2 pt-2 mb-3 me-3"
+            style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>
+            Xuất Excel
+            <i className="fa fa-download ms-2"></i>
+          </button>
           <button
             className="btn pb-2 pt-2 mb-3"
             style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}
@@ -146,6 +209,7 @@ const XemBaoCaoChiNhanhTheoNam = (props) => {
       <table class="table">
         <thead style={{ verticalAlign: "middle" }}>
           <tr class="table-secondary">
+            <th>STT</th>
             <th>Chi nhánh</th>
             <th>Số ca thực hiện</th>
             <th>Số dịch vụ thực hiện</th>
@@ -157,6 +221,7 @@ const XemBaoCaoChiNhanhTheoNam = (props) => {
         <tbody>
           {table.map((item, index) => (
             <tr key={index}>
+              <td>{index + 1}</td>
               <td>{item.chiNhanh}</td>
               <td>{item.soLuongCaThucHien}</td>
               <td>{item.soDichVuThucHien}</td>

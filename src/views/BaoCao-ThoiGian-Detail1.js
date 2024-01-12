@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import "./mistyles.css";
 import Api from "../api/Api";
 import moment from "moment";
-import { tab } from "@testing-library/user-event/dist/tab";
 import { AuthContext } from "../hook/AuthProvider";
+import ExcelJS from "exceljs"
 
 const XemBaoCaoTheoThang = (props) => {
   const { user } = useContext(AuthContext);
@@ -138,6 +138,91 @@ const XemBaoCaoTheoThang = (props) => {
     }
   };
 
+  //export excel
+  const handleExport = () => {
+    // const headings = [[
+    //   'Ngày',
+    //   'Số ca thực hiện',
+    //   'Số dịch vụ thực hiện',
+    //   'Số bệnh nhân',
+    //   'Doanh thu',
+    //   'Tỷ lệ (%)'
+    // ]];
+    // const wb = utils.book_new();
+    // const ws = utils.json_to_sheet([]);
+    // utils.sheet_add_aoa(ws, headings);
+    // utils.sheet_add_json(ws, table.map((item) => {
+    //   return {
+    //     ngay: moment(new Date(item.ngay)).format("DD/MM/YYYY"),
+    //     soLuongCaThucHien: item.soLuongCaThucHien,
+    //     soDichVuThucHien: item.soDichVuThucHien,
+    //     soBenhNhan: item.soBenhNhan,
+    //     doanhThu: new Intl.NumberFormat("en-DE").format(item.doanhThu),
+    //     tyLe: item.tyLe
+    //   }
+    // }).concat([{
+    //   ngay: "",
+    //   soLuongCaThucHien: "",
+    //   soDichVuThucHien: "",
+    //   soBenhNhan: "",
+    //   doanhThu: new Intl.NumberFormat("en-DE").format(totalRevenue),
+    //   tyLe: ""
+    // }]), { origin: 'A2', skipHeader: true });
+    // utils.book_append_sheet(wb, ws, 'Báo cáo');
+    // writeFile(wb, 'Báo cáo tháng 01/2024.xlsx');
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Báo cáo");
+    sheet.columns = [
+      { header: "Ngày", key: "ngay", width: 20 },
+      { header: "Số ca thực hiện", key: "soLuongCaThucHien", width: 20 },
+      { header: "Số dịch vụ thực hiện", key: "soDichVuThucHien", width: 20, },
+      { header: "Số bệnh nhân", key: "soBenhNhan", width: 20 },
+      { header: "Doanh thu", key: "doanhThu", width: 20 },
+      { header: "Tỉ lệ(%)", key: "tyLe", width: 20 },
+    ];
+    sheet.getRow(1).font = { bold: true }
+    for (let i = 1; i <= 6; i++) {
+      if (i !== 5)
+        sheet.getColumn(i).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+    }
+    sheet.getColumn(5).numFmt = '#,##0'
+    sheet.getCell('E1').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+
+    const promise = Promise.all(table.map((item, index) => {
+      sheet.addRow({
+        ngay: moment(new Date(item?.ngay)).format("DD/MM/YYYY"),
+        soLuongCaThucHien: item?.soLuongCaThucHien,
+        soDichVuThucHien: item?.soDichVuThucHien,
+        soBenhNhan: item?.soBenhNhan,
+        doanhThu: item?.doanhThu,
+        tyLe: item?.tyLe,
+      })
+    })
+    );
+    promise.then(() => {
+      sheet.addRow({
+        ngay: "",
+        soLuongCaThucHien: "",
+        soDichVuThucHien: "",
+        soBenhNhan: "",
+        doanhThu: totalRevenue,
+        tyLe: "",
+      })
+      sheet.getCell('E' + (table.length + 2)).font = { bold: true }
+      workbook.xlsx.writeBuffer().then(function (data) {
+        const blob = new Blob([data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = "Báo cáo " + moment(new Date(selectedMonth)).format("MM/YYYY") + " của " + (selectedBranch === "Tất cả" ? "tất cả chi nhánh" : selectedBranch) + ".xlsx";
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      });
+    })
+  }
+
   return (
     <div>
       <div className="row">
@@ -178,6 +263,12 @@ const XemBaoCaoTheoThang = (props) => {
             onChange={(e) => setSelectedMonth(e.target.value)}
           />
           <div className="text-end">
+            <button onClick={handleExport}
+              className="btn pb-2 pt-2 mb-3 me-3"
+              style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>
+              Xuất Excel
+              <i className="fa fa-download ms-2"></i>
+            </button>
             <button
               type="submit"
               className="btn pb-2 pt-2 mb-3"

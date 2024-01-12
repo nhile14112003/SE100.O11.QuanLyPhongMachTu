@@ -263,6 +263,7 @@ const XemThongTinNhanVien = (props) => {
       <table className="table">
         <thead style={{ verticalAlign: "middle" }}>
           <tr className="table-secondary">
+            <th>STT</th>
             <th>Mã nhân viên</th>
             <th>Họ và tên</th>
             <th>Số điện thoại</th>
@@ -277,6 +278,7 @@ const XemThongTinNhanVien = (props) => {
         {staffs.map((row, idx) => {
           return (
             <tr key={row.Id}>
+              <td>{idx + 1}</td>
               <td>{row.maNhanVien}</td>
               <td>{row.tenNhanVien}</td>
               <td>{row.soDienThoai}</td>

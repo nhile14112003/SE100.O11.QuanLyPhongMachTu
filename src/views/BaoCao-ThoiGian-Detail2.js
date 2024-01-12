@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import "./mistyles.css";
 import Api from "../api/Api";
 import { AuthContext } from "../hook/AuthProvider";
+import ExcelJS from "exceljs"
 
 const XemBaoCaoTheoNam = (props) => {
   const { user } = useContext(AuthContext);
@@ -134,6 +135,59 @@ const XemBaoCaoTheoNam = (props) => {
       setTotalRevenue(0);
     }
   };
+  const handleExport = () => {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Báo cáo");
+    sheet.columns = [
+      { header: "Tháng", key: "thang", width: 20 },
+      { header: "Số ca thực hiện", key: "soLuongCaThucHien", width: 20 },
+      { header: "Số dịch vụ thực hiện", key: "soDichVuThucHien", width: 20, },
+      { header: "Số bệnh nhân", key: "soBenhNhan", width: 20 },
+      { header: "Doanh thu", key: "doanhThu", width: 20 },
+      { header: "Tỉ lệ(%)", key: "tyLe", width: 20 },
+    ];
+    sheet.getRow(1).font = { bold: true }
+    for (let i = 1; i <= 6; i++) {
+      if (i !== 5)
+        sheet.getColumn(i).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+    }
+    sheet.getColumn(5).numFmt = '#,##0'
+    sheet.getCell('E1').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+
+    const promise = Promise.all(table.map((item, index) => {
+      sheet.addRow({
+        thang: item?.thang,
+        soLuongCaThucHien: item?.soLuongCaThucHien,
+        soDichVuThucHien: item?.soDichVuThucHien,
+        soBenhNhan: item?.soBenhNhan,
+        doanhThu: item?.doanhThu,
+        tyLe: item?.tyLe,
+      })
+    })
+    );
+    promise.then(() => {
+      sheet.addRow({
+        thang: "",
+        soLuongCaThucHien: "",
+        soDichVuThucHien: "",
+        soBenhNhan: "",
+        doanhThu: totalRevenue,
+        tyLe: "",
+      })
+      sheet.getCell('E' + (table.length + 2)).font = { bold: true }
+      workbook.xlsx.writeBuffer().then(function (data) {
+        const blob = new Blob([data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = "Báo cáo năm " + selectedYear + " của " + (selectedBranch === "Tất cả" ? "tất cả chi nhánh" : selectedBranch) + ".xlsx";
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      });
+    })
+  }
 
   return (
     <div>
@@ -177,6 +231,12 @@ const XemBaoCaoTheoNam = (props) => {
             className="form-control pb-2 pt-2 mb-3"
           />
           <div className="text-end">
+            <button onClick={handleExport}
+              className="btn pb-2 pt-2 mb-3 me-3"
+              style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>
+              Xuất Excel
+              <i className="fa fa-download ms-2"></i>
+            </button>
             <button
               type="submit"
               className="btn pb-2 pt-2 mb-3"

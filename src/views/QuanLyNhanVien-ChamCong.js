@@ -231,6 +231,7 @@ const ChamCong = () => {
       <table className="table">
         <thead>
           <tr className="table-secondary">
+            <th>STT</th>
             <th>Mã nhân viên</th>
             <th>Họ và tên</th>
             <th>Số giờ làm</th>
@@ -239,6 +240,7 @@ const ChamCong = () => {
         {table.map((row, idx) => {
           return (
             <tr>
+              <td>{idx + 1}</td>
               <td>{row.MaNV}</td>
               <td>{row.TenNV}</td>
               <td>

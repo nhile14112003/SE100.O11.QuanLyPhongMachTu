@@ -450,6 +450,7 @@ const PatientManagement = (props) => {
                     <table className="table" >
                         <thead style={{ verticalAlign: "middle" }}>
                             <tr className="table-secondary">
+                                <th>STT</th>
                                 <th>Mã bệnh nhân</th>
                                 <th>Tên bệnh nhân</th>
                                 <th>CCCD</th>
@@ -463,6 +464,7 @@ const PatientManagement = (props) => {
                         <tbody>
                             {customers?.map((item, index) => (
                                 <tr key={index}>
+                                    <td>{index + 1}</td>
                                     <td>{item.maBenhNhan}</td>
                                     <td>{item.tenBenhNhan}</td>
                                     <td>{item.CCCD}</td>
@@ -543,6 +545,7 @@ const PatientManagement = (props) => {
                         <table className="table" >
                             <thead style={{ verticalAlign: "middle" }}>
                                 <tr className="table-secondary">
+                                    <th>STT</th>
                                     <th>Mã nha sĩ điều trị</th>
                                     <th>Tên nha sĩ điều trị</th>
                                     <th>Ngày điều trị</th>
@@ -552,6 +555,7 @@ const PatientManagement = (props) => {
                             <tbody>
                                 {listcthsdt?.map((item, index) => (
                                     <tr key={index}>
+                                        <td>{index + 1}</td>
                                         <td>{item.MaNhaSi}</td>
                                         <td>{item.TenNhaSi}</td>
                                         <td>{moment(new Date(item.NgayDieuTri)).format("DD/MM/YYYY")}</td>
@@ -605,7 +609,7 @@ const PatientManagement = (props) => {
                                 <span style={{ fontWeight: "600" }}>Số điện thoại: </span>{selectedPatient?.soDienThoai}
                             </div>
                         </div>
-                        <div className='col-lg-4 col-md-6'>
+                        <div>
                             <div className='mb-2' style={{ fontWeight: "600" }}>Nha sĩ điều trị:</div>
                             {user?.Loai === 'Nha sĩ' && <div className='col-md-auto'>
                                 <input type="text" className="form-control signature" id="MaNV" name="MaNhaSi" value={state === 'create' ? user?.ten : cthsdt.TenNhaSi} />
@@ -620,16 +624,16 @@ const PatientManagement = (props) => {
                                 placeholder=""
                             />}
                         </div>
-                        <div className='row'>
+                        <div>
                             <div className='col-md-auto mt-auto mb-auto' style={{ fontWeight: "600" }}>Chuẩn đoán:</div>
-                            <div className=''>
-                                <input type="text" className="form-control signature" id="MaNV" name="ChuanDoan" placeholder='Nhập chuẩn đoán' onChange={handlechangeformCTHSDT} value={cthsdt?.ChuanDoan} />
+                            <div>
+                                <input type="text" className="form-control signature" id="MaNV" name="ChuanDoan" onChange={handlechangeformCTHSDT} value={cthsdt?.ChuanDoan} />
                             </div>
                         </div>
-                        <div className='row'>
+                        <div>
                             <div className='col-md-auto mt-auto mb-auto' style={{ fontWeight: "600" }}>Ghi chú:</div>
-                            <div className=''>
-                                <input type="text" className="form-control signature" id="MaNV" name="GhiChu" placeholder='Nhập ghi chú' onChange={handlechangeformCTHSDT} value={cthsdt?.GhiChu} />
+                            <div>
+                                <input type="text" className="form-control signature" id="MaNV" name="GhiChu" onChange={handlechangeformCTHSDT} value={cthsdt?.GhiChu} />
                             </div>
                         </div>
                         <div style={{ fontWeight: "600" }}>Ảnh sau khi điều trị:</div>
@@ -660,6 +664,7 @@ const PatientManagement = (props) => {
                         <table className="table" >
                             <thead style={{ verticalAlign: "middle" }}>
                                 <tr className="table-secondary">
+                                    <th>STT</th>
                                     <th>Dịch vụ</th>
                                     <th>Đơn giá</th>
                                     <th>Số lượng</th>
@@ -669,6 +674,7 @@ const PatientManagement = (props) => {
                             <tbody>
                                 {cthsdt?.DichVu?.map((item, index) => (
                                     <tr key={index}>
+                                        <td>{index + 1}</td>
                                         <td>{item.tenDichVu}</td>
                                         <td>{new Intl.NumberFormat("en-DE").format(
                                             item.DonGia

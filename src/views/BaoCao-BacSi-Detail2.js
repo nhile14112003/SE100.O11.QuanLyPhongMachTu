@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import "./mistyles.css";
 import Api from "../api/Api";
-import moment from "moment";
 import { AuthContext } from "../hook/AuthProvider";
+import ExcelJS from "exceljs"
 
 const XemBaoCaoBacSiTheoNam = (props) => {
   const { user } = useContext(AuthContext);
@@ -109,6 +109,58 @@ const XemBaoCaoBacSiTheoNam = (props) => {
       setTotalCases(doctorTable.length);
     });
   };
+  const handleExport = () => {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Báo cáo");
+    sheet.columns = [
+      { header: "STT", key: "stt", width: 10 },
+      { header: "Mã nha sĩ", key: "maNhaSi", width: 20, },
+      { header: "Tên nha sĩ", key: "tenNhaSi", width: 25 },
+      { header: "Số bệnh nhân", key: "soBenhNhan", width: 20 },
+      { header: "Số ca thực hiện", key: "soLuongCaThucHien", width: 20 },
+      { header: "Tỉ lệ(%)", key: "tyLe", width: 20 },
+    ];
+    sheet.getRow(1).font = { bold: true }
+    for (let i = 1; i <= 6; i++) {
+      if (i !== 5)
+        sheet.getColumn(i).alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+    }
+    sheet.getCell('E1').alignment = { vertical: 'middle', horizontal: 'center', wrapText: true }
+
+    const promise = Promise.all(table.map((item, index) => {
+      sheet.addRow({
+        stt: index + 1,
+        maNhaSi: item?.maNhaSi,
+        tenNhaSi: item?.tenNhaSi,
+        soLuongCaThucHien: item?.soLuongCaThucHien,
+        soBenhNhan: item?.soBenhNhan,
+        tyLe: item?.tyLe,
+      })
+    })
+    );
+    promise.then(() => {
+      sheet.addRow({
+        stt: "",
+        maNhaSi: "",
+        tenNhaSi: "",
+        soLuongCaThucHien: totalCases,
+        soBenhNhan: "",
+        tyLe: "",
+      })
+      sheet.getCell('E' + (table.length + 2)).font = { bold: true }
+      workbook.xlsx.writeBuffer().then(function (data) {
+        const blob = new Blob([data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = "Báo cáo theo bác sĩ năm " + selectedYear + " của " + (selectedBranch === "Tất cả" ? "tất cả chi nhánh" : selectedBranch) + ".xlsx";
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+      });
+    })
+  }
 
   return (
     <div>
@@ -151,6 +203,12 @@ const XemBaoCaoBacSiTheoNam = (props) => {
             onChange={(e) => setSelectedYear(e.target.value)}
           />
           <div className="text-end">
+            <button onClick={handleExport}
+              className="btn pb-2 pt-2 mb-3 me-3"
+              style={{ backgroundColor: "#0096FF", color: "#FFFFFF" }}>
+              Xuất Excel
+              <i className="fa fa-download ms-2"></i>
+            </button>
             <button
               type="submit"
               className="btn pb-2 pt-2 mb-3"
@@ -169,6 +227,7 @@ const XemBaoCaoBacSiTheoNam = (props) => {
       <table class="table">
         <thead style={{ verticalAlign: "middle" }}>
           <tr class="table-secondary">
+            <th>STT</th>
             <th>Mã bác sĩ</th>
             <th>Tên bác sĩ</th>
             <th>Số ca thực hiện</th>
@@ -179,6 +238,7 @@ const XemBaoCaoBacSiTheoNam = (props) => {
         <tbody>
           {table.map((item, index) => (
             <tr key={index}>
+              <td>{index + 1}</td>
               <td>{item.maNhaSi}</td>
               <td>{item.tenNhaSi}</td>
               <td>{item.soLuongCaThucHien}</td>

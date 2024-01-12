@@ -139,6 +139,7 @@ const LuongThuong = () => {
       <table className="table">
         <thead style={{ verticalAlign: "middle" }}>
           <tr className="table-secondary">
+            <th>STT</th>
             <th>Loại lương thưởng</th>
             <th>Tiền</th>
             <th>Ghi chú</th>
@@ -152,6 +153,7 @@ const LuongThuong = () => {
         <tbody>
           {bonuses.map((item, index) => (
             <tr key={index}>
+              <td>{index + 1}</td>
               <td>{item.LoaiLuongThuong}</td>
               <td>{new Intl.NumberFormat("en-DE").format(item.Tien)}</td>
               <td>{item.GhiChu}</td>
