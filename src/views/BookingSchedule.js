@@ -2,15 +2,18 @@ import { useState, useEffect, useContext } from "react";
 import moment from "moment";
 import { FormBookingSchedule } from "../components/FormBookingSchedule";
 import Api from "../api/Api";
-import { AuthContext } from '../hook/AuthProvider'
+import NotificationModal from "../components/NotificationModal";
+import { AuthContext } from "../hook/AuthProvider";
 
 const BookingSchedule = () => {
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [doctorSchedules, setDoctorSchedules] = useState();
   const [doctors, setDoctors] = useState([]);
   const [flag, setFlag] = useState("");
+  const [showNoti, setShowNoti] = useState(false);
+  const [notiBody, setNotiBody] = useState("");
 
   useEffect(() => {
     getDoctorSchedules();
@@ -41,10 +44,13 @@ const BookingSchedule = () => {
   };
 
   const handleSubmit = async (newData) => {
-    const res = await Api.getStaffsBySeacrh()
+    // const res = await Api.getStaffsBySeacrh();
     if (flag == "add") {
       const endpoint = "/ScheduleManagement/add/LichHen";
-      const id = await Api.addDoc(endpoint, {...newData, chiNhanh:selectedItem?.doctor.chiNhanh});
+      const id = await Api.addDoc(endpoint, {
+        ...newData,
+        chiNhanh: selectedItem?.doctor.chiNhanh,
+      });
 
       const newWorkTime = {
         gio: selectedItem.selectedWorkTime.gio,
@@ -64,17 +70,25 @@ const BookingSchedule = () => {
         selectedItem.doctorSchedule.Id;
       console.log(newDoctorSchedule);
       const success = await Api.updateDoc(endpoint2, newDoctorSchedule);
-
       if (success) {
         setDoctorSchedules(
           doctorSchedules.map((item) =>
             item.Id == newDoctorSchedule.Id ? newDoctorSchedule : item
           )
         );
+        setNotiBody("Đặt lịch thành công!");
+        setShowNoti(true);
       }
     } else if (flag == "edit") {
       const endpoint = "/ScheduleManagement/update/LichHen/" + newData.Id;
-      const success = await Api.updateDoc(endpoint, {...newData, chiNhanh:selectedItem?.doctor.chiNhanh});
+      const success = await Api.updateDoc(endpoint, {
+        ...newData,
+        chiNhanh: selectedItem?.doctor.chiNhanh,
+      });
+      if (success) {
+        setNotiBody("Thay đổi lịch thành công!");
+        setShowNoti(true);
+      }
     }
   };
 
@@ -107,11 +121,14 @@ const BookingSchedule = () => {
             item.Id == newDoctorSchedule.Id ? newDoctorSchedule : item
           )
         );
+        setNotiBody("Hủy lịch hẹn thành công!");
+        setShowNoti(true);
       }
     }
   };
 
   const setItemToEdit = async (worktime, doctor) => {
+    if (isTimeRangePassed(worktime.gio, doctor.date)) return;
     const doctorSchedule = doctorSchedules.find((item1) => {
       return (
         doctor.maNhanVien === item1.maNS &&
@@ -186,6 +203,17 @@ const BookingSchedule = () => {
     });
   }
 
+  const isTimeRangePassed = (timeRange, date) => {
+    const [startTime, endTime] = timeRange.split("-");
+
+    const startDate = new Date(date);
+    const [startHour, startMinute] = startTime.split(":");
+    startDate.setHours(parseInt(startHour, 10));
+    startDate.setMinutes(parseInt(startMinute, 10));
+
+    return startDate < new Date();
+  };
+
   return (
     <div>
       {doctors.map((item) => {
@@ -249,7 +277,8 @@ const BookingSchedule = () => {
                             className="mt-3 p-2"
                             style={{
                               backgroundColor:
-                                worktime.maLichHen !== null
+                                worktime.maLichHen !== null ||
+                                isTimeRangePassed(worktime.gio, item.date)
                                   ? "#bfbfbf"
                                   : "#0096FF",
                             }}
@@ -279,6 +308,12 @@ const BookingSchedule = () => {
           flag={flag}
         />
       )}
+      <NotificationModal
+        show={showNoti}
+        onHide={() => setShowNoti(false)}
+        title="LOGOIPSUM"
+        message={notiBody}
+      />
     </div>
   );
 };
