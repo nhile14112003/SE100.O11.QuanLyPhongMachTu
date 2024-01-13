@@ -10,7 +10,7 @@ const SignInPage = (props) => {
     const [pass, setPass] = useState('')
     const [userInfo, setUserInfo] = useState(null)
     const [flag, setFlag] = useState(false)
-    const { login, user } = useContext(AuthContext);
+    const { Login, user } = useContext(AuthContext);
     const history = useHistory();
 
 
@@ -25,7 +25,7 @@ const SignInPage = (props) => {
         //    else{
         //     alert('Sign in unsuccessfully')
         //    }
-        login(name, pass, history)
+        Login(name, pass, history)
         // if(user!=null){
         //     console.log('redirect'+redirectTo)
         //     history.push(redirectTo);

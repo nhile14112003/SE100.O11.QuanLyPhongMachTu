@@ -3,9 +3,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../hook/AuthProvider";
 import nav from "../hook/PhanQuyen";
 const TopNav = () => {
-  const { logout, user, scope } = useContext(AuthContext);
+  const history = useHistory();
+  const { Logout, user, scope } = useContext(AuthContext);
   const handleSignout = () => {
-    logout();
+    Logout(history);
   };
   return (
     <nav className="navbar navbar-expand-md bg-light navbar-light">
