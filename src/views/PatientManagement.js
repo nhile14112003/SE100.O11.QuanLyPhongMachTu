@@ -765,6 +765,7 @@ const PatientManagement = (props) => {
                         onSubmit={handleSubmit}
                         defaultValue={patientRowToEdit !== null && customers[patientRowToEdit]}
                         medicines={medicines}
+                        customers={customers}
                     />
                 )
             }
