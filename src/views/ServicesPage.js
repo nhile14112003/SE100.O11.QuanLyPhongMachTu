@@ -80,7 +80,7 @@ const ServicesPage = (props) => {
                     {currentDoctorList.map((item, index) => {
                         return (
                             <div className="row">
-                                <div className="col-md-4 mt-2">
+                                <div className="col-md-4 mt-2 mb-4">
                                     <img alt="" src={item.image} style={{ width: "100%" }} />
                                 </div>
                                 <div className="col-md-8 align-self-center px-3">

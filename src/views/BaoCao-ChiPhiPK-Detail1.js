@@ -323,7 +323,7 @@ const XemBaoCaoCPPKTheoThang = (props) => {
       </table>
       <div className="text-end">
         <h1 class="noteVND" style={{ fontWeight: "bold", fontSize: "17px" }}>
-          Tổng doanh thu: {totalExpenses ? new Intl.NumberFormat("en-DE").format(totalExpenses) : null}
+          Tổng chi phí: {totalExpenses ? new Intl.NumberFormat("en-DE").format(totalExpenses) : null}
         </h1>
       </div>
     </div>
