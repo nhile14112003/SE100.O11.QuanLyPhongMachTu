@@ -294,7 +294,7 @@ const updateDoctorSchedule = async (req, res) => {
 };
 
 const getAppointmentsBySearch = async (req, res) => {
-  const { MaNS, MaBN, TenNS, TenBN, DichVu, NgayHen } = req.query;
+  const { MaNS, SDT, TenNS, TenBN, DichVu, NgayHen } = req.query;
   const myCollection = collection(firestore, "LichHen");
   try {
     const querySnapshot = await getDocs(myCollection);
@@ -312,9 +312,9 @@ const getAppointmentsBySearch = async (req, res) => {
       const matchTenNS =
         TenNS === "" ||
         normalizeText(lichHen.TenNS).includes(normalizeText(TenNS));
-      const matchMaBN =
-        MaBN === "" ||
-        normalizeText(lichHen.MaBN).includes(normalizeText(MaBN));
+      const matchSDT =
+      SDT === "" ||
+        normalizeText(lichHen.SDT).includes(normalizeText(SDT));
       const matchTenBN =
         TenBN === "" ||
         normalizeText(lichHen.TenBN).includes(normalizeText(TenBN));
@@ -325,7 +325,7 @@ const getAppointmentsBySearch = async (req, res) => {
       console.log(NgayHen);
       return (
         matchMaNS &&
-        matchMaBN &&
+        matchSDT &&
         matchTenBN &&
         matchTenNS &&
         matchDichVu &&
